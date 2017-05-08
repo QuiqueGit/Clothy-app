@@ -6,8 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilidades.*;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import static vista.Menu.menu;
 
 /**
@@ -59,33 +57,29 @@ public class Login extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(485, 600));
         getContentPane().setLayout(null);
 
-        jLTitulo.setFont(new java.awt.Font("Magneto", 2, 48)); // NOI18N
+        jLTitulo.setFont(new java.awt.Font("Arial Black", 2, 48)); // NOI18N
         jLTitulo.setForeground(new java.awt.Color(255, 255, 255));
         jLTitulo.setText("Clothy");
         getContentPane().add(jLTitulo);
-        jLTitulo.setBounds(260, 70, 170, 80);
+        jLTitulo.setBounds(260, 70, 180, 80);
 
-        jLUsuario.setFont(new java.awt.Font("Magneto", 0, 24)); // NOI18N
+        jLUsuario.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         jLUsuario.setForeground(new java.awt.Color(255, 255, 255));
         jLUsuario.setText("Usuario");
         getContentPane().add(jLUsuario);
         jLUsuario.setBounds(290, 290, 120, 20);
 
-        jLPass.setFont(new java.awt.Font("Magneto", 0, 24)); // NOI18N
+        jLPass.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         jLPass.setForeground(new java.awt.Color(255, 255, 255));
         jLPass.setText("Contraseña");
         getContentPane().add(jLPass);
-        jLPass.setBounds(280, 370, 150, 30);
-
-        jTFUsuario.setBorder(null);
+        jLPass.setBounds(270, 370, 160, 35);
         getContentPane().add(jTFUsuario);
         jTFUsuario.setBounds(290, 330, 110, 20);
-
-        jPFPass.setBorder(null);
         getContentPane().add(jPFPass);
-        jPFPass.setBounds(290, 420, 110, 14);
+        jPFPass.setBounds(290, 420, 110, 20);
 
-        jBLogin.setFont(new java.awt.Font("Magneto", 0, 18)); // NOI18N
+        jBLogin.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
         jBLogin.setText("Login");
         jBLogin.setBorderPainted(false);
         jBLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -95,9 +89,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBLogin);
-        jBLogin.setBounds(270, 480, 150, 31);
+        jBLogin.setBounds(270, 480, 150, 35);
 
-        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/icon_exit.png"))); // NOI18N
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
         jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -108,8 +102,7 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(450, 10, 20, 20);
 
-        jLFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/utilidades/fondoLogin.png"))); // NOI18N
-        jLFondo.setPreferredSize(null);
+        jLFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/fondoLogin.png"))); // NOI18N
         getContentPane().add(jLFondo);
         jLFondo.setBounds(0, 0, 485, 600);
 
@@ -132,9 +125,9 @@ public class Login extends javax.swing.JFrame {
     private void jBLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLoginActionPerformed
 
         String user = jTFUsuario.getText();
-        String pass = jPFPass.getText();
+        String pass = jPFPass.getText();        
         boolean isUser = false;
-        boolean isAdmin = false;
+        //boolean isAdmin = false;
 
         for (Empleado emp : empleados) { //BUCLE FOR EACH PARA RECORRER ARRAY DE EMPLEADOS
 
@@ -145,8 +138,8 @@ public class Login extends javax.swing.JFrame {
                 user_actual = user;
                 
             }
-        }
-
+        }        
+        
         if (isUser == true) {
             menu = new Menu();
             //HACEMOS VISIBLE EL MENU

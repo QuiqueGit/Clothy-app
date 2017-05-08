@@ -25,13 +25,17 @@ public class ConexionDB {
         
         String url = "jdbc:mysql://localhost:3306/clothy";
         String user = "root";
-        String pass = "";
+        String pass = "123";
         connection = DriverManager.getConnection(url, user, pass);
         s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         System.out.println("Conexión establecida!");   
         
         
     }    
+
+    public Connection getCon() {
+        return connection;
+    }
     
     public static ArrayList<Empleado> empleados() throws SQLException {     
 
