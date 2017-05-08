@@ -28,8 +28,7 @@ public class ConexionDB {
         String pass = "123";
         connection = DriverManager.getConnection(url, user, pass);
         s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        System.out.println("Conexión establecida!");   
-        
+        System.out.println("Conexión establecida!");          
         
     }    
 
@@ -43,7 +42,7 @@ public class ConexionDB {
         
         while (rs.next()) {  //RECORRER RESULTSET PARA GUARDAR NOMBRE Y PASS EN EL ARRAY
 
-            String nom = rs.getString("nombre");
+            String nom = rs.getString("id_login");
             String pass = rs.getString("password");            
 
             empleados.add(new Empleado(nom,pass));

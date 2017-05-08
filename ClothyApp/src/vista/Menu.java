@@ -21,7 +21,7 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);       
         user_logeado.setText(user_actual);
         //OCULTAMOS BOTÓN EMPLEADOS PARA LOS QUE NO SEAN ADMIN
         if (!user_actual.equalsIgnoreCase("admin")) {
@@ -74,142 +74,183 @@ public class Menu extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(725, 365));
         getContentPane().setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tekton Pro", 1, 27)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Usuario_");
+        jLabel1.setText("@");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(10, 0, 150, 48);
+        jLabel1.setBounds(10, 0, 30, 40);
 
-        user_logeado.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        user_logeado.setFont(new java.awt.Font("Tahoma", 0, 27)); // NOI18N
         user_logeado.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(user_logeado);
-        user_logeado.setBounds(100, 0, 150, 48);
+        user_logeado.setBounds(35, 0, 110, 30);
 
-        jBArticulos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/articulos_icon.png"))); // NOI18N
+        jBArticulos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\articulos_icon.png")); // NOI18N
         jBArticulos.setToolTipText("");
+        jBArticulos.setBorderPainted(false);
+        jBArticulos.setContentAreaFilled(false);
+        jBArticulos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBArticulos.setFocusPainted(false);
+        jBArticulos.setFocusable(false);
         jBArticulos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBArticulosActionPerformed(evt);
             }
         });
         getContentPane().add(jBArticulos);
-        jBArticulos.setBounds(60, 90, 101, 78);
+        jBArticulos.setBounds(70, 80, 70, 78);
 
-        jBCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/categorias_icon.png"))); // NOI18N
+        jBCategorias.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\categorias_icon.png")); // NOI18N
         jBCategorias.setToolTipText("");
+        jBCategorias.setBorderPainted(false);
+        jBCategorias.setContentAreaFilled(false);
+        jBCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCategorias.setFocusPainted(false);
+        jBCategorias.setFocusable(false);
         getContentPane().add(jBCategorias);
-        jBCategorias.setBounds(190, 90, 101, 78);
+        jBCategorias.setBounds(210, 80, 60, 78);
 
-        jBMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/marcas_icon.png"))); // NOI18N
+        jBMarcas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\marcas_icon.png")); // NOI18N
         jBMarcas.setToolTipText("");
+        jBMarcas.setBorderPainted(false);
+        jBMarcas.setContentAreaFilled(false);
+        jBMarcas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBMarcas.setFocusPainted(false);
+        jBMarcas.setFocusable(false);
         getContentPane().add(jBMarcas);
-        jBMarcas.setBounds(320, 90, 101, 78);
+        jBMarcas.setBounds(320, 90, 90, 70);
 
-        jBTallas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tallas_icon.png"))); // NOI18N
+        jBTallas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\tallas_icon.png")); // NOI18N
         jBTallas.setToolTipText("");
+        jBTallas.setBorderPainted(false);
+        jBTallas.setContentAreaFilled(false);
+        jBTallas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBTallas.setFocusPainted(false);
+        jBTallas.setFocusable(false);
         getContentPane().add(jBTallas);
-        jBTallas.setBounds(450, 90, 101, 78);
+        jBTallas.setBounds(440, 90, 80, 70);
 
-        jBLineas_venta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/lineas_venta2.png"))); // NOI18N
+        jBLineas_venta.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\lineas_venta_icon.png")); // NOI18N
         jBLineas_venta.setToolTipText("");
+        jBLineas_venta.setBorderPainted(false);
+        jBLineas_venta.setContentAreaFilled(false);
+        jBLineas_venta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBLineas_venta.setFocusPainted(false);
+        jBLineas_venta.setFocusable(false);
         getContentPane().add(jBLineas_venta);
-        jBLineas_venta.setBounds(580, 90, 101, 78);
+        jBLineas_venta.setBounds(580, 90, 70, 60);
 
-        jBEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/empleados_icon2.png"))); // NOI18N
+        jBEmpleados.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\empleados_icon2.png")); // NOI18N
         jBEmpleados.setToolTipText("");
+        jBEmpleados.setBorderPainted(false);
+        jBEmpleados.setContentAreaFilled(false);
+        jBEmpleados.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBEmpleados.setFocusPainted(false);
+        jBEmpleados.setFocusable(false);
         getContentPane().add(jBEmpleados);
-        jBEmpleados.setBounds(60, 220, 101, 78);
+        jBEmpleados.setBounds(70, 210, 70, 78);
 
-        jBClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/clientes_icon.png"))); // NOI18N
+        jBClientes.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\clientes_icon.png")); // NOI18N
         jBClientes.setToolTipText("");
+        jBClientes.setBorderPainted(false);
+        jBClientes.setContentAreaFilled(false);
+        jBClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBClientes.setFocusPainted(false);
+        jBClientes.setFocusable(false);
         getContentPane().add(jBClientes);
-        jBClientes.setBounds(190, 220, 101, 78);
+        jBClientes.setBounds(200, 210, 70, 78);
 
-        jBVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/ventas_icon.png"))); // NOI18N
+        jBVentas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\ventas_icon.png")); // NOI18N
         jBVentas.setToolTipText("");
+        jBVentas.setBorderPainted(false);
+        jBVentas.setContentAreaFilled(false);
+        jBVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBVentas.setFocusPainted(false);
+        jBVentas.setFocusable(false);
         getContentPane().add(jBVentas);
-        jBVentas.setBounds(320, 220, 101, 78);
+        jBVentas.setBounds(320, 220, 80, 60);
 
         jBSesion.setFont(new java.awt.Font("Magneto", 0, 14)); // NOI18N
-        jBSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/logout.png"))); // NOI18N
+        jBSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/logout2.png"))); // NOI18N
         jBSesion.setToolTipText("Cierra sesión");
+        jBSesion.setBorderPainted(false);
+        jBSesion.setContentAreaFilled(false);
+        jBSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBSesion.setFocusPainted(false);
         jBSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBSesionActionPerformed(evt);
             }
         });
         getContentPane().add(jBSesion);
-        jBSesion.setBounds(680, 320, 30, 30);
+        jBSesion.setBounds(580, 220, 80, 70);
 
-        jLArticulos.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLArticulos.setForeground(new java.awt.Color(255, 255, 255));
+        jLArticulos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLArticulos.setText("Artículos");
         jLArticulos.setToolTipText("");
         getContentPane().add(jLArticulos);
-        jLArticulos.setBounds(60, 170, 130, 26);
+        jLArticulos.setBounds(50, 160, 110, 26);
 
-        jLCategorias.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLCategorias.setForeground(new java.awt.Color(255, 255, 255));
+        jLCategorias.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLCategorias.setText("Categorias");
         jLCategorias.setToolTipText("");
         getContentPane().add(jLCategorias);
-        jLCategorias.setBounds(190, 170, 110, 26);
+        jLCategorias.setBounds(180, 160, 120, 26);
 
-        jLMarcas.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLMarcas.setForeground(new java.awt.Color(255, 255, 255));
+        jLMarcas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLMarcas.setText("Marcas");
         jLMarcas.setToolTipText("");
         getContentPane().add(jLMarcas);
-        jLMarcas.setBounds(338, 170, 72, 26);
+        jLMarcas.setBounds(324, 160, 90, 26);
 
-        jLTallas.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLTallas.setForeground(new java.awt.Color(255, 255, 255));
+        jLTallas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLTallas.setText("Tallas");
         jLTallas.setToolTipText("");
         getContentPane().add(jLTallas);
-        jLTallas.setBounds(470, 170, 80, 26);
+        jLTallas.setBounds(450, 160, 70, 26);
 
-        jLLineas_venta.setFont(new java.awt.Font("Arial Black", 0, 16)); // NOI18N
-        jLLineas_venta.setForeground(new java.awt.Color(255, 255, 255));
+        jLLineas_venta.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLLineas_venta.setText("Lineas de venta");
         jLLineas_venta.setToolTipText("");
         getContentPane().add(jLLineas_venta);
-        jLLineas_venta.setBounds(560, 170, 150, 26);
+        jLLineas_venta.setBounds(540, 160, 176, 26);
 
-        jLEmpleados.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLEmpleados.setForeground(new java.awt.Color(255, 255, 255));
+        jLEmpleados.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLEmpleados.setText("Empleados");
         jLEmpleados.setToolTipText("");
         getContentPane().add(jLEmpleados);
-        jLEmpleados.setBounds(50, 300, 120, 26);
+        jLEmpleados.setBounds(45, 290, 120, 26);
 
-        jLClientes.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLClientes.setForeground(new java.awt.Color(255, 255, 255));
+        jLClientes.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLClientes.setText("Clientes");
         jLClientes.setToolTipText("");
         getContentPane().add(jLClientes);
-        jLClientes.setBounds(200, 300, 100, 26);
+        jLClientes.setBounds(190, 290, 100, 26);
 
-        jLVentas.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLVentas.setForeground(new java.awt.Color(255, 255, 255));
+        jLVentas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLVentas.setText("Ventas");
         jLVentas.setToolTipText("");
         getContentPane().add(jLVentas);
-        jLVentas.setBounds(340, 300, 70, 26);
+        jLVentas.setBounds(330, 290, 80, 26);
 
-        jBPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/pedidos_icon.png"))); // NOI18N
+        jBPedidos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\pedidos_icon.png")); // NOI18N
         jBPedidos.setToolTipText("");
+        jBPedidos.setBorderPainted(false);
+        jBPedidos.setContentAreaFilled(false);
+        jBPedidos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBPedidos.setFocusPainted(false);
+        jBPedidos.setFocusable(false);
         getContentPane().add(jBPedidos);
-        jBPedidos.setBounds(450, 220, 101, 78);
+        jBPedidos.setBounds(440, 210, 80, 80);
 
-        jLPedidos.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLPedidos.setForeground(new java.awt.Color(255, 255, 255));
+        jLPedidos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLPedidos.setText("Pedidos");
         jLPedidos.setToolTipText("");
         getContentPane().add(jLPedidos);
-        jLPedidos.setBounds(460, 300, 100, 26);
+        jLPedidos.setBounds(440, 290, 90, 26);
 
-        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBackground(new java.awt.Color(255, 255, 255));
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/icon_exit.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
         jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -218,14 +259,14 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBCerrar);
-        jBCerrar.setBounds(690, 10, 20, 20);
+        jBCerrar.setBounds(700, 0, 30, 20);
 
-        fondo_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/fondoMenu.jpg"))); // NOI18N
+        fondo_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo3.jpg"))); // NOI18N
         fondo_menu.setMaximumSize(new java.awt.Dimension(733, 365));
         fondo_menu.setMinimumSize(new java.awt.Dimension(733, 365));
         fondo_menu.setPreferredSize(new java.awt.Dimension(733, 365));
         getContentPane().add(fondo_menu);
-        fondo_menu.setBounds(-6, 0, 733, 365);
+        fondo_menu.setBounds(0, -10, 730, 380);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
