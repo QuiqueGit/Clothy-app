@@ -1,11 +1,13 @@
 package modelo;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import utilidades.ConexionDB;
 
 /**
@@ -35,10 +37,22 @@ public class Articulos extends javax.swing.JFrame {
         jTextField1.setText(rs.getString("id"));
         jTextField2.setText(rs.getString("nombre"));
         jTextField3.setText(rs.getString("descripcion"));
-        jTextField4.setText(rs.getString("precio"));
-        jTextField5.setText(rs.getString("categoria"));
+        jTextField4.setText(rs.getString("precio"));        
         jTextField6.setText(rs.getString("marca"));
-        jTextField7.setText(rs.getString("existencias"));        
+        jTextField7.setText(rs.getString("existencias"));   
+        
+        String query2 = "select * from categorias";
+        ResultSet r2;
+        
+        Statement s2 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        r2 = s2.executeQuery(query2);
+        DefaultComboBoxModel value1 = new DefaultComboBoxModel();
+        while (r2.next()) {
+            value1.addElement(r2.getString("nombre"));
+        }
+        
+        jCBCategoria.setModel(value1);
+        jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
         
     }
 
@@ -62,7 +76,6 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jTextField7 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -81,6 +94,7 @@ public class Articulos extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator6 = new javax.swing.JSeparator();
+        jCBCategoria = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(547, 415));
@@ -142,7 +156,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField1.setEnabled(false);
         jTextField1.setFocusable(false);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(181, 81, 39, 20);
+        jTextField1.setBounds(181, 81, 39, 24);
 
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
         jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -169,15 +183,6 @@ public class Articulos extends javax.swing.JFrame {
         jTextField4.setOpaque(false);
         getContentPane().add(jTextField4);
         jTextField4.setBounds(170, 190, 142, 20);
-
-        jTextField5.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField5.setBorder(null);
-        jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField5.setOpaque(false);
-        getContentPane().add(jTextField5);
-        jTextField5.setBounds(170, 230, 142, 20);
 
         jTextField6.setBackground(new java.awt.Color(204, 204, 204));
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
@@ -281,8 +286,13 @@ public class Articulos extends javax.swing.JFrame {
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton8.setText("Aceptar");
         jButton8.setFocusable(false);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton8);
-        jButton8.setBounds(330, 290, 80, 21);
+        jButton8.setBounds(330, 290, 80, 29);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton9.setText("Cancelar");
@@ -293,7 +303,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(430, 290, 90, 21);
+        jButton9.setBounds(430, 290, 90, 29);
 
         jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
@@ -318,6 +328,12 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jSeparator6);
         jSeparator6.setBounds(50, 290, 240, 10);
 
+        jCBCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCBCategoria.setFocusable(false);
+        jCBCategoria.setOpaque(false);
+        getContentPane().add(jCBCategoria);
+        jCBCategoria.setBounds(170, 230, 140, 20);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo1.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 550, 420);
@@ -333,7 +349,7 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField2.setText(rs.getString("nombre"));
                 jTextField3.setText(rs.getString("descripcion"));
                 jTextField4.setText(rs.getString("precio"));
-                jTextField5.setText(rs.getString("categoria"));
+                //jTextField5.setText(rs.getString("categoria"));
                 jTextField6.setText(rs.getString("marca"));
                 jTextField7.setText(rs.getString("existencias"));
                 }
@@ -350,7 +366,7 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField2.setText(rs.getString("nombre"));
                 jTextField3.setText(rs.getString("descripcion"));
                 jTextField4.setText(rs.getString("precio"));
-                jTextField5.setText(rs.getString("categoria"));
+               // jTextField5.setText(rs.getString("categoria"));
                 jTextField6.setText(rs.getString("marca"));
                 jTextField7.setText(rs.getString("existencias"));
                 }
@@ -367,7 +383,7 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField2.setText(rs.getString("nombre"));
                 jTextField3.setText(rs.getString("descripcion"));
                 jTextField4.setText(rs.getString("precio"));
-                jTextField5.setText(rs.getString("categoria"));
+                //jTextField5.setText(rs.getString("categoria"));
                 jTextField6.setText(rs.getString("marca"));
                 jTextField7.setText(rs.getString("existencias"));
                 }
@@ -384,7 +400,7 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField2.setText(rs.getString("nombre"));
                 jTextField3.setText(rs.getString("descripcion"));
                 jTextField4.setText(rs.getString("precio"));
-                jTextField5.setText(rs.getString("categoria"));
+                //jTextField5.setText(rs.getString("categoria"));
                 jTextField6.setText(rs.getString("marca"));
                 jTextField7.setText(rs.getString("existencias"));
                 }
@@ -399,7 +415,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
-        jTextField5.setText("");
+        //jTextField5.setText("");
         jTextField6.setText("");
         jTextField7.setText(""); 
         jButton1.setEnabled(false);
@@ -425,12 +441,12 @@ public class Articulos extends javax.swing.JFrame {
             vNombre = jTextField2.getText();
             vDescripcion = jTextField3.getText();
             vPrecio = Float.parseFloat(jTextField4.getText());
-            vCategoria = Integer.parseInt(jTextField5.getText());    
+            //vCategoria = Integer.parseInt(jTextField5.getText());    
             vMarca = Integer.parseInt(jTextField6.getText());
             vExistencias = Integer.parseInt(jTextField7.getText());          
          
-            String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias + " WHERE id=" + vId;
-            conex.createStatement().executeUpdate(query);
+           // String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias + " WHERE id=" + vId;
+            //conex.createStatement().executeUpdate(query);
             rs.refreshRow();
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
@@ -453,7 +469,7 @@ public class Articulos extends javax.swing.JFrame {
             jTextField2.setText(rs.getString("nombre"));
             jTextField3.setText(rs.getString("descripcion"));
             jTextField4.setText(rs.getString("precio"));
-            jTextField5.setText(rs.getString("categoria"));
+            //jTextField5.setText(rs.getString("categoria"));
             jTextField6.setText(rs.getString("marca"));
             jTextField7.setText(rs.getString("existencias"));
         } catch (Exception e) {
@@ -466,6 +482,40 @@ public class Articulos extends javax.swing.JFrame {
         articulos.setVisible(true);
         
     }//GEN-LAST:event_jBCerrarActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        //BOTÓN ACEPTAR
+        try {            
+            String vNombre, vDescripcion;
+            int vMarca, vExistencias, vCategoria;
+            float vPrecio;            
+           
+            
+            vNombre = jTextField2.getText();
+            vDescripcion = jTextField3.getText();            
+            vPrecio = Float.parseFloat(jTextField4.getText());
+            vCategoria = Integer.parseInt(jTextField5.getText());    
+            vMarca = Integer.parseInt(jTextField6.getText());
+            vExistencias = Integer.parseInt(jTextField7.getText());       
+         
+            String query = "INSERT INTO articulos (nombre, descripcion, precio, categoria, marca, existencias) VALUES (nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias +")";
+            s.executeUpdate(query);
+            
+            String query2 = "SELECT * FROM articulos";
+            rs = s.executeQuery(query2);
+            rs.last();
+            jTextField1.setText(rs.getString("id"));
+            jTextField2.setText(rs.getString("nombre"));
+            jTextField3.setText(rs.getString("descripcion"));
+            jTextField4.setText(rs.getString("precio"));
+            jTextField5.setText(rs.getString("categoria"));
+            jTextField6.setText(rs.getString("marca"));
+            jTextField7.setText(rs.getString("existencias"));            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -506,6 +556,57 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
     }
+           
+    //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
+    public static String getNombreCateg(int num) {
+        String categ = "";
+        
+        try {
+            ResultSet r3; 
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "123";
+            Connection connection = DriverManager.getConnection(url, user,pass);
+            Statement s3 = connection.createStatement(); 
+            String queryNombre = "select nombre from categorias WHERE categoria=" + num;
+            r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            categ = r3.getString("NOMBRE");           
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
+        
+        return categ;
+    }
+    
+    //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
+    public static int getCodigoCateg(String nom) {
+        int numCateg = 0;
+            
+        
+        
+        return numCateg;
+    }
+    
+     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA MARCA, PASANDO POR PARÁMETRO SU INT
+    public static String getNombreMarca(int num) {
+        String marca = "";
+            
+        
+        
+        return marca;
+    }
+    
+    //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
+    public static int getCodigoMarca(String nom) {
+        int numMarca = 0;
+            
+        
+        
+        return numMarca;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBCerrar;
@@ -518,6 +619,7 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JComboBox<String> jCBCategoria;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -536,7 +638,6 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables

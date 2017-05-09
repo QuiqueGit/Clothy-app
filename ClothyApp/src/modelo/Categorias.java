@@ -1,21 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modelo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utilidades.ConexionDB;
 
 /**
  *
  * @author Quique
  */
 public class Categorias extends javax.swing.JFrame {
+    
+    Connection conex = new ConexionDB().getCon(); 
 
     /**
      * Creates new form Categorias
      */
-    public Categorias() {
+    public Categorias() throws SQLException, ClassNotFoundException {
         initComponents();
+        
     }
 
     /**
@@ -71,7 +75,13 @@ public class Categorias extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Categorias().setVisible(true);
+                try {
+                    new Categorias().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

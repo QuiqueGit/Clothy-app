@@ -93,7 +93,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBLogin);
-        jBLogin.setBounds(270, 480, 150, 31);
+        jBLogin.setBounds(270, 480, 150, 39);
 
         jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/icon_exit.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
