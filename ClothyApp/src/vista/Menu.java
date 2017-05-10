@@ -75,17 +75,17 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tekton Pro", 1, 27)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("@");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(10, 0, 30, 40);
 
         user_logeado.setFont(new java.awt.Font("Tahoma", 0, 27)); // NOI18N
-        user_logeado.setForeground(new java.awt.Color(255, 255, 255));
+        user_logeado.setForeground(new java.awt.Color(0, 0, 0));
         getContentPane().add(user_logeado);
-        user_logeado.setBounds(35, 0, 110, 30);
+        user_logeado.setBounds(40, 10, 110, 30);
 
-        jBArticulos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\articulos_icon.png")); // NOI18N
+        jBArticulos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/articulos_icon.png"))); // NOI18N
         jBArticulos.setToolTipText("");
         jBArticulos.setBorderPainted(false);
         jBArticulos.setContentAreaFilled(false);
@@ -100,7 +100,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBArticulos);
         jBArticulos.setBounds(70, 80, 70, 78);
 
-        jBCategorias.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\categorias_icon.png")); // NOI18N
+        jBCategorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/categorias_icon.png"))); // NOI18N
         jBCategorias.setToolTipText("");
         jBCategorias.setBorderPainted(false);
         jBCategorias.setContentAreaFilled(false);
@@ -110,7 +110,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBCategorias);
         jBCategorias.setBounds(210, 80, 60, 78);
 
-        jBMarcas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\marcas_icon.png")); // NOI18N
+        jBMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/marcas_icon.png"))); // NOI18N
         jBMarcas.setToolTipText("");
         jBMarcas.setBorderPainted(false);
         jBMarcas.setContentAreaFilled(false);
@@ -120,7 +120,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBMarcas);
         jBMarcas.setBounds(320, 90, 90, 70);
 
-        jBTallas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\tallas_icon.png")); // NOI18N
+        jBTallas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tallas_icon.png"))); // NOI18N
         jBTallas.setToolTipText("");
         jBTallas.setBorderPainted(false);
         jBTallas.setContentAreaFilled(false);
@@ -130,7 +130,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBTallas);
         jBTallas.setBounds(440, 90, 80, 70);
 
-        jBLineas_venta.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\lineas_venta_icon.png")); // NOI18N
+        jBLineas_venta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/lineas_venta2.png"))); // NOI18N
         jBLineas_venta.setToolTipText("");
         jBLineas_venta.setBorderPainted(false);
         jBLineas_venta.setContentAreaFilled(false);
@@ -140,7 +140,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBLineas_venta);
         jBLineas_venta.setBounds(580, 90, 70, 60);
 
-        jBEmpleados.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\empleados_icon2.png")); // NOI18N
+        jBEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/empleados_icon2.png"))); // NOI18N
         jBEmpleados.setToolTipText("");
         jBEmpleados.setBorderPainted(false);
         jBEmpleados.setContentAreaFilled(false);
@@ -150,7 +150,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBEmpleados);
         jBEmpleados.setBounds(70, 210, 70, 78);
 
-        jBClientes.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\clientes_icon.png")); // NOI18N
+        jBClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/clientes_icon.png"))); // NOI18N
         jBClientes.setToolTipText("");
         jBClientes.setBorderPainted(false);
         jBClientes.setContentAreaFilled(false);
@@ -160,7 +160,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBClientes);
         jBClientes.setBounds(200, 210, 70, 78);
 
-        jBVentas.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\ventas_icon.png")); // NOI18N
+        jBVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/ventas_icon.png"))); // NOI18N
         jBVentas.setToolTipText("");
         jBVentas.setBorderPainted(false);
         jBVentas.setContentAreaFilled(false);
@@ -213,7 +213,7 @@ public class Menu extends javax.swing.JFrame {
         jLLineas_venta.setText("Lineas de venta");
         jLLineas_venta.setToolTipText("");
         getContentPane().add(jLLineas_venta);
-        jLLineas_venta.setBounds(540, 160, 176, 26);
+        jLLineas_venta.setBounds(540, 160, 149, 26);
 
         jLEmpleados.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLEmpleados.setText("Empleados");
@@ -233,7 +233,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jLVentas);
         jLVentas.setBounds(330, 290, 80, 26);
 
-        jBPedidos.setIcon(new javax.swing.ImageIcon("C:\\Users\\Quique\\Documents\\1DAW\\EntornosDesarrollo\\Clothy-app\\images\\pedidos_icon.png")); // NOI18N
+        jBPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/pedidos_icon.png"))); // NOI18N
         jBPedidos.setToolTipText("");
         jBPedidos.setBorderPainted(false);
         jBPedidos.setContentAreaFilled(false);
@@ -250,7 +250,7 @@ public class Menu extends javax.swing.JFrame {
         jLPedidos.setBounds(440, 290, 90, 26);
 
         jBCerrar.setBackground(new java.awt.Color(255, 255, 255));
-        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/icon_exit.png"))); // NOI18N
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
         jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -261,7 +261,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(700, 0, 30, 20);
 
-        fondo_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo3.jpg"))); // NOI18N
+        fondo_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo.jpg"))); // NOI18N
         fondo_menu.setMaximumSize(new java.awt.Dimension(733, 365));
         fondo_menu.setMinimumSize(new java.awt.Dimension(733, 365));
         fondo_menu.setPreferredSize(new java.awt.Dimension(733, 365));
