@@ -5,9 +5,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 import utilidades.ConexionDB;
 
 /**
@@ -15,54 +16,54 @@ import utilidades.ConexionDB;
  * @author Quique
  */
 public class Articulos extends javax.swing.JFrame {
+    
+    static ArrayList<Articulo> array_articulos = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO ARTICULO PARA ALMACENAR TODOS LOS ARTICULOS
    
+    Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE
+    
+    static Articulos articulos;
+    
     Statement s;
     ResultSet rs;
-    Connection conex = new ConexionDB().getCon(); 
-    static Articulos articulos;
 
     /**
      * Creates new form Articulos
      */
     public Articulos() throws SQLException, ClassNotFoundException {
         initComponents();        
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);        
         jTextField1.setVisible(false);
         jButton8.setVisible(false);
-        jButton9.setVisible(false); 
+        jButton9.setVisible(false);         
+        
+        
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String query = "SELECT * FROM articulos";
         rs = s.executeQuery(query);
-        rs.first();
-        jTextField1.setText(rs.getString("id"));
-        jTextField2.setText(rs.getString("nombre"));
-        jTextField3.setText(rs.getString("descripcion"));
-        jTextField4.setText(rs.getString("precio"));    
-        jTextField7.setText(rs.getString("existencias"));   
+                
+        while (rs.next()) { //CREO NUEVOS OBJETOS TIPO ARTICULO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
+            int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            String descripcion = rs.getString("descripcion");
+            float precio = Float.parseFloat(rs.getString("precio"));
+            int categoria = Integer.parseInt(rs.getString("categoria"));            
+            int marca= Integer.parseInt(rs.getString("marca"));                        
+            int existencias = Integer.parseInt(rs.getString("existencias"));
+            
+            array_articulos.add(new Articulo(id, nombre, descripcion, precio, categoria, marca, existencias));            
+        }       
         
-        String query2 = "SELECT * FROM categorias";                
-        Statement s2 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet r2 = s2.executeQuery(query2);
-        DefaultComboBoxModel value1 = new DefaultComboBoxModel();
-        DefaultComboBoxModel value2 = new DefaultComboBoxModel();
+        /*for (Articulo o : array_articulos) { //RECORRER ARRAY PARA COMPROBAR SI RECOGE OBJETOS
+            jTextField1.setText(String.valueOf(o.getId())); //PARSE DE INT A STRING, CON String.valueOf(int);
+            jTextField2.setText(o.getNombre());
+            jTextField3.setText(o.getDescripcion());
+            jTextField4.setText(String.valueOf(o.getPrecio()));
+            jTextField5.setText(getNombreCateg(o.getCategoria()));
+            jTextField6.setText(getNombreMarca(o.getMarca()));
+            jTextField7.setText(String.valueOf(o.getExistencias()));     
+        } */         
         
-        while (r2.next()) {
-            value1.addElement(r2.getString("nombre"));                      
-        }
-        
-        String query3 = "SELECT * FROM marcas";
-        Statement s3 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet r3 = s3.executeQuery(query3);
-        while (r3.next()) {           
-            value2.addElement(r3.getString("nombre"));           
-        }
-        
-        
-        jCBCategoria.setModel(value1);
-        jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
-        
-        jCBMarca.setModel(value2);
-        jCBMarca.setSelectedItem(getNombreMarca(rs.getInt("marca")));
+        añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST
     }
 
     /**
@@ -85,11 +86,9 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jTextField6 = new javax.swing.JTextField();
         jTextField7 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -101,13 +100,14 @@ public class Articulos extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator6 = new javax.swing.JSeparator();
-        jCBCategoria = new javax.swing.JComboBox<>();
-        jCBMarca = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(547, 415));
-        setMinimumSize(new java.awt.Dimension(547, 415));
+        setMaximumSize(new java.awt.Dimension(860, 485));
+        setMinimumSize(new java.awt.Dimension(852, 479));
         setResizable(false);
+        setSize(new java.awt.Dimension(850, 480));
         getContentPane().setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -157,14 +157,15 @@ public class Articulos extends javax.swing.JFrame {
         jLabel8.setText("Artículos");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(213, 19, 150, 30);
+        jLabel8.setBounds(90, 20, 150, 30);
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
         jTextField1.setFocusable(false);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(181, 81, 39, 24);
+        jTextField1.setBounds(170, 80, 39, 24);
 
+        jTextField2.setBackground(new java.awt.Color(204, 204, 204));
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
         jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField2.setBorder(null);
@@ -191,6 +192,24 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jTextField4);
         jTextField4.setBounds(170, 190, 142, 20);
 
+        jTextField5.setBackground(new java.awt.Color(204, 204, 204));
+        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField5.setBorder(null);
+        jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTextField5.setOpaque(false);
+        getContentPane().add(jTextField5);
+        jTextField5.setBounds(170, 230, 142, 20);
+
+        jTextField6.setBackground(new java.awt.Color(204, 204, 204));
+        jTextField6.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField6.setBorder(null);
+        jTextField6.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTextField6.setOpaque(false);
+        getContentPane().add(jTextField6);
+        jTextField6.setBounds(170, 270, 142, 20);
+
         jTextField7.setBackground(new java.awt.Color(204, 204, 204));
         jTextField7.setForeground(new java.awt.Color(255, 255, 255));
         jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -199,56 +218,6 @@ public class Articulos extends javax.swing.JFrame {
         jTextField7.setOpaque(false);
         getContentPane().add(jTextField7);
         jTextField7.setBounds(170, 310, 142, 20);
-
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton1.setText("Siguiente");
-        jButton1.setFocusable(false);
-        jButton1.setMaximumSize(new java.awt.Dimension(71, 23));
-        jButton1.setMinimumSize(new java.awt.Dimension(71, 23));
-        jButton1.setPreferredSize(new java.awt.Dimension(71, 23));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(430, 130, 80, 23);
-
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton2.setText("Anterior");
-        jButton2.setFocusable(false);
-        jButton2.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton2);
-        jButton2.setBounds(340, 130, 85, 23);
-
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton3.setText("Primero");
-        jButton3.setFocusable(false);
-        jButton3.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton3);
-        jButton3.setBounds(340, 170, 85, 23);
-
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton4.setText("Último");
-        jButton4.setFocusable(false);
-        jButton4.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton4);
-        jButton4.setBounds(430, 170, 80, 23);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton5.setText("Añadir");
@@ -260,7 +229,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(340, 210, 85, 23);
+        jButton5.setBounds(30, 370, 85, 23);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton6.setText("Editar");
@@ -272,14 +241,14 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton6);
-        jButton6.setBounds(430, 210, 80, 23);
+        jButton6.setBounds(130, 370, 80, 23);
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton7.setText("Borrar");
         jButton7.setFocusable(false);
         jButton7.setPreferredSize(new java.awt.Dimension(77, 23));
         getContentPane().add(jButton7);
-        jButton7.setBounds(390, 250, 77, 23);
+        jButton7.setBounds(220, 370, 77, 23);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton8.setText("Aceptar");
@@ -290,7 +259,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(330, 290, 80, 29);
+        jButton8.setBounds(60, 410, 80, 29);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButton9.setText("Cancelar");
@@ -301,7 +270,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(430, 290, 90, 29);
+        jButton9.setBounds(160, 410, 90, 29);
         getContentPane().add(jSeparator1);
         jSeparator1.setBounds(50, 330, 240, 10);
         getContentPane().add(jSeparator2);
@@ -315,102 +284,57 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jSeparator6);
         jSeparator6.setBounds(50, 290, 240, 10);
 
-        jCBCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jCBCategoria.setFocusable(false);
-        getContentPane().add(jCBCategoria);
-        jCBCategoria.setBounds(170, 230, 140, 20);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jCBMarca.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jCBMarca.setFocusable(false);
-        getContentPane().add(jCBMarca);
-        jCBMarca.setBounds(170, 270, 140, 20);
+            },
+            new String [] {
+                "ID", "Nombre", "Descripcion", "Precio", "Categoria", "Marca", "Existencias"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setAutoscrolls(false);
+        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTable1.setMaximumSize(new java.awt.Dimension(520, 0));
+        jTable1.setOpaque(false);
+        jTable1.setRowHeight(20);
+        jTable1.setRowMargin(10);
+        jTable1.setShowHorizontalLines(false);
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(330, 20, 500, 420);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo1.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 550, 420);
+        jLabel1.setBounds(0, -10, 850, 500);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        //BOTÓN ÚLTIMO
-        try {
-                if (rs.last()){
-                jTextField1.setText(rs.getString("id"));
-                jTextField2.setText(rs.getString("nombre"));
-                jTextField3.setText(rs.getString("descripcion"));
-                jTextField4.setText(rs.getString("precio"));
-                jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
-                jCBMarca.setSelectedItem(getNombreMarca(rs.getInt("marca")));
-                jTextField7.setText(rs.getString("existencias"));
-                }
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //BOTÓN ANTERIOR
-        try {
-                if (rs.previous()){
-                jTextField1.setText(rs.getString("id"));
-                jTextField2.setText(rs.getString("nombre"));
-                jTextField3.setText(rs.getString("descripcion"));
-                jTextField4.setText(rs.getString("precio"));
-                jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
-                jCBMarca.setSelectedItem(getNombreMarca(rs.getInt("marca")));
-                jTextField7.setText(rs.getString("existencias"));
-                }
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //BOTÓN SIGUIENTE
-        try {
-                if (rs.next()){ 
-                jTextField1.setText(rs.getString("id"));    
-                jTextField2.setText(rs.getString("nombre"));
-                jTextField3.setText(rs.getString("descripcion"));
-                jTextField4.setText(rs.getString("precio"));
-                jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
-                jCBMarca.setSelectedItem(getNombreMarca(rs.getInt("marca")));
-                jTextField7.setText(rs.getString("existencias"));
-                }
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //BOTÓN PRIMERO
-        try {
-                if (rs.first()){
-                jTextField1.setText(rs.getString("id"));
-                jTextField2.setText(rs.getString("nombre"));
-                jTextField3.setText(rs.getString("descripcion"));
-                jTextField4.setText(rs.getString("precio"));
-                jCBCategoria.setSelectedItem(getNombreCateg(rs.getInt("categoria")));
-                jCBMarca.setSelectedItem(getNombreMarca(rs.getInt("marca")));
-                jTextField7.setText(rs.getString("existencias"));
-                }
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //BOTÓN AÑADIR 
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
-        jTextField4.setText("");     
-        jTextField7.setText(""); 
-        jButton1.setEnabled(false);
-        jButton2.setEnabled(false);
-        jButton3.setEnabled(false);
-        jButton4.setEnabled(false);
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");         
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -421,7 +345,7 @@ public class Articulos extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
        //BOTÓN EDITAR
-        try{
+        /**try{
             String vNombre, vDescripcion, cat, mar;
             int vId, vMarca, vExistencias, vCategoria;
             float vPrecio;            
@@ -430,9 +354,9 @@ public class Articulos extends javax.swing.JFrame {
             vNombre = jTextField2.getText();
             vDescripcion = jTextField3.getText();
             vPrecio = Float.parseFloat(jTextField4.getText());
-            cat = (String) jCBCategoria.getSelectedItem();
+           
             vCategoria = getCodigoCateg(cat);
-            mar = (String) jCBMarca.getSelectedItem();
+            
             vMarca = getCodigoMarca(mar);            
             vExistencias = Integer.parseInt(jTextField7.getText());
             
@@ -448,38 +372,25 @@ public class Articulos extends javax.swing.JFrame {
             rs.refreshRow();
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         //BOTÓN CANCELAR
         jButton8.setVisible(false);
         jButton9.setVisible(false);
-        jButton1.setEnabled(true);
-        jButton2.setEnabled(true);
-        jButton3.setEnabled(true);
-        jButton4.setEnabled(true);
         jButton5.setEnabled(true);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
         
-        try {
-            jTextField2.setText(rs.getString("nombre"));
-            jTextField3.setText(rs.getString("descripcion"));
-            jTextField4.setText(rs.getString("precio"));                     
-            jTextField7.setText(rs.getString("existencias"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //BOTÓN ACEPTAR
-        try {            
+       /* try {            
             String vNombre, vDescripcion, cat, mar;
             int vMarca, vExistencias, vCategoria;
-            float vPrecio;            
-           
+            float vPrecio; 
             
             vNombre = jTextField2.getText();
             System.out.println(jTextField2.getText());
@@ -490,28 +401,16 @@ public class Articulos extends javax.swing.JFrame {
             mar = (String) jCBMarca.getSelectedItem();
             vMarca = getCodigoMarca(mar);  
             vExistencias = Integer.parseInt(jTextField7.getText());  
-            
-            
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "123";
-            Connection connection = DriverManager.getConnection(url, user,pass);
-            Statement s = connection.createStatement();                        
-         
-            String query = "INSERT INTO articulos (nombre, descripcion, precio, categoria, marca, existencias) VALUES (nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias +")";
-            int resultado = s.executeUpdate(query);
-            
-            ResultSet r2; 
-            String query2 = "SELECT * FROM articulos";
-            r2 = s.executeQuery(query2);
-            r2.last();
-            jTextField1.setText(r2.getString("id"));
-            jTextField2.setText(r2.getString("nombre"));
-            jTextField3.setText(r2.getString("descripcion"));
-            jTextField4.setText(r2.getString("precio"));
-            jCBCategoria.setSelectedItem(getNombreCateg(r2.getInt("categoria")));
-            jCBMarca.setSelectedItem(getNombreMarca(r2.getInt("marca")));
-            jTextField7.setText(r2.getString("existencias"));     
+           
+            //Connection con = new ConexionDB().getCon();                
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO articulos (nombre, descripcion, precio, categoria, marca, existencias) VALUES (?,?,?,?,?,?)");
+            ps.setString(1, vNombre);
+            ps.setString(2, vDescripcion);
+            ps.setFloat(3, vPrecio);
+            ps.setInt(4, vCategoria);
+            ps.setInt(5, vMarca);
+            ps.setInt(6, vExistencias);
+            ps.executeUpdate();           
             
             jButton1.setEnabled(true);
             jButton2.setEnabled(true);
@@ -521,11 +420,16 @@ public class Articulos extends javax.swing.JFrame {
             jButton6.setEnabled(true);
             jButton7.setEnabled(true);
             jButton8.setVisible(false);
-            jButton9.setVisible(false);  
+            jButton9.setVisible(false);
+            
+            s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String query = "SELECT * FROM articulos";
+            rs = s.executeQuery(query);
+            //estadoInicial();           
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
@@ -572,22 +476,33 @@ public class Articulos extends javax.swing.JFrame {
     public static String getNombreCateg(int num) {
         String categ = "";
         
-        try {
-            ResultSet r3; 
+        if (num == 1) categ = "Camisas";
+        if (num == 2) categ = "Polos";
+        if (num == 3) categ = "Camisetas";
+        if (num == 4) categ = "Chaquetas";
+        if (num == 5) categ = "Trajes";
+        if (num == 6) categ = "Jeans";
+        if (num == 7) categ = "Bermudas";
+        if (num == 8) categ = "Bañadores";
+        if (num == 9) categ = "Zapatos";
+        if (num == 10) categ = "Deportes";
+        
+        return categ;        
+        
+        /*try {
+             
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
             String pass = "123";
             Connection connection = DriverManager.getConnection(url, user,pass);
             Statement s3 = connection.createStatement(); 
             String queryNombre = "select nombre from categorias WHERE id=" + num;
-            r3 = s3.executeQuery(queryNombre);
+            ResultSet r3 = s3.executeQuery(queryNombre);
             r3.first();
             categ = r3.getString("nombre");           
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }         
-       
-        return categ;
+        }   */       
     }
     
     //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
@@ -617,7 +532,20 @@ public class Articulos extends javax.swing.JFrame {
     public static String getNombreMarca(int num) {
         String marca = "";
         
-        try {
+        if (num == 1) marca = "Ralph Lauren";
+        if (num == 2) marca = "Valentino";
+        if (num == 3) marca = "Lacoste";
+        if (num == 4) marca = "Gucci";
+        if (num == 5) marca = "Prada";
+        if (num == 6) marca = "Tommy Hilfiger";
+        if (num == 7) marca = "Emporio Armani";
+        if (num == 8) marca = "Hugo Boss";
+        if (num == 9) marca = "Pepe Jeans";
+        if (num == 10) marca = "Levis";
+        
+        return marca;
+        
+        /*try {
             ResultSet r3; 
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
@@ -630,9 +558,8 @@ public class Articulos extends javax.swing.JFrame {
             marca = r3.getString("nombre");           
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }       
-         
-        return marca;
+        }       */         
+        
     }
     
     //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
@@ -656,19 +583,32 @@ public class Articulos extends javax.swing.JFrame {
    
         return numMarca;
     }
+    
+    public void añadirFilasTabla(){
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        Object datosFila []= new Object [7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+        
+        for (int i = 0; i < array_articulos.size(); i++) {
+            datosFila[0] = array_articulos.get(i).getId();
+            datosFila[1] = array_articulos.get(i).getNombre();
+            datosFila[2] = array_articulos.get(i).getDescripcion();
+            datosFila[3] = array_articulos.get(i).getPrecio();
+            datosFila[4] = array_articulos.get(i).getCategoria();
+            datosFila[5] = array_articulos.get(i).getMarca();
+            datosFila[6] = array_articulos.get(i).getExistencias();
+
+            model.addRow(datosFila);
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jCBCategoria;
-    private javax.swing.JComboBox<String> jCBMarca;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -677,16 +617,20 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 }

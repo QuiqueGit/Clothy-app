@@ -73,7 +73,7 @@ public class Login extends javax.swing.JFrame {
         jLPass.setForeground(new java.awt.Color(255, 255, 255));
         jLPass.setText("Contraseña");
         getContentPane().add(jLPass);
-        jLPass.setBounds(280, 370, 150, 32);
+        jLPass.setBounds(280, 370, 150, 30);
 
         jTFUsuario.setBorder(null);
         getContentPane().add(jTFUsuario);
@@ -93,18 +93,22 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBLogin);
-        jBLogin.setBounds(270, 480, 150, 40);
+        jBLogin.setBounds(270, 480, 150, 39);
 
+        jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
         jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBorder(null);
         jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
         jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCerrar.setFocusable(false);
         jBCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBCerrarActionPerformed(evt);
             }
         });
         getContentPane().add(jBCerrar);
-        jBCerrar.setBounds(460, 0, 30, 20);
+        jBCerrar.setBounds(462, 0, 30, 20);
 
         jLFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/fondoLogin.png"))); // NOI18N
         getContentPane().add(jLFondo);

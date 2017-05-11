@@ -213,7 +213,7 @@ public class Menu extends javax.swing.JFrame {
         jLLineas_venta.setText("Lineas de venta");
         jLLineas_venta.setToolTipText("");
         getContentPane().add(jLLineas_venta);
-        jLLineas_venta.setBounds(540, 160, 149, 26);
+        jLLineas_venta.setBounds(540, 160, 176, 26);
 
         jLEmpleados.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLEmpleados.setText("Empleados");
@@ -250,8 +250,9 @@ public class Menu extends javax.swing.JFrame {
         jLPedidos.setBounds(440, 290, 90, 26);
 
         jBCerrar.setBackground(new java.awt.Color(255, 255, 255));
-        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit2.png"))); // NOI18N
         jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
         jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
