@@ -76,14 +76,14 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tekton Pro", 1, 27)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("@");
+        jLabel1.setText(" @");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(10, 0, 30, 40);
 
         user_logeado.setFont(new java.awt.Font("Tahoma", 0, 27)); // NOI18N
         user_logeado.setForeground(new java.awt.Color(0, 0, 0));
         getContentPane().add(user_logeado);
-        user_logeado.setBounds(40, 10, 110, 30);
+        user_logeado.setBounds(40, 0, 120, 30);
 
         jBArticulos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/articulos_icon.png"))); // NOI18N
         jBArticulos.setToolTipText("");
