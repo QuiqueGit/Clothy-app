@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Articulos;
+import modelo.Empleados;
 import static vista.Login.*;
 
 
@@ -138,7 +139,7 @@ public class Menu extends javax.swing.JFrame {
         jBLineas_venta.setFocusPainted(false);
         jBLineas_venta.setFocusable(false);
         getContentPane().add(jBLineas_venta);
-        jBLineas_venta.setBounds(580, 90, 70, 60);
+        jBLineas_venta.setBounds(580, 80, 80, 80);
 
         jBEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/empleados_icon2.png"))); // NOI18N
         jBEmpleados.setToolTipText("");
@@ -147,6 +148,11 @@ public class Menu extends javax.swing.JFrame {
         jBEmpleados.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBEmpleados.setFocusPainted(false);
         jBEmpleados.setFocusable(false);
+        jBEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBEmpleadosActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBEmpleados);
         jBEmpleados.setBounds(70, 210, 70, 78);
 
@@ -289,7 +295,7 @@ public class Menu extends javax.swing.JFrame {
 
         }      
     }//GEN-LAST:event_jBSesionActionPerformed
-
+        //BOTÓN PROPIO CERRAR MENÚ
     private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
         //CONFIRMAR CERRAR PROGRAMA
         int resp = JOptionPane.showConfirmDialog(null, "¿Salir del programa?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
@@ -311,6 +317,16 @@ public class Menu extends javax.swing.JFrame {
         articulos.setVisible(true);
 
     }//GEN-LAST:event_jBArticulosActionPerformed
+        //BOTÓN EMPLEADOS
+    private void jBEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEmpleadosActionPerformed
+        Empleados empleados = null;
+        try {
+            empleados = new Empleados();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        empleados.setVisible(true);
+    }//GEN-LAST:event_jBEmpleadosActionPerformed
 
     /**
      * @param args the command line arguments

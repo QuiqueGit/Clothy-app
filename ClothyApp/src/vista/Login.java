@@ -1,5 +1,6 @@
 package vista;
 
+import modelo.Empleado;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -139,9 +140,9 @@ public class Login extends javax.swing.JFrame {
 
         for (Empleado emp : empleados) { //BUCLE FOR EACH PARA RECORRER ARRAY DE EMPLEADOS
 
-            String userAc = emp.getNom();
+            String userAc = emp.getId_login();
 
-            if (user.equalsIgnoreCase(userAc) && pass.equalsIgnoreCase(emp.getPass())) {
+            if (user.equalsIgnoreCase(userAc) && pass.equalsIgnoreCase(emp.getPassword())) {
                 isUser = true;            
                 user_actual = user;
                 

@@ -1,5 +1,6 @@
 package utilidades;
 
+import modelo.Empleado;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -41,11 +42,11 @@ public class ConexionDB {
         ResultSet rs = s.executeQuery("SELECT * FROM empleados");  
         
         while (rs.next()) {  //RECORRER RESULTSET PARA GUARDAR NOMBRE Y PASS EN EL ARRAY
-
-            String nom = rs.getString("id_login");
+            
+            String id_log = rs.getString("id_login");
             String pass = rs.getString("password");            
 
-            empleados.add(new Empleado(nom,pass));
+            empleados.add(new Empleado(0,null,null,null,null,null,id_log, pass));
               
         }     
  
