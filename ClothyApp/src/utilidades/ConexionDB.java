@@ -26,7 +26,7 @@ public class ConexionDB {
         
         String url = "jdbc:mysql://localhost:3306/clothy";
         String user = "root";
-        String pass = "123";
+        String pass = "";
         connection = DriverManager.getConnection(url, user, pass);
         s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         System.out.println("Conexión establecida!");          

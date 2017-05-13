@@ -30,10 +30,9 @@ public class Empleados extends javax.swing.JFrame {
     
     public Empleados() throws SQLException, ClassNotFoundException {
         initComponents();
-        //jTextField1.setVisible(false);
+        jTextField1.setVisible(false);
         jButton8.setVisible(false);
-        jButton9.setVisible(false);  
-        
+        jButton9.setVisible(false);          
         this.setLocationRelativeTo(null);   
         array_empleados.clear();//BORRAR ELEMENTOS DEL ARRAY PARA CUANDO CIERRE EMPLEADOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
@@ -459,7 +458,7 @@ public class Empleados extends javax.swing.JFrame {
             //REALIZA UPDATE EN LA BASE DE DATOS
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
-            String pass = "123";
+            String pass = "";
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement st = connection.createStatement();
             String query = "update empleados set nombre='" + vNombre + "', apellidos='" + vApellidos + "', direccion='" + vDireccion + "', email='" + vEmail + "', telefono='" + vTelefono + "', id_login='" + vId_Login + "', password='" + vPass + "' WHERE id=" + vId;
@@ -512,7 +511,7 @@ public class Empleados extends javax.swing.JFrame {
                 //REALIZA DELETE EN LA BASE DE DATOS
                 String url = "jdbc:mysql://localhost:3306/clothy";
                 String user = "root";
-                String pass = "123";
+                String pass = "";
                 Connection connection = DriverManager.getConnection(url, user, pass);
                 Statement st = connection.createStatement();
                 String query = "DELETE FROM empleados WHERE id=" + vId;

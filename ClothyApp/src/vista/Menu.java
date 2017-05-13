@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Articulos;
+import modelo.Categorias;
+import modelo.Clientes;
 import modelo.Empleados;
 import static vista.Login.*;
 
@@ -108,6 +110,11 @@ public class Menu extends javax.swing.JFrame {
         jBCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBCategorias.setFocusPainted(false);
         jBCategorias.setFocusable(false);
+        jBCategorias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCategoriasActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBCategorias);
         jBCategorias.setBounds(210, 80, 60, 78);
 
@@ -163,6 +170,11 @@ public class Menu extends javax.swing.JFrame {
         jBClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBClientes.setFocusPainted(false);
         jBClientes.setFocusable(false);
+        jBClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBClientesActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBClientes);
         jBClientes.setBounds(200, 210, 70, 78);
 
@@ -305,9 +317,9 @@ public class Menu extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jBCerrarActionPerformed
-        //BOTÓN ARTÍCULOS
-    private void jBArticulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBArticulosActionPerformed
         
+    private void jBArticulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBArticulosActionPerformed
+        //BOTÓN ARTÍCULOS
         Articulos articulos = null;
         try {
             articulos = new Articulos();
@@ -315,10 +327,10 @@ public class Menu extends javax.swing.JFrame {
             e.printStackTrace();
         }
         articulos.setVisible(true);
-
     }//GEN-LAST:event_jBArticulosActionPerformed
-        //BOTÓN EMPLEADOS
+        
     private void jBEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEmpleadosActionPerformed
+        //BOTÓN EMPLEADOS
         Empleados empleados = null;
         try {
             empleados = new Empleados();
@@ -327,6 +339,28 @@ public class Menu extends javax.swing.JFrame {
         }
         empleados.setVisible(true);
     }//GEN-LAST:event_jBEmpleadosActionPerformed
+        
+    private void jBCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCategoriasActionPerformed
+        //BOTÓN CATEGORIAS
+        Categorias categorias = null;
+        try {
+            categorias = new Categorias();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        categorias.setVisible(true);
+    }//GEN-LAST:event_jBCategoriasActionPerformed
+
+    private void jBClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBClientesActionPerformed
+        //BOTÓN CLIENTES
+        Clientes clientes = null;
+        try {
+            clientes = new Clientes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        clientes.setVisible(true);
+    }//GEN-LAST:event_jBClientesActionPerformed
 
     /**
      * @param args the command line arguments

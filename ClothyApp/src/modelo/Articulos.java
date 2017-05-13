@@ -315,7 +315,6 @@ public class Articulos extends javax.swing.JFrame {
         jButton5.setFocusable(false);
         jButton5.setMargin(new java.awt.Insets(5, 14, 5, 14));
         jButton5.setMaximumSize(null);
-        jButton5.setOpaque(false);
         jButton5.setPreferredSize(new java.awt.Dimension(77, 23));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -507,7 +506,7 @@ public class Articulos extends javax.swing.JFrame {
             //REALIZA UPDATE EN LA BASE DE DATOS
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
-            String pass = "123";
+            String pass = "";
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement st = connection.createStatement();
             String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias + " WHERE id=" + vId;
@@ -629,6 +628,9 @@ public class Articulos extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
         int i = 0;
+        if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
+        }else{
         int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar el artículo seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
             //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA            
@@ -651,7 +653,7 @@ public class Articulos extends javax.swing.JFrame {
                 //REALIZA DELETE EN LA BASE DE DATOS
                 String url = "jdbc:mysql://localhost:3306/clothy";
                 String user = "root";
-                String pass = "123";
+                String pass = "";
                 Connection connection = DriverManager.getConnection(url, user, pass);
                 Statement st = connection.createStatement();
                 String query = "DELETE FROM articulos WHERE id=" + vId;
@@ -667,6 +669,7 @@ public class Articulos extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
 
             if (resp == JOptionPane.NO_OPTION) {
                 //NO HACER NADA
@@ -725,17 +728,20 @@ public class Articulos extends javax.swing.JFrame {
     public static String getNombreCateg(int num) {
         String categ = "";
         
-        if (num == 1) categ = "Camisas";
-        if (num == 2) categ = "Polos";
-        if (num == 3) categ = "Camisetas";
-        if (num == 4) categ = "Chaquetas";
-        if (num == 5) categ = "Trajes";
-        if (num == 6) categ = "Jeans";
-        if (num == 7) categ = "Bermudas";
-        if (num == 8) categ = "Bañadores";
-        if (num == 9) categ = "Zapatos";
-        if (num == 10) categ = "Deportes";
-        
+        try {
+            ResultSet r3; 
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "";
+            Connection connection = DriverManager.getConnection(url, user,pass);
+            Statement s3 = connection.createStatement(); 
+            String queryNombre = "SELECT nombre from categorias WHERE id=" + num;
+            r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            categ = r3.getString("nombre");           
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return categ;              
     }
     
@@ -743,18 +749,21 @@ public class Articulos extends javax.swing.JFrame {
     public static int getCodigoCateg(String nom) {
         int numCateg = 0;
         
-        if (nom.equalsIgnoreCase("Camisas")) numCateg = 1;
-        if (nom.equalsIgnoreCase("Polos")) numCateg = 2;
-        if (nom.equalsIgnoreCase("Camisetas")) numCateg = 3;
-        if (nom.equalsIgnoreCase("Chaquetas")) numCateg = 4;
-        if (nom.equalsIgnoreCase("Trajes")) numCateg = 5;
-        if (nom.equalsIgnoreCase("Jeans")) numCateg = 6;
-        if (nom.equalsIgnoreCase("Bermudas")) numCateg = 7;
-        if (nom.equalsIgnoreCase("Bañadores")) numCateg = 8;
-        if (nom.equalsIgnoreCase("Zapatos")) numCateg = 9;
-        if (nom.equalsIgnoreCase("Deportes")) numCateg = 10;
-        
-        return numCateg;
+        try {
+            ResultSet r3;
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "";
+            Connection connection = DriverManager.getConnection(url, user,pass);            
+            Statement s3 = connection.createStatement(); 
+            String queryNombre = "SELECT id from categorias WHERE nombre='" + nom+"'";
+            r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            numCateg = r3.getInt("id");           
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return numCateg;
     }
     
      //MÉTODO QUE DEVUELVE EL NOMBRE DE LA MARCA, PASANDO POR PARÁMETRO SU INT
