@@ -38,9 +38,9 @@ public class Clientes extends javax.swing.JFrame {
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel(); 
         columnModel.getColumn(0).setPreferredWidth(40);
-        columnModel.getColumn(1).setPreferredWidth(115);
+        columnModel.getColumn(1).setPreferredWidth(125);
         columnModel.getColumn(2).setPreferredWidth(135);
-        columnModel.getColumn(3).setPreferredWidth(210);
+        columnModel.getColumn(3).setPreferredWidth(195);
         columnModel.getColumn(4).setPreferredWidth(200);
         columnModel.getColumn(5).setPreferredWidth(180);
         columnModel.getColumn(6).setPreferredWidth(160);

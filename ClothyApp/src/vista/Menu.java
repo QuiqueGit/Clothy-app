@@ -7,6 +7,7 @@ import modelo.Articulos;
 import modelo.Categorias;
 import modelo.Clientes;
 import modelo.Empleados;
+import modelo.Ventas;
 import static vista.Login.*;
 
 
@@ -185,6 +186,11 @@ public class Menu extends javax.swing.JFrame {
         jBVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBVentas.setFocusPainted(false);
         jBVentas.setFocusable(false);
+        jBVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBVentasActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBVentas);
         jBVentas.setBounds(320, 220, 80, 60);
 
@@ -361,6 +367,17 @@ public class Menu extends javax.swing.JFrame {
         }
         clientes.setVisible(true);
     }//GEN-LAST:event_jBClientesActionPerformed
+
+    private void jBVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBVentasActionPerformed
+        //BOTÓN VENTAS
+        Ventas ventas = null;
+        try {
+            ventas = new Ventas();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ventas.setVisible(true);
+    }//GEN-LAST:event_jBVentasActionPerformed
 
     /**
      * @param args the command line arguments

@@ -9,10 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -21,95 +22,86 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import utilidades.ConexionDB;
 
-
 /**
  *
  * @author Quique
  */
-public class Articulos extends javax.swing.JFrame {
-    
-    static ArrayList<Articulo> array_articulos = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO ARTICULO PARA ALMACENAR TODOS LOS ARTICULOS
-   
-    Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE
-   
-    DefaultTableModel model;    
+public class Ventas extends javax.swing.JFrame {
+
+    static ArrayList<Venta> array_ventas = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO venta PARA ALMACENAR TODAS LAS VENTAS
+    Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE 
+    DefaultTableModel model;
     Statement s;
     ResultSet rs;
-    
+
     int viewRow, modelRow;
 
     /**
-     * Creates new form Articulos
+     * Creates new form Ventas
      */
-    public Articulos() throws SQLException, ClassNotFoundException {        
-        initComponents();         
-        this.setLocationRelativeTo(null);   
-        array_articulos.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
+    public Ventas() throws SQLException, ClassNotFoundException {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
-        TableColumnModel columnModel = jTable1.getColumnModel(); 
+        TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(55);
-        columnModel.getColumn(1).setPreferredWidth(180);
-        columnModel.getColumn(2).setPreferredWidth(180);
-        columnModel.getColumn(3).setPreferredWidth(65);
-        columnModel.getColumn(4).setPreferredWidth(130);
-        columnModel.getColumn(5).setPreferredWidth(150);
-        columnModel.getColumn(6).setPreferredWidth(60);
-               
+        columnModel.getColumn(1).setPreferredWidth(120);
+        columnModel.getColumn(2).setPreferredWidth(120);
+        columnModel.getColumn(3).setPreferredWidth(120);
+        columnModel.getColumn(4).setPreferredWidth(120);
+
         jTextField1.setVisible(false);
         statusText.setVisible(false);
-        jCBCat.setVisible(false);
-        jCBMar.setVisible(false);
+        jCBCli.setVisible(false);
+        jCBEmp.setVisible(false);
+        jCBTarjeta.setVisible(false);
+        jCBEfectivo.setVisible(false);
         jButton8.setVisible(false);
-        jButton9.setVisible(false);          
-        
+        jButton9.setVisible(false);
+
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        String query = "SELECT * FROM articulos";
+        String query = "SELECT * FROM ventas";
         rs = s.executeQuery(query);
-                
+
         while (rs.next()) { //CREO NUEVOS OBJETOS TIPO ARTICULO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
             int id = rs.getInt("id");
-            String nombre = rs.getString("nombre");
-            String descripcion = rs.getString("descripcion");
-            float precio = Float.parseFloat(rs.getString("precio"));
-            int categoria = Integer.parseInt(rs.getString("categoria"));            
-            int marca= Integer.parseInt(rs.getString("marca"));                        
-            int existencias = Integer.parseInt(rs.getString("existencias"));
-            
-            array_articulos.add(new Articulo(id, nombre, descripcion, precio, categoria, marca, existencias));            
-        }            
-                       
+            int cliente = Integer.parseInt(rs.getString("cliente"));
+            int empleado = Integer.parseInt(rs.getString("empleado"));
+            String fecha = rs.getString("fecha");
+            String metodo_pago = rs.getString("metodo_pago");
+
+            array_ventas.add(new Venta(id, cliente, empleado, fecha, metodo_pago));
+        }
+
         añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST
-        llenarCategorias(); //MÉTODO PARA LLENAR COMBOBOX DE CATEGORIAS
-        llenarMarcas();     //MÉTODO PARA LLENAR COMBOBOX DE MARCAS
-                
+        llenarClientes();  //MÉTODO PARA LLENAR COMBOBOX DE CATEGORIAS
+        llenarEmpleados(); //MÉTODO PARA LLENAR COMBOBOX DE MARCAS
+
         jTable1.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
-                           
-           @Override
-           public void mouseClicked (MouseEvent e){ //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
-               if (jTFBuscar.getText().isEmpty()) {
-               int i = jTable1.getSelectedRow();
-               // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
-               jTextField1.setText(model.getValueAt(i, 0).toString());
-               jTextField2.setText(model.getValueAt(i, 1).toString());
-               jTextField3.setText(model.getValueAt(i, 2).toString());
-               jTextField4.setText(model.getValueAt(i, 3).toString());
-               jTextField5.setText(model.getValueAt(i, 4).toString());
-               jTextField6.setText(model.getValueAt(i, 5).toString());
-               jTextField7.setText(model.getValueAt(i, 6).toString());
-               }else{
+
+            @Override
+            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
+                if (jTFBuscar.getText().isEmpty()) {
+                    int i = jTable1.getSelectedRow();
+                    // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
+                    jTextField1.setText(model.getValueAt(i, 0).toString());
+                    jTextField2.setText(model.getValueAt(i, 1).toString());
+                    jTextField3.setText(model.getValueAt(i, 2).toString());
+                    jTextField4.setText(model.getValueAt(i, 3).toString());
+                    jTextField5.setText(model.getValueAt(i, 4).toString());
+
+                } else {
                     int i = modelRow;
                     jTextField1.setText(model.getValueAt(i, 0).toString());
                     jTextField2.setText(model.getValueAt(i, 1).toString());
                     jTextField3.setText(model.getValueAt(i, 2).toString());
                     jTextField4.setText(model.getValueAt(i, 3).toString());
                     jTextField5.setText(model.getValueAt(i, 4).toString());
-                    jTextField6.setText(model.getValueAt(i, 5).toString());
-                    jTextField7.setText(model.getValueAt(i, 6).toString());
-               }
-           }
-       });
-       
+                }
+            }
+        });
     }
 
     /**
@@ -125,8 +117,6 @@ public class Articulos extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -134,87 +124,69 @@ public class Articulos extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
         jTFBuscar = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
-        jSeparator6 = new javax.swing.JSeparator();
         jSeparator7 = new javax.swing.JSeparator();
-        jCBCat = new javax.swing.JComboBox<>();
-        jCBMar = new javax.swing.JComboBox<>();
         statusText = new javax.swing.JTextField();
+        jCBTarjeta = new javax.swing.JCheckBox();
+        jCBEfectivo = new javax.swing.JCheckBox();
+        jCBCli = new javax.swing.JComboBox<>();
+        jCBEmp = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(915, 485));
-        setMinimumSize(new java.awt.Dimension(915, 485));
-        setPreferredSize(new java.awt.Dimension(915, 485));
-        setResizable(false);
-        setSize(new java.awt.Dimension(915, 485));
+        setMaximumSize(new java.awt.Dimension(940, 415));
+        setMinimumSize(new java.awt.Dimension(940, 415));
+        setPreferredSize(new java.awt.Dimension(940, 415));
         getContentPane().setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Nombre");
+        jLabel2.setText("Cliente");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 120, 63, 22);
+        jLabel2.setBounds(50, 120, 55, 22);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Descripción");
+        jLabel3.setText("Empleado");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(50, 160, 91, 22);
+        jLabel3.setBounds(50, 160, 78, 22);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Precio");
+        jLabel4.setText("Fecha");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(50, 200, 49, 22);
+        jLabel4.setBounds(50, 200, 45, 22);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Categoria");
+        jLabel5.setText("Método pago");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(50, 240, 76, 22);
-
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Marca");
-        jLabel6.setFocusable(false);
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(50, 280, 50, 22);
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Existencias");
-        jLabel7.setFocusable(false);
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(50, 320, 85, 22);
+        jLabel5.setBounds(50, 240, 127, 22);
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Artículos");
+        jLabel8.setText("Ventas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(20, 10, 150, 30);
+        jLabel8.setBounds(30, 40, 120, 30);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(140, 60, 40, 40);
+        jLabel9.setBounds(170, 40, 40, 40);
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
@@ -225,7 +197,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(50, 80, 39, 24);
+        jTextField1.setBounds(50, 80, 20, 24);
 
         jTextField2.setBackground(new java.awt.Color(204, 204, 204));
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
@@ -239,7 +211,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(150, 120, 142, 20);
+        jTextField2.setBounds(160, 120, 142, 20);
 
         jTextField3.setBackground(new java.awt.Color(204, 204, 204));
         jTextField3.setForeground(new java.awt.Color(255, 255, 255));
@@ -248,7 +220,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField3.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField3.setOpaque(false);
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(150, 160, 142, 20);
+        jTextField3.setBounds(160, 160, 142, 20);
 
         jTextField4.setBackground(new java.awt.Color(204, 204, 204));
         jTextField4.setForeground(new java.awt.Color(255, 255, 255));
@@ -257,7 +229,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField4.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField4.setOpaque(false);
         getContentPane().add(jTextField4);
-        jTextField4.setBounds(150, 200, 142, 20);
+        jTextField4.setBounds(160, 200, 142, 20);
 
         jTextField5.setBackground(new java.awt.Color(204, 204, 204));
         jTextField5.setForeground(new java.awt.Color(255, 255, 255));
@@ -266,25 +238,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField5.setOpaque(false);
         getContentPane().add(jTextField5);
-        jTextField5.setBounds(150, 240, 142, 20);
-
-        jTextField6.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField6.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setBorder(null);
-        jTextField6.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField6.setOpaque(false);
-        getContentPane().add(jTextField6);
-        jTextField6.setBounds(150, 280, 142, 20);
-
-        jTextField7.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField7.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField7.setBorder(null);
-        jTextField7.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField7.setOpaque(false);
-        getContentPane().add(jTextField7);
-        jTextField7.setBounds(150, 320, 142, 20);
+        jTextField5.setBounds(160, 240, 142, 20);
 
         jTFBuscar.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -300,7 +254,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscar);
-        jTFBuscar.setBounds(170, 70, 120, 19);
+        jTFBuscar.setBounds(200, 50, 120, 19);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
@@ -319,7 +273,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(20, 370, 100, 30);
+        jButton5.setBounds(30, 290, 100, 30);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
@@ -338,7 +292,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton6);
-        jButton6.setBounds(120, 370, 100, 30);
+        jButton6.setBounds(130, 290, 100, 30);
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
@@ -356,7 +310,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton7);
-        jButton7.setBounds(220, 370, 100, 30);
+        jButton7.setBounds(230, 290, 100, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -372,7 +326,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(40, 410, 120, 30);
+        jButton8.setBounds(50, 330, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -388,31 +342,41 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(160, 410, 120, 30);
-        getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(50, 340, 240, 10);
+        jButton9.setBounds(170, 330, 120, 30);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(50, 140, 240, 10);
+        jSeparator2.setBounds(50, 140, 250, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(50, 180, 240, 10);
+        jSeparator3.setBounds(50, 180, 250, 10);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(50, 220, 240, 10);
+        jSeparator4.setBounds(50, 220, 250, 10);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(50, 260, 240, 10);
-        getContentPane().add(jSeparator6);
-        jSeparator6.setBounds(50, 300, 240, 10);
+        jSeparator5.setBounds(50, 260, 250, 10);
         getContentPane().add(jSeparator7);
-        jSeparator7.setBounds(170, 90, 120, 10);
-
-        jCBCat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jCBCat);
-        jCBCat.setBounds(170, 240, 140, 20);
-
-        jCBMar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jCBMar);
-        jCBMar.setBounds(170, 280, 140, 20);
+        jSeparator7.setBounds(200, 70, 120, 10);
         getContentPane().add(statusText);
-        statusText.setBounds(330, 450, 30, 24);
+        statusText.setBounds(320, 340, 20, 24);
+
+        jCBTarjeta.setForeground(new java.awt.Color(255, 255, 255));
+        jCBTarjeta.setText("Tarjeta");
+        jCBTarjeta.setBorder(null);
+        jCBTarjeta.setContentAreaFilled(false);
+        jCBTarjeta.setOpaque(false);
+        getContentPane().add(jCBTarjeta);
+        jCBTarjeta.setBounds(160, 240, 70, 20);
+
+        jCBEfectivo.setForeground(new java.awt.Color(255, 255, 255));
+        jCBEfectivo.setText("Efectivo");
+        jCBEfectivo.setContentAreaFilled(false);
+        getContentPane().add(jCBEfectivo);
+        jCBEfectivo.setBounds(230, 240, 80, 24);
+
+        jCBCli.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(jCBCli);
+        jCBCli.setBounds(160, 120, 160, 20);
+
+        jCBEmp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(jCBEmp);
+        jCBEmp.setBounds(160, 160, 160, 20);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -421,14 +385,14 @@ public class Articulos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Descripcion", "Precio", "Categoria", "Marca", "Existencias"
+                "ID", "Cliente", "Empleado", "Fecha", "Método pago"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -453,166 +417,14 @@ public class Articulos extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(330, 20, 560, 420);
+        jScrollPane1.setBounds(350, 30, 560, 330);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 1040, 500);
+        jLabel1.setBounds(0, -10, 970, 430);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        //BOTÓN NUEVO 
-        jTFBuscar.setText("");
-        jTFBuscar.setEnabled(false);        
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
-        jTextField5.setVisible(false);
-        jCBCat.setVisible(true);
-        jTextField6.setText("");
-        jTextField6.setVisible(false);        
-        jCBMar.setVisible(true);
-        jTextField7.setText("");         
-        jButton5.setEnabled(false);
-        jButton6.setEnabled(false);
-        jButton7.setEnabled(false);
-        jButton8.setVisible(true);
-        jButton9.setVisible(true);    
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       //BOTÓN EDITAR         
-            try {
-            String vNombre, vDescripcion, cat, mar;
-            int vId, vMarca, vExistencias, vCategoria;
-            float vPrecio;
-
-            vId = Integer.parseInt(jTextField1.getText());
-            vNombre = jTextField2.getText();
-            vDescripcion = jTextField3.getText();
-            vPrecio = Float.parseFloat(jTextField4.getText());
-            cat = jTextField5.getText();
-            vCategoria = getCodigoCateg(cat);
-            mar = jTextField6.getText();
-            vMarca = getCodigoMarca(mar);
-            vExistencias = Integer.parseInt(jTextField7.getText());
-            //REALIZA UPDATE EN LA BASE DE DATOS
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement st = connection.createStatement();
-            String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias + " WHERE id=" + vId;
-            st.executeUpdate(query);         
-            //REALIZA UPDATE EN EL ARRAY
-            /*int i = jTable1.getSelectedRow();
-            array_articulos.get(i).setNombre(vNombre);
-            array_articulos.get(i).setDescripcion(vDescripcion);
-            array_articulos.get(i).setPrecio(vPrecio);
-            array_articulos.get(i).setCategoria(vCategoria);
-            array_articulos.get(i).setMarca(vMarca);
-            array_articulos.get(i).setExistencias(vExistencias);*/
-            //REALIZA UPDATE EN LA TABLA
-            if(jTFBuscar.getText().isEmpty()){
-            int i = jTable1.getSelectedRow();
-            model.setValueAt(jTextField2.getText(), i, 1);
-            model.setValueAt(jTextField3.getText(), i, 2);
-            model.setValueAt(jTextField4.getText(), i, 3);
-            model.setValueAt(jTextField5.getText(), i, 4);
-            model.setValueAt(jTextField6.getText(), i, 5);
-            model.setValueAt(jTextField7.getText(), i, 6);
-            }else{
-                int i = modelRow;
-                model.setValueAt(jTextField2.getText(), i, 1);
-                model.setValueAt(jTextField3.getText(), i, 2);
-                model.setValueAt(jTextField4.getText(), i, 3);
-                model.setValueAt(jTextField5.getText(), i, 4);
-                model.setValueAt(jTextField6.getText(), i, 5);
-                model.setValueAt(jTextField7.getText(), i, 6);
-            }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-            }    
-            
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        //BOTÓN CANCELAR
-        jTFBuscar.setEnabled(true); 
-        jCBCat.setVisible(false);
-        jCBMar.setVisible(false);
-        jButton8.setVisible(false);
-        jButton9.setVisible(false);
-        jTextField5.setVisible(true);
-        jTextField6.setVisible(true);
-        jButton5.setEnabled(true);
-        jButton6.setEnabled(true);
-        jButton7.setEnabled(true);
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField7.setText("");
-        
-        
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        //BOTÓN ACEPTAR
-       try {            
-            String vNombre, vDescripcion, cat, mar;
-            int vId, vMarca, vExistencias, vCategoria;
-            float vPrecio;            
-            
-            vNombre = jTextField2.getText();
-            vDescripcion = jTextField3.getText();
-            vPrecio = Float.parseFloat(jTextField4.getText());
-            cat = (String) jCBCat.getSelectedItem();
-            vCategoria = getCodigoCateg(cat);
-            mar = (String) jCBMar.getSelectedItem();
-            vMarca = getCodigoMarca(mar);
-            vExistencias = Integer.parseInt(jTextField7.getText());             
-            //INSERT EN LA BASE DE DATOS               
-            PreparedStatement ps = conex.prepareStatement("INSERT INTO articulos (nombre, descripcion, precio, categoria, marca, existencias) VALUES (?,?,?,?,?,?)");
-            ps.setString(1, vNombre);
-            ps.setString(2, vDescripcion);
-            ps.setFloat(3, vPrecio);
-            ps.setInt(4, vCategoria);
-            ps.setInt(5, vMarca);
-            ps.setInt(6, vExistencias);
-            ps.executeUpdate();           
-            //INSERT EN LA TABLA      
-            vId = (array_articulos.get(array_articulos.size()-1).getId()+1);
-            model.addRow(new Object[]{vId, vNombre,vDescripcion,vPrecio,cat,mar,vExistencias});
-            //INSERT EN EL ARRAY            
-            array_articulos.add(new Articulo(vId, vNombre, vDescripcion, vPrecio, vCategoria, vMarca, vExistencias));
-            
-            jTFBuscar.setEnabled(true); 
-            jButton5.setEnabled(true);
-            jButton6.setEnabled(true);
-            jButton7.setEnabled(true);
-            jButton8.setVisible(false);
-            jButton9.setVisible(false);
-            jCBCat.setVisible(false);
-            jCBMar.setVisible(false);
-            jTextField5.setVisible(true);
-            jTextField6.setVisible(true);
-            jTextField2.setText("");
-            jTextField3.setText("");
-            jTextField4.setText("");
-            jTextField7.setText("");
-            
-
-            //estadoInicial();           
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -622,51 +434,118 @@ public class Articulos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
+    private void jTFBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarKeyReleased
+        //jTextField BÚSQUEDA
+        String query = jTFBuscar.getText().toLowerCase();
+
+        filtro(query);
+    }//GEN-LAST:event_jTFBuscarKeyReleased
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        //BOTÓN NUEVO
+        jTFBuscar.setText("");
+        jTFBuscar.setEnabled(false);
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField2.setVisible(false);
+        jTextField3.setText("");
+        jTextField3.setVisible(false);
+        jTextField4.setText("");        
+        jTextField5.setText("");
+        jTextField5.setVisible(false);
+        jCBCli.setVisible(true);
+        jCBEmp.setVisible(true);
+        jCBTarjeta.setVisible(true);
+        jCBEfectivo.setVisible(true);
+        jButton5.setEnabled(false);
+        jButton6.setEnabled(false);
+        jButton7.setEnabled(false);
+        jButton8.setVisible(true);
+        jButton9.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        //BOTÓN EDITAR
+        try {
+            int vId, vCli, vEmp;
+            String vFecha, vMetodo_pago;
+
+            vId = Integer.parseInt(jTextField1.getText());
+            vCli = getCodigoCliente(jTextField2.getText());
+            vEmp = getCodigoEmpleado(jTextField3.getText());
+            vFecha = jTextField4.getText();
+            vMetodo_pago = jTextField5.getText();
+            //REALIZA UPDATE EN LA BASE DE DATOS
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "";
+            Connection connection = DriverManager.getConnection(url, user, pass);
+            Statement st = connection.createStatement();
+            String query = "update ventas set cliente='" + vCli + "', empleado='" + vEmp + "', fecha=" + vFecha + ", metodo_pago=" + vMetodo_pago + " WHERE id=" + vId;
+            st.executeUpdate(query);             
+            //REALIZA UPDATE EN LA TABLA
+            if (jTFBuscar.getText().isEmpty()) {
+                int i = jTable1.getSelectedRow();
+                model.setValueAt(jTextField2.getText(), i, 1);
+                model.setValueAt(jTextField3.getText(), i, 2);
+                model.setValueAt(jTextField4.getText(), i, 3);
+                model.setValueAt(jTextField5.getText(), i, 4);
+            } else {
+                int i = modelRow;
+                model.setValueAt(jTextField2.getText(), i, 1);
+                model.setValueAt(jTextField3.getText(), i, 2);
+                model.setValueAt(jTextField4.getText(), i, 3);
+                model.setValueAt(jTextField5.getText(), i, 4);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
         int i = 0;
         if (jTextField2.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
-        }else{
-        int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar el artículo seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
-        if (resp == JOptionPane.YES_OPTION) {
-            //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA            
-            if (jTFBuscar.getText().isEmpty()) {
-                i = jTable1.getSelectedRow();
-                if (i >= 0) {
-                    model.removeRow(i);
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna venta", "Error Delete", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la venta seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
+            if (resp == JOptionPane.YES_OPTION) {
+                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
+                if (jTFBuscar.getText().isEmpty()) {
+                    i = jTable1.getSelectedRow();
+                    if (i >= 0) {
+                        model.removeRow(i);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna venta", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "No ha seleccionado un artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                    i = modelRow;
+                    model.removeRow(i);
                 }
-            } else {
-                i = modelRow;
-                model.removeRow(i);
+
+                try {
+                    //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
+                    // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
+                    int vId = Integer.parseInt(jTextField1.getText());
+                    //REALIZA DELETE EN LA BASE DE DATOS
+                    String url = "jdbc:mysql://localhost:3306/clothy";
+                    String user = "root";
+                    String pass = "";
+                    Connection connection = DriverManager.getConnection(url, user, pass);
+                    Statement st = connection.createStatement();
+                    String query = "DELETE FROM ventas WHERE id=" + vId;
+                    st.executeUpdate(query);
+                    jTextField2.setText("");
+                    jTextField3.setText("");
+                    jTextField4.setText("");
+                    jTextField5.setText("");
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-
-            try {
-                //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
-                // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
-                int vId = Integer.parseInt(jTextField1.getText());                
-                //REALIZA DELETE EN LA BASE DE DATOS
-                String url = "jdbc:mysql://localhost:3306/clothy";
-                String user = "root";
-                String pass = "";
-                Connection connection = DriverManager.getConnection(url, user, pass);
-                Statement st = connection.createStatement();
-                String query = "DELETE FROM articulos WHERE id=" + vId;
-                st.executeUpdate(query);
-
-                jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField5.setText("");
-                jTextField6.setText("");
-                jTextField7.setText("");
-
-            } catch (SQLException ex) {
-                Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
 
             if (resp == JOptionPane.NO_OPTION) {
                 //NO HACER NADA
@@ -674,17 +553,80 @@ public class Articulos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jTFBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarKeyReleased
-        //jTextField BÚSQUEDA
-        String query = jTFBuscar.getText().toLowerCase();
-        
-        filtro(query);
-    }//GEN-LAST:event_jTFBuscarKeyReleased
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        //BOTÓN ACEPTAR
+        try {
+            int vId, vCli, vEmp;
+            String vFecha, vMetodo_pago;
+
+            vId = Integer.parseInt(jTextField1.getText());
+            vCli = getCodigoCliente(jTextField2.getText());
+            vEmp = getCodigoEmpleado(jTextField3.getText());
+            vFecha = jTextField4.getText();
+            vMetodo_pago = jTextField5.getText();
+            //INSERT EN LA BASE DE DATOS
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO ventas (cliente, empleado, fecha, metodo_paog) VALUES (?,?,?,?)");
+            ps.setInt(1, vCli);
+            ps.setInt(2, vEmp);
+            ps.setString(3, vFecha);
+            ps.setString(4, vMetodo_pago);
+            ps.executeUpdate();
+            //INSERT EN LA TABLA
+            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
+            model.addRow(new Object[]{vId, vCli, vEmp, vFecha, vMetodo_pago});
+            //INSERT EN EL ARRAY
+            array_ventas.add(new Venta(vId, vCli, vEmp, vFecha, vMetodo_pago));
+
+            jTFBuscar.setEnabled(true);
+            jButton5.setEnabled(true);
+            jButton6.setEnabled(true);
+            jButton7.setEnabled(true);
+            jButton8.setVisible(false);
+            jButton9.setVisible(false);
+            jCBCli.setVisible(false);
+            jCBEmp.setVisible(false);
+            jCBTarjeta.setVisible(false);
+            jCBEfectivo.setVisible(false);
+            jTextField2.setVisible(true);
+            jTextField3.setVisible(true);
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jTextField5.setText("");
+            jTextField5.setVisible(true);
+
+            //estadoInicial();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        //BOTÓN CANCELAR
+        jTFBuscar.setEnabled(true);
+        jButton8.setVisible(false);
+        jButton9.setVisible(false);
+        jTextField2.setVisible(true);
+        jTextField3.setVisible(true);
+        jTextField5.setVisible(true);
+        jCBCli.setVisible(false);
+        jCBEmp.setVisible(false);
+        jCBTarjeta.setVisible(false);
+        jCBEfectivo.setVisible(false);
+        jButton5.setEnabled(true);
+        jButton6.setEnabled(true);
+        jButton7.setEnabled(true);
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {  //MÉTODO MAIN
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -698,13 +640,13 @@ public class Articulos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -712,197 +654,193 @@ public class Articulos extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Articulos().setVisible(true);
-                    //this.articulos.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    new Ventas().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
-           
+
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
-    public static String getNombreCateg(int num) {
-        String categ = "";
-        
-        try {
-            ResultSet r3; 
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user,pass);
-            Statement s3 = connection.createStatement(); 
-            String queryNombre = "SELECT nombre from categorias WHERE id=" + num;
-            r3 = s3.executeQuery(queryNombre);
-            r3.first();
-            categ = r3.getString("nombre");           
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return categ;              
-    }
-    
-    //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
-    public static int getCodigoCateg(String nom) {
-        int codCateg = 0;
-        
+    public static String getNombreCliente(int num) {
+        String nombre = "";
+
         try {
             ResultSet r3;
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
             String pass = "";
-            Connection connection = DriverManager.getConnection(url, user,pass);            
-            Statement s3 = connection.createStatement(); 
-            String queryNombre = "SELECT id from categorias WHERE nombre='" + nom;
+            Connection connection = DriverManager.getConnection(url, user, pass);
+            Statement s3 = connection.createStatement();
+            String queryNombre = "SELECT nombre from clientes WHERE id=" + num;
             r3 = s3.executeQuery(queryNombre);
             r3.first();
-            codCateg = r3.getInt("id");           
+            nombre = r3.getString("nombre");
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
-         return codCateg;
+        return nombre;
     }
-    
-     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA MARCA, PASANDO POR PARÁMETRO SU INT
-    public static String getNombreMarca(int num) {
-        String marca = "";
-        
-       try {
-            ResultSet r3; 
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user,pass);
-            Statement s3 = connection.createStatement(); 
-            String queryNombre = "SELECT nombre from marcas WHERE id=" + num;
-            r3 = s3.executeQuery(queryNombre);
-            r3.first();
-            marca = r3.getString("nombre");           
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return marca;
-    }
-    
+
     //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
-    public static int getCodigoMarca(String nom) {
-        int codMarca = 0;
-        
+    public static int getCodigoCliente(String nom) {
+        int codCliente = 0;
+
         try {
             ResultSet r3;
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
             String pass = "";
-            Connection connection = DriverManager.getConnection(url, user,pass);            
-            Statement s3 = connection.createStatement(); 
-            String queryNombre = "SELECT id from marcas WHERE nombre='" + nom;
+            Connection connection = DriverManager.getConnection(url, user, pass);
+            Statement s3 = connection.createStatement();
+            String queryNombre = "SELECT id from clientes WHERE nombre='" + nom;
             r3 = s3.executeQuery(queryNombre);
             r3.first();
-            codMarca = r3.getInt("id");           
+            codCliente = r3.getInt("id");
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        }         
-   
-        return codMarca;
+        }
+        return codCliente;
     }
-    
-    public void añadirFilasTabla(){ 
-        Object datosFila []= new Object [7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
-        
-        for (int i = 0; i < array_articulos.size(); i++) {
-            datosFila[0] = array_articulos.get(i).getId();
-            datosFila[1] = array_articulos.get(i).getNombre();
-            datosFila[2] = array_articulos.get(i).getDescripcion();
-            datosFila[3] = array_articulos.get(i).getPrecio();             
-            datosFila[4] = getNombreCateg(array_articulos.get(i).getCategoria());
-            datosFila[5] = getNombreMarca(array_articulos.get(i).getMarca());
-            datosFila[6] = array_articulos.get(i).getExistencias();
+
+    //MÉTODO QUE DEVUELVE EL NOMBRE DE LA MARCA, PASANDO POR PARÁMETRO SU INT
+    public static String getNombreEmpleado(int num) {
+        String empleado = "";
+
+        try {
+            ResultSet r3;
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "";
+            Connection connection = DriverManager.getConnection(url, user, pass);
+            Statement s3 = connection.createStatement();
+            String queryNombre = "SELECT nombre from empleados WHERE id=" + num;
+            r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            empleado = r3.getString("nombre");
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return empleado;
+    }
+
+    //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
+    public static int getCodigoEmpleado(String nom) {
+        int codEmp = 0;
+
+        try {
+            ResultSet r3;
+            String url = "jdbc:mysql://localhost:3306/clothy";
+            String user = "root";
+            String pass = "";
+            Connection connection = DriverManager.getConnection(url, user, pass);
+            Statement s3 = connection.createStatement();
+            String queryNombre = "SELECT id from empleados WHERE nombre='" + nom;
+            r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            codEmp = r3.getInt("id");
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return codEmp;
+    }
+
+    public void añadirFilasTabla() {
+        Object datosFila[] = new Object[5]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+
+        for (int i = 0; i < array_ventas.size(); i++) {
+            datosFila[0] = array_ventas.get(i).getId();
+            datosFila[1] = getNombreCliente(array_ventas.get(i).getCliente());
+            datosFila[2] = getNombreEmpleado(array_ventas.get(i).getEmpleado());
+            datosFila[3] = array_ventas.get(i).getFecha();
+            datosFila[4] = array_ventas.get(i).getMetodo_pago();
 
             model.addRow(datosFila);
         }
     }
-    
-    public void llenarCategorias() throws SQLException {
-        
-        String query2 = "SELECT * FROM categorias";                
+
+    public void llenarClientes() throws SQLException {
+
+        String query2 = "SELECT * FROM clientes";
         Statement s2 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet r2 = s2.executeQuery(query2);
         DefaultComboBoxModel value1 = new DefaultComboBoxModel();
-        
+
         while (r2.next()) {
-            value1.addElement(r2.getString("nombre"));             
+            value1.addElement(r2.getString("nombre"));
         }
-        jCBCat.setModel(value1);            
+        jCBCli.setModel(value1);
     }
-        
-    public void llenarMarcas() throws SQLException{
-        
-        String query3 = "SELECT * FROM marcas";
+
+    public void llenarEmpleados() throws SQLException {
+
+        String query3 = "SELECT * FROM empleados";
         Statement s3 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet r3 = s3.executeQuery(query3);
         DefaultComboBoxModel value2 = new DefaultComboBoxModel();
-        
-        while (r3.next()) {           
-            value2.addElement(r3.getString("nombre"));           
+
+        while (r3.next()) {
+            value2.addElement(r3.getString("nombre"));
         }
 
-        jCBMar.setModel(value2);            
+        jCBEmp.setModel(value2);
     }
-    
+
     //MÉTODO FILTRAR RESULTADOS
-    private void filtro(String query){
-        
+    private void filtro(String query) {
+
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
         jTable1.setRowSorter(tr);
-        
+
         tr.setRowFilter(RowFilter.regexFilter("(?i)" + query));
-        
+
         jTable1.getSelectionModel().addListSelectionListener(
-        new ListSelectionListener() {
+                new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
-                 viewRow = jTable1.getSelectedRow();
+                viewRow = jTable1.getSelectedRow();
                 if (viewRow < 0) {
                     //Selection got filtered away.
                     statusText.setText("");
                 } else {
-                    modelRow = 
-                        jTable1.convertRowIndexToModel(viewRow);
+                    modelRow
+                            = jTable1.convertRowIndexToModel(viewRow);
                     statusText.setText(
-                        String.format("Selected Row in view: %d. " +
-                            "Selected Row in model: %d.", 
-                            viewRow, modelRow));
+                            String.format("Selected Row in view: %d. "
+                                    + "Selected Row in model: %d.",
+                                    viewRow, modelRow));
                 }
-            }            
+            }
         }
-);    
+        );
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jCBCat;
-    private javax.swing.JComboBox<String> jCBMar;
+    private javax.swing.JComboBox<String> jCBCli;
+    private javax.swing.JCheckBox jCBEfectivo;
+    private javax.swing.JComboBox<String> jCBEmp;
+    private javax.swing.JCheckBox jCBTarjeta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JTextField jTFBuscar;
     private javax.swing.JTable jTable1;
@@ -911,8 +849,6 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField statusText;
     // End of variables declaration//GEN-END:variables
 }

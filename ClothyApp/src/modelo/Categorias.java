@@ -43,9 +43,9 @@ public class Categorias extends javax.swing.JFrame {
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel(); 
-        columnModel.getColumn(0).setPreferredWidth(55);
+        columnModel.getColumn(0).setPreferredWidth(40);
         columnModel.getColumn(1).setPreferredWidth(120);
-        columnModel.getColumn(2).setPreferredWidth(250);
+        columnModel.getColumn(2).setPreferredWidth(260);
         
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String query = "SELECT * FROM categorias";
@@ -129,12 +129,12 @@ public class Categorias extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(30, 180, 91, 22);
 
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Categorias");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(80, 20, 190, 40);
+        jLabel8.setBounds(80, 20, 220, 40);
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 204));
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));

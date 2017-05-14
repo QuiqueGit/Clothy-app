@@ -171,7 +171,7 @@ public class Empleados extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(280, 120, 500, 200);
+        jScrollPane1.setBounds(280, 90, 500, 270);
 
         jTextField2.setBackground(new java.awt.Color(204, 204, 204));
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
