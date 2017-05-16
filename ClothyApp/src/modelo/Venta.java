@@ -10,10 +10,10 @@ public class Venta {
     private int id;
     private int cliente;
     private int empleado;
-    private String fecha; //PASARLO A DATE
+    private Date fecha; //PASARLO A DATE
     private String metodo_pago;    
     
-    public Venta(int id, int cliente, int empleado, String fecha, String metodo){
+    public Venta(int id, int cliente, int empleado, Date fecha, String metodo){
         this.id = id;
         this.cliente = cliente;
         this.empleado = empleado;
@@ -45,11 +45,11 @@ public class Venta {
         this.empleado = empleado;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

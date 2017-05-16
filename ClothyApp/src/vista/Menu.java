@@ -3,11 +3,14 @@ package vista;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import modelo.Articulos;
-import modelo.Categorias;
-import modelo.Clientes;
-import modelo.Empleados;
-import modelo.Ventas;
+import controlador.Articulos;
+import controlador.Categorias;
+import controlador.Clientes;
+import controlador.Empleados;
+import controlador.Marcas;
+import controlador.Tallas;
+import controlador.Ventas;
+import java.sql.SQLException;
 import static vista.Login.*;
 
 
@@ -23,17 +26,17 @@ public class Menu extends javax.swing.JFrame {
     /**
      * Creates new form Menu
      */
-    public Menu() {
+    public Menu() throws SQLException {
         initComponents();
-        this.setLocationRelativeTo(null);       
+        this.setLocationRelativeTo(null);  
+        
         user_logeado.setText(user_actual);
+       
         //OCULTAMOS BOTÓN EMPLEADOS PARA LOS QUE NO SEAN ADMIN
         if (!user_actual.equalsIgnoreCase("admin")) {
             jBEmpleados.setVisible(false);
             jLEmpleados.setVisible(false);
-        }
-        
-        
+        }          
     }
 
     /**
@@ -126,6 +129,11 @@ public class Menu extends javax.swing.JFrame {
         jBMarcas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBMarcas.setFocusPainted(false);
         jBMarcas.setFocusable(false);
+        jBMarcas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBMarcasActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBMarcas);
         jBMarcas.setBounds(320, 90, 90, 70);
 
@@ -136,6 +144,11 @@ public class Menu extends javax.swing.JFrame {
         jBTallas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBTallas.setFocusPainted(false);
         jBTallas.setFocusable(false);
+        jBTallas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBTallasActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBTallas);
         jBTallas.setBounds(440, 90, 80, 70);
 
@@ -207,7 +220,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBSesion);
-        jBSesion.setBounds(580, 220, 80, 70);
+        jBSesion.setBounds(570, 210, 80, 80);
 
         jLArticulos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLArticulos.setText("Artículos");
@@ -379,6 +392,28 @@ public class Menu extends javax.swing.JFrame {
         ventas.setVisible(true);
     }//GEN-LAST:event_jBVentasActionPerformed
 
+    private void jBMarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBMarcasActionPerformed
+        //BOTÓN MARCAS
+        Marcas marcas = null;
+        try {
+            marcas = new Marcas();            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        marcas.setVisible(true);        
+    }//GEN-LAST:event_jBMarcasActionPerformed
+
+    private void jBTallasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBTallasActionPerformed
+        //BOTÓN TALLAS
+        Tallas tallas = null;
+        try {
+            tallas = new Tallas();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tallas.setVisible(true);
+    }//GEN-LAST:event_jBTallasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -410,7 +445,11 @@ public class Menu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                menu = new Menu();
+                try {
+                    menu = new Menu();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
             }
         });

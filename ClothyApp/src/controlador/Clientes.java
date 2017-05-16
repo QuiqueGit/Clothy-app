@@ -1,4 +1,4 @@
-package modelo;
+package controlador;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import modelo.Cliente;
 import utilidades.ConexionDB;
 
 /**
@@ -94,6 +95,7 @@ public class Clientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jBCerrar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -123,18 +125,32 @@ public class Clientes extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(940, 485));
         setMinimumSize(new java.awt.Dimension(940, 485));
-        setPreferredSize(new java.awt.Dimension(940, 485));
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(null);
 
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBorder(null);
+        jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
+        jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCerrar.setFocusable(false);
+        jBCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBCerrar);
+        jBCerrar.setBounds(910, 0, 20, 20);
+
+        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Clientes");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(110, 40, 150, 30);
+        jLabel8.setBounds(90, 40, 170, 30);
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
@@ -359,7 +375,7 @@ public class Clientes extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -566,6 +582,11 @@ public class Clientes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
+        //BOTÓN X, CERRAR VENTANA INDIVIDUAL
+        this.dispose();
+    }//GEN-LAST:event_jBCerrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -624,6 +645,7 @@ public class Clientes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;

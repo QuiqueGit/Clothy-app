@@ -1,4 +1,4 @@
-package modelo;
+package controlador;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,8 +14,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import static modelo.Articulos.getNombreCateg;
+import modelo.Categoria;
 import utilidades.ConexionDB;
+import vista.Login;
 
 /**
  *
@@ -38,7 +39,13 @@ public class Categorias extends javax.swing.JFrame {
         jTextField1.setEnabled(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false); 
-        
+        //SI EL USUARIO LOGEADO NO ES ADMIN, EL EMPLEADO NO PODRÁ INSERTAR, EDITAR Y BORRAR CATEGORIAS
+        /*String user_actual = new Login().getUser_actual();
+        if (!user_actual.equalsIgnoreCase("admin")) {
+            jButton5.setVisible(false);
+            jButton6.setVisible(false);
+            jButton7.setVisible(false);
+        }*/        
         array_categorias.clear();//BORRAR ELEMENTOS DEL ARRAY PARA CUANDO CIERRE EMPLEADOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
@@ -71,9 +78,7 @@ public class Categorias extends javax.swing.JFrame {
                jTextField2.setText(model.getValueAt(i, 1).toString());
                jTextField3.setText(model.getValueAt(i, 2).toString());                          
            }
-       });    
-        
-        
+       });           
     }
 
     /**
@@ -85,6 +90,7 @@ public class Categorias extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jBCerrar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -104,10 +110,24 @@ public class Categorias extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(800, 370));
-        setMinimumSize(new java.awt.Dimension(800, 370));
-        setPreferredSize(new java.awt.Dimension(800, 370));
+        setMinimumSize(new java.awt.Dimension(779, 335));
+        setUndecorated(true);
         getContentPane().setLayout(null);
+
+        jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBorder(null);
+        jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
+        jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCerrar.setFocusable(false);
+        jBCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBCerrar);
+        jBCerrar.setBounds(760, 0, 20, 20);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -279,7 +299,7 @@ public class Categorias extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false
@@ -310,8 +330,11 @@ public class Categorias extends javax.swing.JFrame {
         jScrollPane1.setBounds(360, 20, 390, 280);
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
+        jLabel4.setMaximumSize(new java.awt.Dimension(779, 335));
+        jLabel4.setMinimumSize(new java.awt.Dimension(779, 335));
+        jLabel4.setPreferredSize(new java.awt.Dimension(779, 335));
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(-10, -20, 810, 390);
+        jLabel4.setBounds(0, 0, 779, 335);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -337,11 +360,7 @@ public class Categorias extends javax.swing.JFrame {
         //BOTÓN EDITAR
         try {
             String vNombre, vDescripcion;
-            int vId;
-            int vIdOld = jTable1.getSelectedRow();
-            array_categorias.get(vIdOld).getId();
-            
-            vId = Integer.parseInt(jTextField1.getText());
+            int vId = Integer.parseInt(jTextField1.getText());
             vNombre = jTextField2.getText();
             vDescripcion = jTextField3.getText();
 
@@ -351,7 +370,7 @@ public class Categorias extends javax.swing.JFrame {
             String pass = "";
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement st = connection.createStatement();
-            String query = "update categorias set id='" + vId + "', nombre='" + vNombre + "', descripcion='" + vDescripcion + "' WHERE id=" + vIdOld;
+            String query = "update categorias set nombre='" + vNombre + "', descripcion='" + vDescripcion + "' WHERE id=" + vId;
             st.executeUpdate(query);
             //REALIZA UPDATE EN EL ARRAY
             int i = jTable1.getSelectedRow();
@@ -389,7 +408,12 @@ public class Categorias extends javax.swing.JFrame {
                        count += 1;
                        id = cat;                    
                 }
-                nomCat = getNombreCateg(cat);                
+                try {
+                    Articulos metodo = new Articulos();
+                    nomCat = metodo.getNombreCateg(cat);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
+                }             
             } catch (NumberFormatException numberFormatException) {
             } catch (SQLException sQLException) {
             }                    
@@ -434,8 +458,7 @@ public class Categorias extends javax.swing.JFrame {
                     Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
-            
+        }            
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -485,6 +508,11 @@ public class Categorias extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
+        //BOTÓN X, CERRAR VENTANA INDIVIDUAL
+        this.dispose();
+    }//GEN-LAST:event_jBCerrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -540,6 +568,7 @@ public class Categorias extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;

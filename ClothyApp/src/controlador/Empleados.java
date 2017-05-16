@@ -1,4 +1,4 @@
-package modelo;
+package controlador;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import modelo.Empleado;
 import utilidades.ConexionDB;
 
 /**
@@ -38,14 +39,14 @@ public class Empleados extends javax.swing.JFrame {
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel(); 
-        columnModel.getColumn(0).setPreferredWidth(40);
+        columnModel.getColumn(0).setPreferredWidth(45);
         columnModel.getColumn(1).setPreferredWidth(105);
         columnModel.getColumn(2).setPreferredWidth(150);
         columnModel.getColumn(3).setPreferredWidth(220);
         columnModel.getColumn(4).setPreferredWidth(180);
         columnModel.getColumn(5).setPreferredWidth(150);
         columnModel.getColumn(6).setPreferredWidth(110);
-        columnModel.getColumn(7).setPreferredWidth(110);
+        columnModel.getColumn(7).setPreferredWidth(100);
         
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String query = "SELECT * FROM empleados";
@@ -96,6 +97,7 @@ public class Empleados extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jBCerrar = new javax.swing.JButton();
         jTextField2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
@@ -126,9 +128,9 @@ public class Empleados extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(810, 500));
-        setMinimumSize(new java.awt.Dimension(810, 500));
-        setPreferredSize(new java.awt.Dimension(810, 500));
+        setMaximumSize(new java.awt.Dimension(821, 475));
+        setMinimumSize(new java.awt.Dimension(821, 475));
+        setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(null);
 
@@ -143,7 +145,7 @@ public class Empleados extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
@@ -171,7 +173,22 @@ public class Empleados extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(280, 90, 500, 270);
+        jScrollPane1.setBounds(280, 90, 520, 270);
+
+        jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBorder(null);
+        jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
+        jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCerrar.setFocusable(false);
+        jBCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBCerrar);
+        jBCerrar.setBounds(800, 0, 20, 20);
 
         jTextField2.setBackground(new java.awt.Color(204, 204, 204));
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
@@ -385,12 +402,12 @@ public class Empleados extends javax.swing.JFrame {
         getContentPane().add(jButton8);
         jButton8.setBounds(30, 430, 120, 30);
 
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Empleados");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(20, 10, 190, 40);
+        jLabel8.setBounds(50, 20, 220, 40);
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -411,8 +428,11 @@ public class Empleados extends javax.swing.JFrame {
         jSeparator7.setBounds(20, 360, 240, 10);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(821, 475));
+        jLabel1.setMinimumSize(new java.awt.Dimension(821, 475));
+        jLabel1.setPreferredSize(new java.awt.Dimension(821, 475));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, -20, 990, 590);
+        jLabel1.setBounds(0, 0, 821, 475);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -585,6 +605,11 @@ public class Empleados extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton8ActionPerformed
 
+    private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
+        //BOTÓN X, CERRAR VENTANA INDIVIDUAL
+        this.dispose();
+    }//GEN-LAST:event_jBCerrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -644,6 +669,7 @@ public class Empleados extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;

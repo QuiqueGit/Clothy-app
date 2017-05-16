@@ -1,5 +1,6 @@
 package vista;
 
+import com.sun.awt.AWTUtilities;
 import modelo.Empleado;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,14 +20,16 @@ public class Login extends javax.swing.JFrame {
     static Login login;
     static String user_actual;
     
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
+    
     /**
      * Creates new form Login
      * @throws java.sql.SQLException
      */
     public Login() throws SQLException {        
-        
-        initComponents(); 
-        this.setLocationRelativeTo(null); 
+        initComponents();         
+        AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
+        this.setLocationRelativeTo(null); //PARA CENTRAR FRAME EN PANTALLA
         empleados = utilidades.ConexionDB.empleados(); //arrayList con los empleados     
 
     }
@@ -47,6 +50,7 @@ public class Login extends javax.swing.JFrame {
         jPFPass = new javax.swing.JPasswordField();
         jBLogin = new javax.swing.JButton();
         jBCerrar = new javax.swing.JButton();
+        jLMover = new javax.swing.JLabel();
         jLFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -111,6 +115,20 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(462, 0, 30, 20);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 470, 30);
+
         jLFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/fondoLogin.png"))); // NOI18N
         getContentPane().add(jLFondo);
         jLFondo.setBounds(0, 0, 485, 600);
@@ -144,25 +162,39 @@ public class Login extends javax.swing.JFrame {
 
             if (user.equalsIgnoreCase(userAc) && pass.equalsIgnoreCase(emp.getPassword())) {
                 isUser = true;            
-                user_actual = user;
-                
+                user_actual = user;                
             }
         }
 
         if (isUser == true) {
-            menu = new Menu();
+            try {
+                menu = new Menu();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
             //HACEMOS VISIBLE EL MENU
             menu.setVisible(true); 
             //RESET CAMPOS LOGIN
             jTFUsuario.setText("");     
             jPFPass.setText("");
             //OCULTAMOS LOGIN
-            login.setVisible(false); 
+            login.setVisible(false);
         } else {
             //MENSAJE ERROR USER Y PASS
             JOptionPane.showMessageDialog(null,"Usuario o contraseña no válidos", "Error", JOptionPane.ERROR_MESSAGE);            
         }
     }//GEN-LAST:event_jBLoginActionPerformed
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
 
     /**
      * @param args the command line arguments
@@ -193,12 +225,13 @@ public class Login extends javax.swing.JFrame {
                               
             }
         });
-    }
+    }  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jBLogin;
     private javax.swing.JLabel jLFondo;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLPass;
     private javax.swing.JLabel jLTitulo;
     private javax.swing.JLabel jLUsuario;

@@ -1,4 +1,4 @@
-package modelo;
+package controlador;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -20,6 +23,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
+import modelo.Venta;
 import utilidades.ConexionDB;
 
 /**
@@ -27,7 +31,7 @@ import utilidades.ConexionDB;
  * @author Quique
  */
 public class Ventas extends javax.swing.JFrame {
-
+    private static final DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
     static ArrayList<Venta> array_ventas = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO venta PARA ALMACENAR TODAS LAS VENTAS
     Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE 
     DefaultTableModel model;
@@ -69,7 +73,7 @@ public class Ventas extends javax.swing.JFrame {
             int id = rs.getInt("id");
             int cliente = Integer.parseInt(rs.getString("cliente"));
             int empleado = Integer.parseInt(rs.getString("empleado"));
-            String fecha = rs.getString("fecha");
+            Date fecha = rs.getDate("fecha");
             String metodo_pago = rs.getString("metodo_pago");
 
             array_ventas.add(new Venta(id, cliente, empleado, fecha, metodo_pago));
@@ -113,6 +117,7 @@ public class Ventas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jBCerrar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -144,49 +149,63 @@ public class Ventas extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(940, 415));
-        setMinimumSize(new java.awt.Dimension(940, 415));
-        setPreferredSize(new java.awt.Dimension(940, 415));
+        setMinimumSize(new java.awt.Dimension(931, 386));
+        setUndecorated(true);
         getContentPane().setLayout(null);
+
+        jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
+        jBCerrar.setBorder(null);
+        jBCerrar.setBorderPainted(false);
+        jBCerrar.setContentAreaFilled(false);
+        jBCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jBCerrar.setFocusable(false);
+        jBCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jBCerrar);
+        jBCerrar.setBounds(910, 0, 20, 20);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Cliente");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 120, 55, 22);
+        jLabel2.setBounds(50, 130, 55, 22);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Empleado");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(50, 160, 78, 22);
+        jLabel3.setBounds(50, 170, 78, 22);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Fecha");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(50, 200, 45, 22);
+        jLabel4.setBounds(50, 210, 45, 22);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Método pago");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(50, 240, 127, 22);
+        jLabel5.setBounds(50, 250, 127, 22);
 
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ventas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(30, 40, 120, 30);
+        jLabel8.setBounds(30, 30, 140, 30);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(170, 40, 40, 40);
+        jLabel9.setBounds(170, 60, 40, 40);
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
@@ -211,7 +230,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(160, 120, 142, 20);
+        jTextField2.setBounds(160, 130, 142, 20);
 
         jTextField3.setBackground(new java.awt.Color(204, 204, 204));
         jTextField3.setForeground(new java.awt.Color(255, 255, 255));
@@ -220,7 +239,7 @@ public class Ventas extends javax.swing.JFrame {
         jTextField3.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField3.setOpaque(false);
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(160, 160, 142, 20);
+        jTextField3.setBounds(160, 170, 142, 20);
 
         jTextField4.setBackground(new java.awt.Color(204, 204, 204));
         jTextField4.setForeground(new java.awt.Color(255, 255, 255));
@@ -229,7 +248,7 @@ public class Ventas extends javax.swing.JFrame {
         jTextField4.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField4.setOpaque(false);
         getContentPane().add(jTextField4);
-        jTextField4.setBounds(160, 200, 142, 20);
+        jTextField4.setBounds(160, 210, 142, 20);
 
         jTextField5.setBackground(new java.awt.Color(204, 204, 204));
         jTextField5.setForeground(new java.awt.Color(255, 255, 255));
@@ -238,7 +257,7 @@ public class Ventas extends javax.swing.JFrame {
         jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField5.setOpaque(false);
         getContentPane().add(jTextField5);
-        jTextField5.setBounds(160, 240, 142, 20);
+        jTextField5.setBounds(160, 250, 142, 20);
 
         jTFBuscar.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -254,7 +273,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscar);
-        jTFBuscar.setBounds(200, 50, 120, 19);
+        jTFBuscar.setBounds(200, 70, 120, 19);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
@@ -265,7 +284,6 @@ public class Ventas extends javax.swing.JFrame {
         jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton5.setFocusable(false);
         jButton5.setMargin(new java.awt.Insets(5, 14, 5, 14));
-        jButton5.setMaximumSize(null);
         jButton5.setPreferredSize(new java.awt.Dimension(77, 23));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -273,7 +291,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(30, 290, 100, 30);
+        jButton5.setBounds(30, 300, 100, 30);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
@@ -292,7 +310,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton6);
-        jButton6.setBounds(130, 290, 100, 30);
+        jButton6.setBounds(130, 300, 100, 30);
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
@@ -310,7 +328,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton7);
-        jButton7.setBounds(230, 290, 100, 30);
+        jButton7.setBounds(230, 300, 100, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -326,7 +344,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(50, 330, 120, 30);
+        jButton8.setBounds(50, 340, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -342,41 +360,51 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(170, 330, 120, 30);
+        jButton9.setBounds(170, 340, 120, 30);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(50, 140, 250, 10);
+        jSeparator2.setBounds(50, 150, 270, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(50, 180, 250, 10);
+        jSeparator3.setBounds(50, 190, 270, 10);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(50, 220, 250, 10);
+        jSeparator4.setBounds(50, 230, 270, 10);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(50, 260, 250, 10);
+        jSeparator5.setBounds(50, 270, 270, 10);
         getContentPane().add(jSeparator7);
-        jSeparator7.setBounds(200, 70, 120, 10);
+        jSeparator7.setBounds(200, 90, 120, 10);
         getContentPane().add(statusText);
         statusText.setBounds(320, 340, 20, 24);
 
         jCBTarjeta.setForeground(new java.awt.Color(255, 255, 255));
+        jCBTarjeta.setSelected(true);
         jCBTarjeta.setText("Tarjeta");
         jCBTarjeta.setBorder(null);
         jCBTarjeta.setContentAreaFilled(false);
-        jCBTarjeta.setOpaque(false);
+        jCBTarjeta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBTarjetaActionPerformed(evt);
+            }
+        });
         getContentPane().add(jCBTarjeta);
-        jCBTarjeta.setBounds(160, 240, 70, 20);
+        jCBTarjeta.setBounds(180, 250, 70, 20);
 
         jCBEfectivo.setForeground(new java.awt.Color(255, 255, 255));
         jCBEfectivo.setText("Efectivo");
         jCBEfectivo.setContentAreaFilled(false);
+        jCBEfectivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBEfectivoActionPerformed(evt);
+            }
+        });
         getContentPane().add(jCBEfectivo);
-        jCBEfectivo.setBounds(230, 240, 80, 24);
+        jCBEfectivo.setBounds(250, 250, 80, 20);
 
         jCBCli.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBCli);
-        jCBCli.setBounds(160, 120, 160, 20);
+        jCBCli.setBounds(160, 130, 160, 20);
 
         jCBEmp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBEmp);
-        jCBEmp.setBounds(160, 160, 160, 20);
+        jCBEmp.setBounds(160, 170, 160, 20);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -389,7 +417,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -420,8 +448,11 @@ public class Ventas extends javax.swing.JFrame {
         jScrollPane1.setBounds(350, 30, 560, 330);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(931, 386));
+        jLabel1.setMinimumSize(new java.awt.Dimension(931, 386));
+        jLabel1.setPreferredSize(new java.awt.Dimension(931, 386));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, -10, 970, 430);
+        jLabel1.setBounds(0, 0, 931, 386);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -456,24 +487,26 @@ public class Ventas extends javax.swing.JFrame {
         jCBCli.setVisible(true);
         jCBEmp.setVisible(true);
         jCBTarjeta.setVisible(true);
+        jCBTarjeta.setEnabled(false);
         jCBEfectivo.setVisible(true);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
         jButton8.setVisible(true);
-        jButton9.setVisible(true);
+        jButton9.setVisible(true);        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         //BOTÓN EDITAR
         try {
             int vId, vCli, vEmp;
-            String vFecha, vMetodo_pago;
+            String vMetodo_pago;            
+            //Date vFecha = new Date();
+            Date vFecha = sdf.parse(jTextField4.getText());
 
             vId = Integer.parseInt(jTextField1.getText());
             vCli = getCodigoCliente(jTextField2.getText());
-            vEmp = getCodigoEmpleado(jTextField3.getText());
-            vFecha = jTextField4.getText();
+            vEmp = getCodigoEmpleado(jTextField3.getText());            
             vMetodo_pago = jTextField5.getText();
             //REALIZA UPDATE EN LA BASE DE DATOS
             String url = "jdbc:mysql://localhost:3306/clothy";
@@ -481,7 +514,7 @@ public class Ventas extends javax.swing.JFrame {
             String pass = "";
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement st = connection.createStatement();
-            String query = "update ventas set cliente='" + vCli + "', empleado='" + vEmp + "', fecha=" + vFecha + ", metodo_pago=" + vMetodo_pago + " WHERE id=" + vId;
+            String query = "UPDATE ventas SET cliente='" + vCli + "', empleado='" + vEmp + "', fecha='" + vFecha + "', metodo_pago='" + vMetodo_pago + "' WHERE id=" + vId;
             st.executeUpdate(query);             
             //REALIZA UPDATE EN LA TABLA
             if (jTFBuscar.getText().isEmpty()) {
@@ -500,6 +533,8 @@ public class Ventas extends javax.swing.JFrame {
 
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -555,25 +590,47 @@ public class Ventas extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //BOTÓN ACEPTAR
+        //Date vFecha = new Date();
+        Date vFecha = null;
+        try {
+            vFecha = sdf.parse(jTextField4.getText());
+        } catch (ParseException ex) {
+            Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             int vId, vCli, vEmp;
-            String vFecha, vMetodo_pago;
-
-            vId = Integer.parseInt(jTextField1.getText());
-            vCli = getCodigoCliente(jTextField2.getText());
-            vEmp = getCodigoEmpleado(jTextField3.getText());
-            vFecha = jTextField4.getText();
-            vMetodo_pago = jTextField5.getText();
+            String vMetodo_pago = null ,cli, emp;            
+            
+            if(jTextField1.getText().isEmpty()){
+                vId=0;
+            }else{
+                vId = Integer.parseInt(jTextField1.getText());                
+            }            
+            vCli = getCodigoCliente((String) jCBCli.getSelectedItem());
+            cli = (String) jCBCli.getSelectedItem();
+            vEmp = getCodigoEmpleado((String) jCBEmp.getSelectedItem());
+            emp = (String) jCBEmp.getSelectedItem();             
+           
+            if (jCBTarjeta.isSelected()) {
+                vMetodo_pago = "Tarjeta";                
+            }else if(jCBEfectivo.isSelected()){
+                vMetodo_pago = "Efectivo";                
+            }else{
+                JOptionPane.showMessageDialog(null, "Seleccione un método de pago", "Error", JOptionPane.ERROR_MESSAGE);
+            }           
             //INSERT EN LA BASE DE DATOS
-            PreparedStatement ps = conex.prepareStatement("INSERT INTO ventas (cliente, empleado, fecha, metodo_paog) VALUES (?,?,?,?)");
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO ventas (cliente, empleado, fecha, metodo_pago) VALUES (?,?,?,?)");
             ps.setInt(1, vCli);
             ps.setInt(2, vEmp);
-            ps.setString(3, vFecha);
+            ps.setDate(3, (java.sql.Date) vFecha);
             ps.setString(4, vMetodo_pago);
             ps.executeUpdate();
             //INSERT EN LA TABLA
             vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
-            model.addRow(new Object[]{vId, vCli, vEmp, vFecha, vMetodo_pago});
+            if(array_ventas.isEmpty()){ //SI NO HAY NINGÚN PEDIDO AÚN, ES EL 0.
+                vId=0;                
+            }            
+            model.addRow(new Object[]{vId, cli, emp, vFecha, vMetodo_pago});
             //INSERT EN EL ARRAY
             array_ventas.add(new Venta(vId, vCli, vEmp, vFecha, vMetodo_pago));
 
@@ -587,6 +644,8 @@ public class Ventas extends javax.swing.JFrame {
             jCBEmp.setVisible(false);
             jCBTarjeta.setVisible(false);
             jCBEfectivo.setVisible(false);
+            jCBTarjeta.setEnabled(true);
+            jCBEfectivo.setEnabled(true);
             jTextField2.setVisible(true);
             jTextField3.setVisible(true);
             jTextField2.setText("");
@@ -594,10 +653,9 @@ public class Ventas extends javax.swing.JFrame {
             jTextField4.setText("");
             jTextField5.setText("");
             jTextField5.setVisible(true);
-
-            //estadoInicial();
-        } catch (Exception e) {
-            e.printStackTrace();
+                              
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton8ActionPerformed
 
@@ -613,6 +671,10 @@ public class Ventas extends javax.swing.JFrame {
         jCBEmp.setVisible(false);
         jCBTarjeta.setVisible(false);
         jCBEfectivo.setVisible(false);
+        jCBTarjeta.setEnabled(true);
+        jCBEfectivo.setEnabled(true);
+        jCBTarjeta.setSelected(true);
+        jCBEfectivo.setSelected(false);
         jButton5.setEnabled(true);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
@@ -622,6 +684,29 @@ public class Ventas extends javax.swing.JFrame {
         jTextField4.setText("");
         jTextField5.setText("");
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
+        //BOTÓN X, CERRAR VENTANA INDIVIDUAL
+        this.dispose();
+    }//GEN-LAST:event_jBCerrarActionPerformed
+
+    private void jCBTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBTarjetaActionPerformed
+        //CHECKBOX TARJETA
+        if (jCBTarjeta.isSelected()) {
+            jCBTarjeta.setEnabled(false);
+            jCBEfectivo.setEnabled(true);
+            jCBEfectivo.setSelected(false);
+        }              
+    }//GEN-LAST:event_jCBTarjetaActionPerformed
+
+    private void jCBEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBEfectivoActionPerformed
+        //CHECKBOX EFECTIVO
+        if (jCBEfectivo.isSelected()) {            
+            jCBEfectivo.setEnabled(false);
+            jCBTarjeta.setEnabled(true);
+            jCBTarjeta.setSelected(false);
+        }
+    }//GEN-LAST:event_jCBEfectivoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -665,18 +750,13 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
-    public static String getNombreCliente(int num) {
+    public String getNombreCliente(int num) {
         String nombre = "";
 
-        try {
-            ResultSet r3;
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement s3 = connection.createStatement();
+        try {            
+            Statement s3 = conex.createStatement();
             String queryNombre = "SELECT nombre from clientes WHERE id=" + num;
-            r3 = s3.executeQuery(queryNombre);
+            ResultSet r3 = s3.executeQuery(queryNombre);
             r3.first();
             nombre = r3.getString("nombre");
         } catch (SQLException ex) {
@@ -686,18 +766,13 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
-    public static int getCodigoCliente(String nom) {
+    public int getCodigoCliente(String nom) {
         int codCliente = 0;
 
-        try {
-            ResultSet r3;
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement s3 = connection.createStatement();
-            String queryNombre = "SELECT id from clientes WHERE nombre='" + nom;
-            r3 = s3.executeQuery(queryNombre);
+        try {           
+            Statement s3 = conex.createStatement();
+            String queryNombre = "SELECT id from clientes WHERE nombre='" + nom + "'";
+            ResultSet r3 = s3.executeQuery(queryNombre);
             r3.first();
             codCliente = r3.getInt("id");
         } catch (SQLException ex) {
@@ -707,18 +782,13 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA MARCA, PASANDO POR PARÁMETRO SU INT
-    public static String getNombreEmpleado(int num) {
+    public String getNombreEmpleado(int num) {
         String empleado = "";
 
-        try {
-            ResultSet r3;
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement s3 = connection.createStatement();
+        try {            
+            Statement s3 = conex.createStatement();
             String queryNombre = "SELECT nombre from empleados WHERE id=" + num;
-            r3 = s3.executeQuery(queryNombre);
+            ResultSet r3 = s3.executeQuery(queryNombre);
             r3.first();
             empleado = r3.getString("nombre");
         } catch (SQLException ex) {
@@ -729,18 +799,13 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     //MÉTODO QUE DEVUELVE EL NÚMERO  DE LA MARCA, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
-    public static int getCodigoEmpleado(String nom) {
+    public int getCodigoEmpleado(String nom) {
         int codEmp = 0;
 
         try {
-            ResultSet r3;
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement s3 = connection.createStatement();
-            String queryNombre = "SELECT id from empleados WHERE nombre='" + nom;
-            r3 = s3.executeQuery(queryNombre);
+            Statement s3 = conex.createStatement();
+            String queryNombre = "SELECT id from empleados WHERE nombre='" + nom + "'";
+            ResultSet r3 = s3.executeQuery(queryNombre);
             r3.first();
             codEmp = r3.getInt("id");
         } catch (SQLException ex) {
@@ -820,6 +885,7 @@ public class Ventas extends javax.swing.JFrame {
         );
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
