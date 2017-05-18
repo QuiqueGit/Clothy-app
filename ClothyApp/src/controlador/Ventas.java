@@ -8,11 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,30 +20,36 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Venta;
+import modelo.VentaArticulo;
 import utilidades.ConexionDB;
+import vista.Login;
 
 /**
  *
  * @author Quique
  */
 public class Ventas extends javax.swing.JFrame {
-    private static final DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
+    
     static ArrayList<Venta> array_ventas = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO venta PARA ALMACENAR TODAS LAS VENTAS
+    ArrayList<VentaArticulo> array_stockTotal = new ArrayList<>(); //ARRAYLIST PARA ALMACENAR TODOS LOS OBJETOS EN STOCK, INCLUIDA TALLA
     Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE 
     DefaultTableModel model;
+    DefaultTableModel model2;   
     Statement s;
-    ResultSet rs;
-
+    ResultSet rs;  
+    
     int viewRow, modelRow;
 
     /**
      * Creates new form Ventas
      */
     public Ventas() throws SQLException, ClassNotFoundException {
+        
         initComponents();
         this.setLocationRelativeTo(null);
         array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
-        this.model = (DefaultTableModel) jTable1.getModel();
+        model = (DefaultTableModel) jTable1.getModel();
+        model2 = (DefaultTableModel) jTable2.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(55);
@@ -56,10 +58,11 @@ public class Ventas extends javax.swing.JFrame {
         columnModel.getColumn(3).setPreferredWidth(120);
         columnModel.getColumn(4).setPreferredWidth(120);
 
-        jTextField1.setVisible(false);
+        TFIdOculta.setVisible(false);
+        TFEmpleado.setEnabled(false);
         statusText.setVisible(false);
+        statusText1.setVisible(false);
         jCBCli.setVisible(false);
-        jCBEmp.setVisible(false);
         jCBTarjeta.setVisible(false);
         jCBEfectivo.setVisible(false);
         jButton8.setVisible(false);
@@ -73,39 +76,80 @@ public class Ventas extends javax.swing.JFrame {
             int id = rs.getInt("id");
             int cliente = Integer.parseInt(rs.getString("cliente"));
             int empleado = Integer.parseInt(rs.getString("empleado"));
-            Date fecha = rs.getDate("fecha");
+            String fecha = rs.getString("fecha");
             String metodo_pago = rs.getString("metodo_pago");
 
             array_ventas.add(new Venta(id, cliente, empleado, fecha, metodo_pago));
         }
 
-        añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST
-        llenarClientes();  //MÉTODO PARA LLENAR COMBOBOX DE CATEGORIAS
-        llenarEmpleados(); //MÉTODO PARA LLENAR COMBOBOX DE MARCAS
+        añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST, TABLA1 VENTAS/CLIENTES
+        llenarClientes();  //MÉTODO PARA LLENAR COMBOBOX DE CLIENTES
 
         jTable1.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
 
             @Override
             public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
-                if (jTFBuscar.getText().isEmpty()) {
+                if (jTFBuscarVenta.getText().isEmpty()) {
                     int i = jTable1.getSelectedRow();
                     // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
-                    jTextField1.setText(model.getValueAt(i, 0).toString());
-                    jTextField2.setText(model.getValueAt(i, 1).toString());
-                    jTextField3.setText(model.getValueAt(i, 2).toString());
-                    jTextField4.setText(model.getValueAt(i, 3).toString());
-                    jTextField5.setText(model.getValueAt(i, 4).toString());
+                    TFIdOculta.setText(model.getValueAt(i, 0).toString());
+                    TFCliente.setText(model.getValueAt(i, 1).toString());
+                    TFEmpleado.setText(model.getValueAt(i, 2).toString());
+                    TFFecha.setText(model.getValueAt(i, 3).toString());
+                    TFPago.setText(model.getValueAt(i, 4).toString());
 
                 } else {
                     int i = modelRow;
-                    jTextField1.setText(model.getValueAt(i, 0).toString());
-                    jTextField2.setText(model.getValueAt(i, 1).toString());
-                    jTextField3.setText(model.getValueAt(i, 2).toString());
-                    jTextField4.setText(model.getValueAt(i, 3).toString());
-                    jTextField5.setText(model.getValueAt(i, 4).toString());
+                    TFIdOculta.setText(model.getValueAt(i, 0).toString());
+                    TFCliente.setText(model.getValueAt(i, 1).toString());
+                    TFEmpleado.setText(model.getValueAt(i, 2).toString());
+                    TFFecha.setText(model.getValueAt(i, 3).toString());
+                    TFPago.setText(model.getValueAt(i, 4).toString());
                 }
             }
         });
+        
+        Statement s2 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        String query2 = "SELECT * FROM ventas_articulos";
+        ResultSet r2 = s2.executeQuery(query2);
+
+        while (r2.next()) { //CREO NUEVOS OBJETOS TIPO ARTICULO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
+            String idArt = r2.getString("Articulo");
+            String idTal = r2.getString("valor_talla");
+            String desc = r2.getString("descripcion");
+            float precio = r2.getFloat("precio");
+            String cat = r2.getString("Categoria");
+            String marca = r2.getString("Marca"); 
+            int stock = r2.getInt("stock");
+            
+            array_stockTotal.add(new VentaArticulo(idArt, idTal, desc, precio, cat, marca, stock));
+        }
+        
+        añadirFilasTabla2(); //TABLA2 VENTAS/ARTICULOS
+        
+        jTable2.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
+
+            @Override
+            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
+                if (jTFBuscarVentaArticulos.getText().isEmpty()) {
+                    int i = jTable2.getSelectedRow();
+                    // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
+                    TFArticulo.setText(model2.getValueAt(i, 0).toString());
+                    TFTalla.setText(model2.getValueAt(i, 1).toString());
+                    TFPrecio.setText(model2.getValueAt(i, 3).toString());
+                    TFStock.setText(model2.getValueAt(i, 6).toString());
+
+                } else {
+                    int i = modelRow;
+                    TFArticulo.setText(model2.getValueAt(i, 0).toString());
+                    TFTalla.setText(model2.getValueAt(i, 1).toString());
+                    TFPrecio.setText(model2.getValueAt(i, 3).toString());
+                    TFStock.setText(model2.getValueAt(i, 6).toString());
+
+                }
+            }
+        });
+           
     }
 
     /**
@@ -124,14 +168,32 @@ public class Ventas extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTFBuscar = new javax.swing.JTextField();
+        TFIdOculta = new javax.swing.JTextField();
+        TFCliente = new javax.swing.JTextField();
+        TFEmpleado = new javax.swing.JTextField();
+        TFFecha = new javax.swing.JTextField();
+        TFPago = new javax.swing.JTextField();
+        TFArticulo = new javax.swing.JTextField();
+        TFTalla = new javax.swing.JTextField();
+        TFPrecio = new javax.swing.JTextField();
+        TFStock = new javax.swing.JTextField();
+        TFCantidad = new javax.swing.JTextField();
+        TFNumLinea = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jSeparator15 = new javax.swing.JSeparator();
+        jTFBuscarVenta = new javax.swing.JTextField();
+        jTFBuscarVentaArticulos = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jSeparator6 = new javax.swing.JSeparator();
+        jLabel7 = new javax.swing.JLabel();
+        jSeparator9 = new javax.swing.JSeparator();
+        jLabel12 = new javax.swing.JLabel();
+        jSeparator11 = new javax.swing.JSeparator();
+        jLabel14 = new javax.swing.JLabel();
+        jSeparator13 = new javax.swing.JSeparator();
+        jLabel15 = new javax.swing.JLabel();
+        jSeparator14 = new javax.swing.JSeparator();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
@@ -141,16 +203,22 @@ public class Ventas extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator7 = new javax.swing.JSeparator();
         statusText = new javax.swing.JTextField();
+        statusText1 = new javax.swing.JTextField();
         jCBTarjeta = new javax.swing.JCheckBox();
         jCBEfectivo = new javax.swing.JCheckBox();
         jCBCli = new javax.swing.JComboBox<>();
-        jCBEmp = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        jSeparator8 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
-        setMinimumSize(new java.awt.Dimension(931, 386));
+        setMaximumSize(new java.awt.Dimension(1045, 720));
+        setMinimumSize(new java.awt.Dimension(1045, 720));
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(1045, 720));
         getContentPane().setLayout(null);
 
         jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
@@ -166,119 +234,248 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBCerrar);
-        jBCerrar.setBounds(910, 0, 20, 20);
+        jBCerrar.setBounds(1020, 0, 20, 20);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Cliente");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 130, 55, 22);
+        jLabel2.setBounds(60, 120, 55, 22);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Empleado");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(50, 170, 78, 22);
+        jLabel3.setBounds(60, 160, 78, 22);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Fecha");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(50, 210, 45, 22);
+        jLabel4.setBounds(60, 200, 45, 22);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Método pago");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(50, 250, 127, 22);
+        jLabel5.setBounds(60, 240, 127, 22);
 
         jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ventas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(30, 30, 140, 30);
+        jLabel8.setBounds(140, 30, 140, 30);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(170, 60, 40, 40);
+        jLabel9.setBounds(380, 30, 40, 40);
 
-        jTextField1.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField1.setEnabled(false);
-        jTextField1.setFocusable(false);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        TFIdOculta.setBackground(new java.awt.Color(0, 0, 0));
+        TFIdOculta.setEnabled(false);
+        TFIdOculta.setFocusable(false);
+        TFIdOculta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                TFIdOcultaActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(50, 80, 20, 24);
+        getContentPane().add(TFIdOculta);
+        TFIdOculta.setBounds(60, 70, 20, 24);
 
-        jTextField2.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField2.setBorder(null);
-        jTextField2.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField2.setOpaque(false);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        TFCliente.setBackground(new java.awt.Color(204, 204, 204));
+        TFCliente.setForeground(new java.awt.Color(255, 255, 255));
+        TFCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFCliente.setBorder(null);
+        TFCliente.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFCliente.setOpaque(false);
+        TFCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                TFClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(160, 130, 142, 20);
+        getContentPane().add(TFCliente);
+        TFCliente.setBounds(170, 120, 142, 20);
 
-        jTextField3.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField3.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField3.setBorder(null);
-        jTextField3.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField3.setOpaque(false);
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(160, 170, 142, 20);
+        TFEmpleado.setBackground(new java.awt.Color(204, 204, 204));
+        TFEmpleado.setForeground(new java.awt.Color(255, 255, 255));
+        TFEmpleado.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFEmpleado.setBorder(null);
+        TFEmpleado.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFEmpleado.setOpaque(false);
+        getContentPane().add(TFEmpleado);
+        TFEmpleado.setBounds(170, 160, 142, 20);
 
-        jTextField4.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField4.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField4.setBorder(null);
-        jTextField4.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField4.setOpaque(false);
-        getContentPane().add(jTextField4);
-        jTextField4.setBounds(160, 210, 142, 20);
+        TFFecha.setBackground(new java.awt.Color(204, 204, 204));
+        TFFecha.setForeground(new java.awt.Color(255, 255, 255));
+        TFFecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFFecha.setBorder(null);
+        TFFecha.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFFecha.setOpaque(false);
+        getContentPane().add(TFFecha);
+        TFFecha.setBounds(170, 200, 142, 20);
 
-        jTextField5.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField5.setBorder(null);
-        jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField5.setOpaque(false);
-        getContentPane().add(jTextField5);
-        jTextField5.setBounds(160, 250, 142, 20);
+        TFPago.setBackground(new java.awt.Color(204, 204, 204));
+        TFPago.setForeground(new java.awt.Color(255, 255, 255));
+        TFPago.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFPago.setBorder(null);
+        TFPago.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFPago.setOpaque(false);
+        getContentPane().add(TFPago);
+        TFPago.setBounds(170, 240, 142, 20);
 
-        jTFBuscar.setBackground(new java.awt.Color(204, 204, 204));
-        jTFBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jTFBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        jTFBuscar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTFBuscar.setBorder(null);
-        jTFBuscar.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTFBuscar.setName("Buscar"); // NOI18N
-        jTFBuscar.setOpaque(false);
-        jTFBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+        TFArticulo.setBackground(new java.awt.Color(204, 204, 204));
+        TFArticulo.setForeground(new java.awt.Color(255, 255, 255));
+        TFArticulo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFArticulo.setBorder(null);
+        TFArticulo.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFArticulo.setOpaque(false);
+        TFArticulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TFArticuloActionPerformed(evt);
+            }
+        });
+        getContentPane().add(TFArticulo);
+        TFArticulo.setBounds(170, 280, 142, 20);
+
+        TFTalla.setBackground(new java.awt.Color(204, 204, 204));
+        TFTalla.setForeground(new java.awt.Color(255, 255, 255));
+        TFTalla.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFTalla.setBorder(null);
+        TFTalla.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFTalla.setOpaque(false);
+        getContentPane().add(TFTalla);
+        TFTalla.setBounds(170, 320, 142, 20);
+
+        TFPrecio.setBackground(new java.awt.Color(204, 204, 204));
+        TFPrecio.setForeground(new java.awt.Color(255, 255, 255));
+        TFPrecio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFPrecio.setBorder(null);
+        TFPrecio.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFPrecio.setOpaque(false);
+        getContentPane().add(TFPrecio);
+        TFPrecio.setBounds(170, 360, 142, 20);
+
+        TFStock.setBackground(new java.awt.Color(204, 204, 204));
+        TFStock.setForeground(new java.awt.Color(255, 255, 255));
+        TFStock.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFStock.setBorder(null);
+        TFStock.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFStock.setOpaque(false);
+        getContentPane().add(TFStock);
+        TFStock.setBounds(170, 400, 142, 20);
+
+        TFCantidad.setBackground(new java.awt.Color(204, 204, 204));
+        TFCantidad.setForeground(new java.awt.Color(255, 255, 255));
+        TFCantidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFCantidad.setBorder(null);
+        TFCantidad.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFCantidad.setOpaque(false);
+        getContentPane().add(TFCantidad);
+        TFCantidad.setBounds(170, 440, 142, 20);
+
+        TFNumLinea.setBackground(new java.awt.Color(204, 204, 204));
+        TFNumLinea.setForeground(new java.awt.Color(255, 255, 255));
+        TFNumLinea.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFNumLinea.setBorder(null);
+        TFNumLinea.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFNumLinea.setOpaque(false);
+        getContentPane().add(TFNumLinea);
+        TFNumLinea.setBounds(170, 480, 142, 20);
+
+        jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Nº Linea");
+        jLabel16.setFocusable(false);
+        getContentPane().add(jLabel16);
+        jLabel16.setBounds(60, 480, 90, 22);
+        getContentPane().add(jSeparator15);
+        jSeparator15.setBounds(60, 500, 270, 10);
+
+        jTFBuscarVenta.setBackground(new java.awt.Color(204, 204, 204));
+        jTFBuscarVenta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFBuscarVenta.setForeground(new java.awt.Color(255, 255, 255));
+        jTFBuscarVenta.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTFBuscarVenta.setBorder(null);
+        jTFBuscarVenta.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTFBuscarVenta.setName("Buscar"); // NOI18N
+        jTFBuscarVenta.setOpaque(false);
+        jTFBuscarVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTFBuscarKeyReleased(evt);
+                jTFBuscarVentaKeyReleased(evt);
             }
         });
-        getContentPane().add(jTFBuscar);
-        jTFBuscar.setBounds(200, 70, 120, 19);
+        getContentPane().add(jTFBuscarVenta);
+        jTFBuscarVenta.setBounds(410, 40, 120, 19);
+
+        jTFBuscarVentaArticulos.setBackground(new java.awt.Color(204, 204, 204));
+        jTFBuscarVentaArticulos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFBuscarVentaArticulos.setForeground(new java.awt.Color(255, 255, 255));
+        jTFBuscarVentaArticulos.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTFBuscarVentaArticulos.setBorder(null);
+        jTFBuscarVentaArticulos.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTFBuscarVentaArticulos.setName("Buscar"); // NOI18N
+        jTFBuscarVentaArticulos.setOpaque(false);
+        jTFBuscarVentaArticulos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTFBuscarVentaArticulosKeyReleased(evt);
+            }
+        });
+        getContentPane().add(jTFBuscarVentaArticulos);
+        jTFBuscarVentaArticulos.setBounds(410, 360, 120, 19);
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Artículo");
+        jLabel6.setFocusable(false);
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(60, 280, 80, 22);
+        getContentPane().add(jSeparator6);
+        jSeparator6.setBounds(60, 300, 270, 10);
+
+        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Talla");
+        jLabel7.setFocusable(false);
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(60, 320, 50, 22);
+        getContentPane().add(jSeparator9);
+        jSeparator9.setBounds(60, 340, 270, 10);
+
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Precio");
+        jLabel12.setFocusable(false);
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(60, 360, 80, 22);
+        getContentPane().add(jSeparator11);
+        jSeparator11.setBounds(60, 380, 270, 10);
+
+        jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Stock");
+        jLabel14.setFocusable(false);
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(60, 400, 60, 22);
+        getContentPane().add(jSeparator13);
+        jSeparator13.setBounds(60, 420, 270, 10);
+
+        jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel15.setText("Cantidad");
+        jLabel15.setFocusable(false);
+        getContentPane().add(jLabel15);
+        jLabel15.setBounds(60, 440, 80, 22);
+        getContentPane().add(jSeparator14);
+        jSeparator14.setBounds(60, 460, 270, 10);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/newx24b.png"))); // NOI18N
-        jButton5.setText("Nuevo");
+        jButton5.setText("Nueva Venta");
         jButton5.setBorderPainted(false);
         jButton5.setContentAreaFilled(false);
         jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -291,26 +488,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(30, 300, 100, 30);
-
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/edit_button.png"))); // NOI18N
-        jButton6.setText("Editar");
-        jButton6.setBorderPainted(false);
-        jButton6.setContentAreaFilled(false);
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton6.setFocusable(false);
-        jButton6.setMaximumSize(null);
-        jButton6.setMinimumSize(new java.awt.Dimension(96, 40));
-        jButton6.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton6);
-        jButton6.setBounds(130, 300, 100, 30);
+        jButton5.setBounds(60, 560, 140, 30);
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
@@ -328,7 +506,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton7);
-        jButton7.setBounds(230, 300, 100, 30);
+        jButton7.setBounds(220, 560, 100, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -344,7 +522,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(50, 340, 120, 30);
+        jButton8.setBounds(10, 610, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -360,19 +538,27 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(170, 340, 120, 30);
+        jButton9.setBounds(110, 610, 120, 30);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(50, 150, 270, 10);
+        jSeparator2.setBounds(60, 140, 270, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(50, 190, 270, 10);
+        jSeparator3.setBounds(60, 180, 270, 10);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(50, 230, 270, 10);
+        jSeparator4.setBounds(60, 220, 270, 10);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(50, 270, 270, 10);
+        jSeparator5.setBounds(60, 260, 270, 10);
         getContentPane().add(jSeparator7);
-        jSeparator7.setBounds(200, 90, 120, 10);
+        jSeparator7.setBounds(410, 60, 120, 10);
+
+        statusText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusTextActionPerformed(evt);
+            }
+        });
         getContentPane().add(statusText);
-        statusText.setBounds(320, 340, 20, 24);
+        statusText.setBounds(350, 300, 20, 24);
+        getContentPane().add(statusText1);
+        statusText1.setBounds(350, 640, 20, 24);
 
         jCBTarjeta.setForeground(new java.awt.Color(255, 255, 255));
         jCBTarjeta.setSelected(true);
@@ -385,7 +571,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jCBTarjeta);
-        jCBTarjeta.setBounds(180, 250, 70, 20);
+        jCBTarjeta.setBounds(190, 240, 70, 20);
 
         jCBEfectivo.setForeground(new java.awt.Color(255, 255, 255));
         jCBEfectivo.setText("Efectivo");
@@ -396,15 +582,17 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jCBEfectivo);
-        jCBEfectivo.setBounds(250, 250, 80, 20);
+        jCBEfectivo.setBounds(260, 240, 80, 20);
 
         jCBCli.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBCli);
-        jCBCli.setBounds(160, 130, 160, 20);
+        jCBCli.setBounds(170, 120, 160, 20);
 
-        jCBEmp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(jCBEmp);
-        jCBEmp.setBounds(160, 170, 160, 20);
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(380, 350, 40, 40);
+        getContentPane().add(jSeparator8);
+        jSeparator8.setBounds(410, 380, 120, 10);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -443,112 +631,112 @@ public class Ventas extends javax.swing.JFrame {
         jTable1.setShowVerticalLines(false);
         jTable1.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Fecha");
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Método pago");
+        }
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(350, 30, 560, 330);
+        jScrollPane1.setBounds(390, 70, 620, 260);
+
+        jTable2.setAutoCreateRowSorter(true);
+        jTable2.setForeground(new java.awt.Color(0, 0, 0));
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Artículo", "Talla", "Descripción", "Precio", "Categoria", "Marca", "Stock"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable2.setAutoscrolls(false);
+        jTable2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTable2.setFocusable(false);
+        jTable2.setGridColor(new java.awt.Color(0, 0, 0));
+        jTable2.setMaximumSize(new java.awt.Dimension(520, 0));
+        jTable2.setOpaque(false);
+        jTable2.setRowHeight(30);
+        jTable2.setRowMargin(10);
+        jTable2.setSelectionForeground(new java.awt.Color(51, 51, 51));
+        jTable2.setShowVerticalLines(false);
+        jTable2.setUpdateSelectionOnSort(false);
+        jScrollPane2.setViewportView(jTable2);
+
+        getContentPane().add(jScrollPane2);
+        jScrollPane2.setBounds(390, 390, 620, 280);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(931, 386));
         jLabel1.setMinimumSize(new java.awt.Dimension(931, 386));
         jLabel1.setPreferredSize(new java.awt.Dimension(931, 386));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 931, 386);
+        jLabel1.setBounds(0, 0, 1050, 720);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void TFIdOcultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFIdOcultaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_TFIdOcultaActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void TFClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_TFClienteActionPerformed
 
-    private void jTFBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarKeyReleased
-        //jTextField BÚSQUEDA
-        String query = jTFBuscar.getText().toLowerCase();
+    private void jTFBuscarVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarVentaKeyReleased
+        //jTextField BÚSQUEDA Ventas/Clientes
+        String query = jTFBuscarVenta.getText().toLowerCase();
 
         filtro(query);
-    }//GEN-LAST:event_jTFBuscarKeyReleased
+    }//GEN-LAST:event_jTFBuscarVentaKeyReleased
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //BOTÓN NUEVO
-        jTFBuscar.setText("");
-        jTFBuscar.setEnabled(false);
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField2.setVisible(false);
-        jTextField3.setText("");
-        jTextField3.setVisible(false);
-        jTextField4.setText("");        
-        jTextField5.setText("");
-        jTextField5.setVisible(false);
+        jTFBuscarVenta.setText("");
+        jTFBuscarVenta.setEnabled(false);
+        TFIdOculta.setText("");
+        TFCliente.setText("");
+        TFCliente.setVisible(false);
+        String e = Login.getUser_actual(); //LA VENTA LA REALIZA EL EMPLEADO QUE ESTÁ LOGEADO
+        TFEmpleado.setText(e);
+        TFFecha.setText("");        
+        TFPago.setText("");
+        TFPago.setVisible(false);
         jCBCli.setVisible(true);
-        jCBEmp.setVisible(true);
         jCBTarjeta.setVisible(true);
         jCBTarjeta.setEnabled(false);
         jCBEfectivo.setVisible(true);
         jButton5.setEnabled(false);
-        jButton6.setEnabled(false);
         jButton7.setEnabled(false);
         jButton8.setVisible(true);
         jButton9.setVisible(true);        
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        //BOTÓN EDITAR
-        try {
-            int vId, vCli, vEmp;
-            String vMetodo_pago;            
-            //Date vFecha = new Date();
-            Date vFecha = sdf.parse(jTextField4.getText());
-
-            vId = Integer.parseInt(jTextField1.getText());
-            vCli = getCodigoCliente(jTextField2.getText());
-            vEmp = getCodigoEmpleado(jTextField3.getText());            
-            vMetodo_pago = jTextField5.getText();
-            //REALIZA UPDATE EN LA BASE DE DATOS
-            String url = "jdbc:mysql://localhost:3306/clothy";
-            String user = "root";
-            String pass = "";
-            Connection connection = DriverManager.getConnection(url, user, pass);
-            Statement st = connection.createStatement();
-            String query = "UPDATE ventas SET cliente='" + vCli + "', empleado='" + vEmp + "', fecha='" + vFecha + "', metodo_pago='" + vMetodo_pago + "' WHERE id=" + vId;
-            st.executeUpdate(query);             
-            //REALIZA UPDATE EN LA TABLA
-            if (jTFBuscar.getText().isEmpty()) {
-                int i = jTable1.getSelectedRow();
-                model.setValueAt(jTextField2.getText(), i, 1);
-                model.setValueAt(jTextField3.getText(), i, 2);
-                model.setValueAt(jTextField4.getText(), i, 3);
-                model.setValueAt(jTextField5.getText(), i, 4);
-            } else {
-                int i = modelRow;
-                model.setValueAt(jTextField2.getText(), i, 1);
-                model.setValueAt(jTextField3.getText(), i, 2);
-                model.setValueAt(jTextField4.getText(), i, 3);
-                model.setValueAt(jTextField5.getText(), i, 4);
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_jButton6ActionPerformed
-
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
         int i = 0;
-        if (jTextField2.getText().isEmpty()) {
+        if (TFCliente.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna venta", "Error Delete", JOptionPane.ERROR_MESSAGE);
         } else {
             int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la venta seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
             if (resp == JOptionPane.YES_OPTION) {
                 //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
-                if (jTFBuscar.getText().isEmpty()) {
+                if (jTFBuscarVenta.getText().isEmpty()) {
                     i = jTable1.getSelectedRow();
                     if (i >= 0) {
                         model.removeRow(i);
@@ -563,7 +751,7 @@ public class Ventas extends javax.swing.JFrame {
                 try {
                     //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
                     // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
-                    int vId = Integer.parseInt(jTextField1.getText());
+                    int vId = Integer.parseInt(TFIdOculta.getText());
                     //REALIZA DELETE EN LA BASE DE DATOS
                     String url = "jdbc:mysql://localhost:3306/clothy";
                     String user = "root";
@@ -572,10 +760,10 @@ public class Ventas extends javax.swing.JFrame {
                     Statement st = connection.createStatement();
                     String query = "DELETE FROM ventas WHERE id=" + vId;
                     st.executeUpdate(query);
-                    jTextField2.setText("");
-                    jTextField3.setText("");
-                    jTextField4.setText("");
-                    jTextField5.setText("");
+                    TFCliente.setText("");
+                    TFEmpleado.setText("");
+                    TFFecha.setText("");
+                    TFPago.setText("");
 
                 } catch (SQLException ex) {
                     Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
@@ -589,28 +777,22 @@ public class Ventas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        //BOTÓN ACEPTAR
-        //Date vFecha = new Date();
-        Date vFecha = null;
+        //BOTÓN ACEPTAR       
+        String vFecha = null;
+        vFecha = TFFecha.getText(); 
         try {
-            vFecha = sdf.parse(jTextField4.getText());
-        } catch (ParseException ex) {
-            Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            int vId, vCli, vEmp;
-            String vMetodo_pago = null ,cli, emp;            
+            int vId = 0, vCli, vEmp;
+            String vMetodo_pago = null ,cli;            
             
-            if(jTextField1.getText().isEmpty()){
-                vId=0;
-            }else{
-                vId = Integer.parseInt(jTextField1.getText());                
-            }            
+            if(TFIdOculta.getText().isEmpty()){
+                vId=1;
+            } else{
+                vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
+            }           
             vCli = getCodigoCliente((String) jCBCli.getSelectedItem());
             cli = (String) jCBCli.getSelectedItem();
-            vEmp = getCodigoEmpleado((String) jCBEmp.getSelectedItem());
-            emp = (String) jCBEmp.getSelectedItem();             
-           
+            vEmp = getCodigoEmpleado(TFEmpleado.getText());            
+            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
             if (jCBTarjeta.isSelected()) {
                 vMetodo_pago = "Tarjeta";                
             }else if(jCBEfectivo.isSelected()){
@@ -619,40 +801,62 @@ public class Ventas extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Seleccione un método de pago", "Error", JOptionPane.ERROR_MESSAGE);
             }           
             //INSERT EN LA BASE DE DATOS
-            PreparedStatement ps = conex.prepareStatement("INSERT INTO ventas (cliente, empleado, fecha, metodo_pago) VALUES (?,?,?,?)");
-            ps.setInt(1, vCli);
-            ps.setInt(2, vEmp);
-            ps.setDate(3, (java.sql.Date) vFecha);
-            ps.setString(4, vMetodo_pago);
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO ventas (id, cliente, empleado, fecha, metodo_pago) VALUES (?,?,?,?,?)");
+            ps.setInt(1, vId);
+            ps.setInt(2, vCli);
+            ps.setInt(3, vEmp);
+            ps.setString(4, vFecha);
+            ps.setString(5, vMetodo_pago);
             ps.executeUpdate();
             //INSERT EN LA TABLA
-            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
             if(array_ventas.isEmpty()){ //SI NO HAY NINGÚN PEDIDO AÚN, ES EL 0.
-                vId=0;                
-            }            
+                vId=1;                
+            }else{
+            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
+            }
+            String emp = TFEmpleado.getText();
             model.addRow(new Object[]{vId, cli, emp, vFecha, vMetodo_pago});
             //INSERT EN EL ARRAY
             array_ventas.add(new Venta(vId, vCli, vEmp, vFecha, vMetodo_pago));
+            
+            /*******************************************************************/            
+            //INSERT DE LA VENTA COMPLETA, A LA TABLA linea_ventas
+            
+            //INSERT EN LA BASE DE DATOS
+            int venta_id = vId;
+            int num_linea = Integer.parseInt(TFNumLinea.getText());
+            int articulo = getCodigoArticulo(TFArticulo.getText());
+            int cantidad = Integer.parseInt(TFCantidad.getText());
+            float precio = Float.parseFloat(TFPrecio.getText());
+            float importe = cantidad * precio;
+            
+            PreparedStatement ps2 = conex.prepareStatement("INSERT INTO lineas_ventas (id, venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?,?)");
+            ps2.setInt(1, venta_id);
+            ps2.setInt(2, venta_id);
+            ps2.setInt(3, num_linea);
+            ps2.setInt(4, articulo);
+            ps2.setInt(5, cantidad);
+            ps2.setFloat(6, importe);
+            ps2.executeUpdate();
 
-            jTFBuscar.setEnabled(true);
+            
+            jTFBuscarVenta.setEnabled(true);
             jButton5.setEnabled(true);
-            jButton6.setEnabled(true);
             jButton7.setEnabled(true);
             jButton8.setVisible(false);
             jButton9.setVisible(false);
             jCBCli.setVisible(false);
-            jCBEmp.setVisible(false);
             jCBTarjeta.setVisible(false);
             jCBEfectivo.setVisible(false);
             jCBTarjeta.setEnabled(true);
             jCBEfectivo.setEnabled(true);
-            jTextField2.setVisible(true);
-            jTextField3.setVisible(true);
-            jTextField2.setText("");
-            jTextField3.setText("");
-            jTextField4.setText("");
-            jTextField5.setText("");
-            jTextField5.setVisible(true);
+            TFCliente.setVisible(true);
+            TFEmpleado.setVisible(true);
+            TFCliente.setText("");
+            TFEmpleado.setText("");
+            TFFecha.setText("");
+            TFPago.setText("");
+            TFPago.setVisible(true);
                               
         } catch (SQLException ex) {
             Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
@@ -661,14 +865,12 @@ public class Ventas extends javax.swing.JFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         //BOTÓN CANCELAR
-        jTFBuscar.setEnabled(true);
+        jTFBuscarVenta.setEnabled(true);
         jButton8.setVisible(false);
         jButton9.setVisible(false);
-        jTextField2.setVisible(true);
-        jTextField3.setVisible(true);
-        jTextField5.setVisible(true);
+        TFCliente.setVisible(true);
+        TFPago.setVisible(true);
         jCBCli.setVisible(false);
-        jCBEmp.setVisible(false);
         jCBTarjeta.setVisible(false);
         jCBEfectivo.setVisible(false);
         jCBTarjeta.setEnabled(true);
@@ -676,13 +878,12 @@ public class Ventas extends javax.swing.JFrame {
         jCBTarjeta.setSelected(true);
         jCBEfectivo.setSelected(false);
         jButton5.setEnabled(true);
-        jButton6.setEnabled(true);
         jButton7.setEnabled(true);
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
+        TFIdOculta.setText("");
+        TFCliente.setText("");
+        TFEmpleado.setText("");
+        TFFecha.setText("");
+        TFPago.setText("");
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
@@ -707,6 +908,21 @@ public class Ventas extends javax.swing.JFrame {
             jCBTarjeta.setSelected(false);
         }
     }//GEN-LAST:event_jCBEfectivoActionPerformed
+
+    private void jTFBuscarVentaArticulosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarVentaArticulosKeyReleased
+        //jTextField BÚSQUEDA Ventas/Artículos
+        String query = jTFBuscarVentaArticulos.getText().toLowerCase();
+
+        filtro2(query);
+    }//GEN-LAST:event_jTFBuscarVentaArticulosKeyReleased
+
+    private void statusTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_statusTextActionPerformed
+
+    private void TFArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFArticuloActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TFArticuloActionPerformed
 
     /**
      * @param args the command line arguments
@@ -747,6 +963,22 @@ public class Ventas extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    
+    //MÉTODO QUE DEVUELVE EL NÚMERO  DEL ARTICULO, PASANDO POR PARÁMETRO SU NOMBRE, (MÉTODO PARA INSERT)
+    public int getCodigoArticulo(String nom) {
+        int codArt = 0;
+        
+        try {                        
+            Statement s3 = conex.createStatement(); 
+            String queryNombre = "SELECT id from articulos WHERE nombre='" + nom +"'";
+            ResultSet r3 = s3.executeQuery(queryNombre);
+            r3.first();
+            codArt = r3.getInt("id");           
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return codArt;
     }
 
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
@@ -828,6 +1060,22 @@ public class Ventas extends javax.swing.JFrame {
             model.addRow(datosFila);
         }
     }
+    
+    public void añadirFilasTabla2() {
+        Object datosFila[] = new Object[7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+
+        for (int i = 0; i < array_stockTotal.size(); i++) {
+            datosFila[0] = array_stockTotal.get(i).getIdArticulo();
+            datosFila[1] = array_stockTotal.get(i).getIdTalla();
+            datosFila[2] = array_stockTotal.get(i).getDescripcion();
+            datosFila[3] = array_stockTotal.get(i).getPrecio();
+            datosFila[4] = array_stockTotal.get(i).getCategoria();
+            datosFila[5] = array_stockTotal.get(i).getMarca();
+            datosFila[6] = array_stockTotal.get(i).getStock();
+
+            model2.addRow(datosFila);
+        }
+    }
 
     public void llenarClientes() throws SQLException {
 
@@ -842,22 +1090,8 @@ public class Ventas extends javax.swing.JFrame {
         jCBCli.setModel(value1);
     }
 
-    public void llenarEmpleados() throws SQLException {
-
-        String query3 = "SELECT * FROM empleados";
-        Statement s3 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet r3 = s3.executeQuery(query3);
-        DefaultComboBoxModel value2 = new DefaultComboBoxModel();
-
-        while (r3.next()) {
-            value2.addElement(r3.getString("nombre"));
-        }
-
-        jCBEmp.setModel(value2);
-    }
-
     //MÉTODO FILTRAR RESULTADOS
-    private void filtro(String query) {
+    private void filtro(String query) { //FILTRO PARA CLIENTES
 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
         jTable1.setRowSorter(tr);
@@ -884,37 +1118,87 @@ public class Ventas extends javax.swing.JFrame {
         }
         );
     }
+    
+    private void filtro2(String query) { //FILTRO PARA ARTÍCULOS
+
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model2);
+        jTable2.setRowSorter(tr);
+
+        tr.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+
+        jTable2.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                viewRow = jTable2.getSelectedRow();
+                if (viewRow < 0) {
+                    //Selection got filtered away.
+                    statusText.setText("");
+                } else {
+                    modelRow
+                            = jTable2.convertRowIndexToModel(viewRow);
+                    statusText.setText(
+                            String.format("Selected Row in view: %d. "
+                                    + "Selected Row in model: %d.",
+                                    viewRow, modelRow));
+                }
+            }
+        }
+        );
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField TFArticulo;
+    private javax.swing.JTextField TFCantidad;
+    private javax.swing.JTextField TFCliente;
+    private javax.swing.JTextField TFEmpleado;
+    private javax.swing.JTextField TFFecha;
+    private javax.swing.JTextField TFIdOculta;
+    private javax.swing.JTextField TFNumLinea;
+    private javax.swing.JTextField TFPago;
+    private javax.swing.JTextField TFPrecio;
+    private javax.swing.JTextField TFStock;
+    private javax.swing.JTextField TFTalla;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jCBCli;
     private javax.swing.JCheckBox jCBEfectivo;
-    private javax.swing.JComboBox<String> jCBEmp;
     private javax.swing.JCheckBox jCBTarjeta;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator13;
+    private javax.swing.JSeparator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JTextField jTFBuscar;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JTextField jTFBuscarVenta;
+    private javax.swing.JTextField jTFBuscarVentaArticulos;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField statusText;
+    private javax.swing.JTextField statusText1;
     // End of variables declaration//GEN-END:variables
 }

@@ -18,7 +18,7 @@ public class Login extends javax.swing.JFrame {
     
     ArrayList<Empleado> empleados;   
     static Login login;
-    static String user_actual;
+    static String user_actual;    
     
     int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
@@ -226,6 +226,12 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }  
+
+    public static String getUser_actual() {
+        return user_actual;
+    }
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBCerrar;

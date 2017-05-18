@@ -1,0 +1,6 @@
+1. Consulta para la tabla ventas/artículos...muestra todos los articulos en stock, incluias todas las tallas y sus existencias actuales.
+
+CREATE VIEW ventas_articulos AS (SELECT A.nombre AS Articulo ,T.valor_talla, A.descripcion, A.precio, C.nombre AS Categoria, M.nombre AS Marca, TAM.stock
+FROM tallas_articulos_map TAM, tallas T, articulos A, categorias C, marcas M
+WHERE A.id=TAM.id_articulo AND T.id=TAM.id_talla AND A.categoria=C.id AND A.marca=M.id
+ORDER BY TAM.id_articulo, TAM.id_talla)

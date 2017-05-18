@@ -26,8 +26,6 @@ CREATE DATABASE Clothy character set utf8 collate utf8_general_ci;
 
 USE Clothy;
 
-
-
 --
 -- Estructura Stand-in para la vista `all_articles`
 --
@@ -179,7 +177,7 @@ CREATE TABLE `empleados` (
 --
 
 INSERT INTO `empleados` (`id`, `nombre`, `apellidos`, `direccion`, `email`, `telefono`, `id_login`, `password`) VALUES
-(1, 'admin', '*', '*', '*', '*', 'admin', '*'),
+(1, 'admin', '*', '*', '*', '*', 'a', ''),
 (2, 'Marta', 'Sanchez', 'Av.de los Naranjos n14 pta23', 'marta@gmail.com', '96 154 98 65', 'marta', 'marta123'),
 (3, 'Pepe', 'Ramirez', 'C/Salvador n23 pta43', 'pepe@gmail.com', '676 45 12 52', 'pepe', 'pepe123'),
 (4, 'Sonia', 'Peris', 'C/Carrer n2 pta5', 'sonia@gmail.com', '96 345 64 78', 'sonia', 'sonia123');
@@ -192,10 +190,11 @@ INSERT INTO `empleados` (`id`, `nombre`, `apellidos`, `direccion`, `email`, `tel
 
 CREATE TABLE `lineas_ventas` (
   `id` int(10) UNSIGNED NOT NULL,
-  `articulo` int(10) UNSIGNED NOT NULL,
   `venta_id` int(10) UNSIGNED NOT NULL,
-  `descuento` float(8,2) DEFAULT '0.00',
-  `cantidad` int(5) DEFAULT '1'
+  `num_linea` int(10) UNSIGNED NOT NULL,
+  `articulo` int(10) UNSIGNED NOT NULL,  
+  `cantidad` int(5) DEFAULT '1',
+  `importe` float(8,2)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -291,8 +290,10 @@ INSERT INTO `tallas` (`id`, `valor_talla`) VALUES
 --
 
 CREATE TABLE `tallas_articulos_map` (
-  `id_talla` int(5) NOT NULL,
-  `id_articulo` int(10) UNSIGNED NOT NULL
+ `id_talla` int(5) NOT NULL,
+ `id_articulo` int(10) UNSIGNED NOT NULL, 
+ `stock` int(5)
+ 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -651,7 +652,7 @@ ALTER TABLE `empleados`
 -- AUTO_INCREMENT de la tabla `lineas_ventas`
 --
 ALTER TABLE `lineas_ventas`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL;
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
@@ -661,7 +662,7 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL;
 --
 -- Restricciones para tablas volcadas
 --
