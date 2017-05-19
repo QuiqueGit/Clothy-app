@@ -249,7 +249,7 @@ public class Marcas extends javax.swing.JFrame {
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/newx24b.png"))); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/new_button.png"))); // NOI18N
         jButton5.setText("Nuevo");
         jButton5.setBorderPainted(false);
         jButton5.setContentAreaFilled(false);

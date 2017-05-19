@@ -470,7 +470,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/vista/images/newx24b.png"/>
+          <Image iconType="3" name="/vista/images/new_button.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Nuevo"/>
         <Property name="borderPainted" type="boolean" value="false"/>

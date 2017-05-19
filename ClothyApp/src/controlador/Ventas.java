@@ -21,6 +21,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Venta;
 import modelo.VentaArticulo;
+import modelo.VentaLineaVenta;
 import utilidades.ConexionDB;
 import vista.Login;
 
@@ -32,6 +33,7 @@ public class Ventas extends javax.swing.JFrame {
     
     static ArrayList<Venta> array_ventas = new ArrayList<>(); //CREO UN ARRAYLIST DE TIPO venta PARA ALMACENAR TODAS LAS VENTAS
     ArrayList<VentaArticulo> array_stockTotal = new ArrayList<>(); //ARRAYLIST PARA ALMACENAR TODOS LOS OBJETOS EN STOCK, INCLUIDA TALLA
+    ArrayList<VentaLineaVenta> array_lineasVenta = new ArrayList<>();
     Connection conex = new ConexionDB().getCon(); //OBTENGO LA CONEXION QUE CREO EN OTRO PAQUETE 
     DefaultTableModel model;
     DefaultTableModel model2;   
@@ -47,7 +49,7 @@ public class Ventas extends javax.swing.JFrame {
         
         initComponents();
         this.setLocationRelativeTo(null);
-        array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
+        //array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         model = (DefaultTableModel) jTable1.getModel();
         model2 = (DefaultTableModel) jTable2.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
@@ -72,7 +74,7 @@ public class Ventas extends javax.swing.JFrame {
         String query = "SELECT * FROM ventas";
         rs = s.executeQuery(query);
 
-        while (rs.next()) { //CREO NUEVOS OBJETOS TIPO ARTICULO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
+        while (rs.next()) { //CREO NUEVOS OBJETOS TIPO VENTA Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
             int id = rs.getInt("id");
             int cliente = Integer.parseInt(rs.getString("cliente"));
             int empleado = Integer.parseInt(rs.getString("empleado"));
@@ -82,8 +84,31 @@ public class Ventas extends javax.swing.JFrame {
             array_ventas.add(new Venta(id, cliente, empleado, fecha, metodo_pago));
         }
 
-        añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST, TABLA1 VENTAS/CLIENTES
+        //añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST, TABLA1 VENTAS/CLIENTES
         llenarClientes();  //MÉTODO PARA LLENAR COMBOBOX DE CLIENTES
+        
+       
+        Statement s5;
+        s5 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        String query5 = "SELECT * FROM ventas_lineasVenta";
+        ResultSet r5 = s5.executeQuery(query5);
+
+        while (r5.next()) { //CREO NUEVOS OBJETOS TIPO VENTA Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
+            int id_venta = r5.getInt("ID_Venta");
+            int num_linea = r5.getInt("Num_Linea");
+            String cliente = r5.getString("Cliente");
+            String emp = r5.getString("Empleado");
+            String fecha = r5.getString("Fecha");
+            String met_pago = r5.getString("Metodo_Pago");
+            String artic = r5.getString("Articulo");
+            int cant = r5.getInt("Cantidad");
+            int imp = r5.getInt("Importe");
+
+            array_lineasVenta.add(new VentaLineaVenta(id_venta, num_linea, cliente, emp, fecha, met_pago, artic, cant, imp));
+        }
+        
+        añadirFilasTabla();
+        
 
         jTable1.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
 
@@ -192,9 +217,10 @@ public class Ventas extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jSeparator13 = new javax.swing.JSeparator();
         jLabel15 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         jSeparator14 = new javax.swing.JSeparator();
         jButton5 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
@@ -273,7 +299,7 @@ public class Ventas extends javax.swing.JFrame {
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(380, 30, 40, 40);
+        jLabel9.setBounds(500, 30, 40, 40);
 
         TFIdOculta.setBackground(new java.awt.Color(0, 0, 0));
         TFIdOculta.setEnabled(false);
@@ -339,7 +365,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(TFArticulo);
-        TFArticulo.setBounds(170, 280, 142, 20);
+        TFArticulo.setBounds(140, 300, 142, 20);
 
         TFTalla.setBackground(new java.awt.Color(204, 204, 204));
         TFTalla.setForeground(new java.awt.Color(255, 255, 255));
@@ -348,7 +374,7 @@ public class Ventas extends javax.swing.JFrame {
         TFTalla.setCaretColor(new java.awt.Color(255, 255, 255));
         TFTalla.setOpaque(false);
         getContentPane().add(TFTalla);
-        TFTalla.setBounds(170, 320, 142, 20);
+        TFTalla.setBounds(140, 340, 142, 20);
 
         TFPrecio.setBackground(new java.awt.Color(204, 204, 204));
         TFPrecio.setForeground(new java.awt.Color(255, 255, 255));
@@ -357,7 +383,7 @@ public class Ventas extends javax.swing.JFrame {
         TFPrecio.setCaretColor(new java.awt.Color(255, 255, 255));
         TFPrecio.setOpaque(false);
         getContentPane().add(TFPrecio);
-        TFPrecio.setBounds(170, 360, 142, 20);
+        TFPrecio.setBounds(140, 380, 142, 20);
 
         TFStock.setBackground(new java.awt.Color(204, 204, 204));
         TFStock.setForeground(new java.awt.Color(255, 255, 255));
@@ -366,7 +392,7 @@ public class Ventas extends javax.swing.JFrame {
         TFStock.setCaretColor(new java.awt.Color(255, 255, 255));
         TFStock.setOpaque(false);
         getContentPane().add(TFStock);
-        TFStock.setBounds(170, 400, 142, 20);
+        TFStock.setBounds(140, 420, 142, 20);
 
         TFCantidad.setBackground(new java.awt.Color(204, 204, 204));
         TFCantidad.setForeground(new java.awt.Color(255, 255, 255));
@@ -375,7 +401,7 @@ public class Ventas extends javax.swing.JFrame {
         TFCantidad.setCaretColor(new java.awt.Color(255, 255, 255));
         TFCantidad.setOpaque(false);
         getContentPane().add(TFCantidad);
-        TFCantidad.setBounds(170, 440, 142, 20);
+        TFCantidad.setBounds(140, 460, 142, 20);
 
         TFNumLinea.setBackground(new java.awt.Color(204, 204, 204));
         TFNumLinea.setForeground(new java.awt.Color(255, 255, 255));
@@ -384,16 +410,16 @@ public class Ventas extends javax.swing.JFrame {
         TFNumLinea.setCaretColor(new java.awt.Color(255, 255, 255));
         TFNumLinea.setOpaque(false);
         getContentPane().add(TFNumLinea);
-        TFNumLinea.setBounds(170, 480, 142, 20);
+        TFNumLinea.setBounds(140, 500, 142, 20);
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Nº Linea");
         jLabel16.setFocusable(false);
         getContentPane().add(jLabel16);
-        jLabel16.setBounds(60, 480, 90, 22);
+        jLabel16.setBounds(30, 500, 90, 22);
         getContentPane().add(jSeparator15);
-        jSeparator15.setBounds(60, 500, 270, 10);
+        jSeparator15.setBounds(30, 520, 270, 10);
 
         jTFBuscarVenta.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscarVenta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -409,7 +435,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscarVenta);
-        jTFBuscarVenta.setBounds(410, 40, 120, 19);
+        jTFBuscarVenta.setBounds(530, 40, 120, 19);
 
         jTFBuscarVentaArticulos.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscarVentaArticulos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -425,56 +451,70 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscarVentaArticulos);
-        jTFBuscarVentaArticulos.setBounds(410, 360, 120, 19);
+        jTFBuscarVentaArticulos.setBounds(530, 360, 120, 19);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Artículo");
         jLabel6.setFocusable(false);
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(60, 280, 80, 22);
+        jLabel6.setBounds(30, 300, 80, 22);
         getContentPane().add(jSeparator6);
-        jSeparator6.setBounds(60, 300, 270, 10);
+        jSeparator6.setBounds(30, 320, 270, 10);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Talla");
         jLabel7.setFocusable(false);
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(60, 320, 50, 22);
+        jLabel7.setBounds(30, 340, 50, 22);
         getContentPane().add(jSeparator9);
-        jSeparator9.setBounds(60, 340, 270, 10);
+        jSeparator9.setBounds(30, 360, 270, 10);
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Precio");
         jLabel12.setFocusable(false);
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(60, 360, 80, 22);
+        jLabel12.setBounds(30, 380, 80, 22);
         getContentPane().add(jSeparator11);
-        jSeparator11.setBounds(60, 380, 270, 10);
+        jSeparator11.setBounds(30, 400, 270, 10);
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Stock");
         jLabel14.setFocusable(false);
         getContentPane().add(jLabel14);
-        jLabel14.setBounds(60, 400, 60, 22);
+        jLabel14.setBounds(30, 420, 60, 22);
         getContentPane().add(jSeparator13);
-        jSeparator13.setBounds(60, 420, 270, 10);
+        jSeparator13.setBounds(30, 440, 270, 10);
 
         jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("Cantidad");
         jLabel15.setFocusable(false);
         getContentPane().add(jLabel15);
-        jLabel15.setBounds(60, 440, 80, 22);
+        jLabel15.setBounds(30, 460, 80, 22);
+
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Lineas de venta");
+        jLabel11.setFocusable(false);
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(660, 30, 140, 40);
+
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Stock en tienda");
+        jLabel13.setFocusable(false);
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(660, 350, 140, 40);
         getContentPane().add(jSeparator14);
-        jSeparator14.setBounds(60, 460, 270, 10);
+        jSeparator14.setBounds(30, 480, 270, 10);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/newx24b.png"))); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/new_button.png"))); // NOI18N
         jButton5.setText("Nueva Venta");
         jButton5.setBorderPainted(false);
         jButton5.setContentAreaFilled(false);
@@ -488,25 +528,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(60, 560, 140, 30);
-
-        jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(255, 255, 255));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/delete_button.png"))); // NOI18N
-        jButton7.setText("Borrar");
-        jButton7.setBorderPainted(false);
-        jButton7.setContentAreaFilled(false);
-        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton7.setFocusable(false);
-        jButton7.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
-        jButton7.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton7);
-        jButton7.setBounds(220, 560, 100, 30);
+        jButton5.setBounds(110, 590, 140, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -522,7 +544,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(10, 610, 120, 30);
+        jButton8.setBounds(60, 640, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -538,7 +560,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(110, 610, 120, 30);
+        jButton9.setBounds(160, 640, 120, 30);
         getContentPane().add(jSeparator2);
         jSeparator2.setBounds(60, 140, 270, 10);
         getContentPane().add(jSeparator3);
@@ -556,9 +578,9 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(statusText);
-        statusText.setBounds(350, 300, 20, 24);
+        statusText.setBounds(470, 300, 20, 24);
         getContentPane().add(statusText1);
-        statusText1.setBounds(350, 640, 20, 24);
+        statusText1.setBounds(470, 640, 20, 24);
 
         jCBTarjeta.setForeground(new java.awt.Color(255, 255, 255));
         jCBTarjeta.setSelected(true);
@@ -590,7 +612,7 @@ public class Ventas extends javax.swing.JFrame {
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(380, 350, 40, 40);
+        jLabel10.setBounds(500, 350, 40, 40);
         getContentPane().add(jSeparator8);
         jSeparator8.setBounds(410, 380, 120, 10);
 
@@ -601,14 +623,14 @@ public class Ventas extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Cliente", "Empleado", "Fecha", "Método pago"
+                "ID_Venta", "NºLinea", "Cliente", "Empleado", "Fecha", "Método_Pago", "Artículo", "Cantidad", "Importe"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -631,13 +653,9 @@ public class Ventas extends javax.swing.JFrame {
         jTable1.setShowVerticalLines(false);
         jTable1.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(3).setHeaderValue("Fecha");
-            jTable1.getColumnModel().getColumn(4).setHeaderValue("Método pago");
-        }
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(390, 70, 620, 260);
+        jScrollPane1.setBounds(510, 70, 620, 260);
 
         jTable2.setAutoCreateRowSorter(true);
         jTable2.setForeground(new java.awt.Color(0, 0, 0));
@@ -678,14 +696,14 @@ public class Ventas extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(390, 390, 620, 280);
+        jScrollPane2.setBounds(510, 390, 620, 280);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(931, 386));
         jLabel1.setMinimumSize(new java.awt.Dimension(931, 386));
         jLabel1.setPreferredSize(new java.awt.Dimension(931, 386));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 1050, 720);
+        jLabel1.setBounds(390, -10, 1200, 720);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -722,59 +740,9 @@ public class Ventas extends javax.swing.JFrame {
         jCBTarjeta.setEnabled(false);
         jCBEfectivo.setVisible(true);
         jButton5.setEnabled(false);
-        jButton7.setEnabled(false);
         jButton8.setVisible(true);
         jButton9.setVisible(true);        
     }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        //BOTÓN BORRAR
-        int i = 0;
-        if (TFCliente.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna venta", "Error Delete", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la venta seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
-            if (resp == JOptionPane.YES_OPTION) {
-                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
-                if (jTFBuscarVenta.getText().isEmpty()) {
-                    i = jTable1.getSelectedRow();
-                    if (i >= 0) {
-                        model.removeRow(i);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna venta", "Error Delete", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    i = modelRow;
-                    model.removeRow(i);
-                }
-
-                try {
-                    //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
-                    // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
-                    int vId = Integer.parseInt(TFIdOculta.getText());
-                    //REALIZA DELETE EN LA BASE DE DATOS
-                    String url = "jdbc:mysql://localhost:3306/clothy";
-                    String user = "root";
-                    String pass = "";
-                    Connection connection = DriverManager.getConnection(url, user, pass);
-                    Statement st = connection.createStatement();
-                    String query = "DELETE FROM ventas WHERE id=" + vId;
-                    st.executeUpdate(query);
-                    TFCliente.setText("");
-                    TFEmpleado.setText("");
-                    TFFecha.setText("");
-                    TFPago.setText("");
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            if (resp == JOptionPane.NO_OPTION) {
-                //NO HACER NADA
-            }
-        }
-    }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //BOTÓN ACEPTAR       
@@ -838,11 +806,20 @@ public class Ventas extends javax.swing.JFrame {
             ps2.setInt(5, cantidad);
             ps2.setFloat(6, importe);
             ps2.executeUpdate();
-
+            
+            //INSERT PARA MÁS DE UN ARTICULO EN LA MISMA VENTA...
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             jTFBuscarVenta.setEnabled(true);
             jButton5.setEnabled(true);
-            jButton7.setEnabled(true);
             jButton8.setVisible(false);
             jButton9.setVisible(false);
             jCBCli.setVisible(false);
@@ -878,7 +855,6 @@ public class Ventas extends javax.swing.JFrame {
         jCBTarjeta.setSelected(true);
         jCBEfectivo.setSelected(false);
         jButton5.setEnabled(true);
-        jButton7.setEnabled(true);
         TFIdOculta.setText("");
         TFCliente.setText("");
         TFEmpleado.setText("");
@@ -1048,14 +1024,18 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     public void añadirFilasTabla() {
-        Object datosFila[] = new Object[5]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+        Object datosFila[] = new Object[9]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
 
-        for (int i = 0; i < array_ventas.size(); i++) {
-            datosFila[0] = array_ventas.get(i).getId();
-            datosFila[1] = getNombreCliente(array_ventas.get(i).getCliente());
-            datosFila[2] = getNombreEmpleado(array_ventas.get(i).getEmpleado());
-            datosFila[3] = array_ventas.get(i).getFecha();
-            datosFila[4] = array_ventas.get(i).getMetodo_pago();
+        for (int i = 0; i < array_lineasVenta.size(); i++) {
+            datosFila[0] = array_lineasVenta.get(i).getId_venta();
+            datosFila[1] = array_lineasVenta.get(i).getNlinea();
+            datosFila[2] = array_lineasVenta.get(i).getCliente();
+            datosFila[3] = array_lineasVenta.get(i).getEmpleado();
+            datosFila[4] = array_lineasVenta.get(i).getFecha();
+            datosFila[5] = array_lineasVenta.get(i).getMet_pago();
+            datosFila[6] = array_lineasVenta.get(i).getArticulo();
+            datosFila[7] = array_lineasVenta.get(i).getCantidad();
+            datosFila[8] = array_lineasVenta.get(i).getImporte();
 
             model.addRow(datosFila);
         }
@@ -1065,11 +1045,11 @@ public class Ventas extends javax.swing.JFrame {
         Object datosFila[] = new Object[7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
 
         for (int i = 0; i < array_stockTotal.size(); i++) {
-            datosFila[0] = array_stockTotal.get(i).getIdArticulo();
-            datosFila[1] = array_stockTotal.get(i).getIdTalla();
-            datosFila[2] = array_stockTotal.get(i).getDescripcion();
+            datosFila[0] = array_stockTotal.get(i).getIdArt();
+            datosFila[1] = array_stockTotal.get(i).getIdTal();
+            datosFila[2] = array_stockTotal.get(i).getDesc();
             datosFila[3] = array_stockTotal.get(i).getPrecio();
-            datosFila[4] = array_stockTotal.get(i).getCategoria();
+            datosFila[4] = array_stockTotal.get(i).getCat();
             datosFila[5] = array_stockTotal.get(i).getMarca();
             datosFila[6] = array_stockTotal.get(i).getStock();
 
@@ -1160,7 +1140,6 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JTextField TFTalla;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jCBCli;
@@ -1168,7 +1147,9 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCBTarjeta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;

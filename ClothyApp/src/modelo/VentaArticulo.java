@@ -5,47 +5,48 @@ package modelo;
  * @author Quique
  */
 public class VentaArticulo {
-    
-    private String idArticulo;
-    private String idTalla;
-    private String descripcion;
+
+    private String idArt;
+    private String idTal; 
+    private String desc;
     private float precio;
-    private String categoria;
-    private String marca;
-    private int stock;
+    private String cat; 
+    private String marca;  
+    private int stock; 
+            
+    public VentaArticulo(String idArt, String idTal, String desc, float precio, String cat,String marca,int stock) {
+        this.idArt=idArt;
+        this.idTal=idTal;
+        this.desc=desc;
+        this.precio=precio;
+        this.cat=cat;
+        this.marca=marca;
+        this.stock=stock;
 
-    public VentaArticulo(String idArt, String idTal, String desc, float precio, String cat, String marca, int stock) {
-        this.idArticulo = idArt;
-        this.idTalla = idTal;
-        this.descripcion = desc;
-        this.precio = precio;
-        this.categoria = cat;
-        this.marca = marca;
-        this.stock = stock;
     }
 
-    public String getIdArticulo() {
-        return idArticulo;
+    public String getIdArt() {
+        return idArt;
     }
 
-    public void setIdArticulo(String idArticulo) {
-        this.idArticulo = idArticulo;
+    public void setIdArt(String idArt) {
+        this.idArt = idArt;
     }
 
-    public String getIdTalla() {
-        return idTalla;
+    public String getIdTal() {
+        return idTal;
     }
 
-    public void setIdTalla(String idTalla) {
-        this.idTalla = idTalla;
+    public void setIdTal(String idTal) {
+        this.idTal = idTal;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public float getPrecio() {
@@ -56,12 +57,12 @@ public class VentaArticulo {
         this.precio = precio;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getCat() {
+        return cat;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCat(String cat) {
+        this.cat = cat;
     }
 
     public String getMarca() {
@@ -79,7 +80,5 @@ public class VentaArticulo {
     public void setStock(int stock) {
         this.stock = stock;
     }
-    
-    
-    
+
 }
