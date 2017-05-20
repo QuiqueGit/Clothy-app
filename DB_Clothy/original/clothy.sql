@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-05-2017 a las 22:03:47
+-- Tiempo de generación: 20-05-2017 a las 16:52:32
 -- Versión del servidor: 10.1.16-MariaDB
 -- Versión de PHP: 5.6.24
 
@@ -21,10 +21,6 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-
-CREATE DATABASE Clothy character set utf8 collate utf8_general_ci;
-
-USE Clothy;
 
 --
 -- Estructura de tabla para la tabla `articulos`
@@ -146,7 +142,9 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `nif`, `nombre`, `apellidos`, `direccion`, `email`, `telefono`) VALUES
-(1, '0000', 'Cliente0000', 'vacio', 'vacio', 'vacio', 'vacio');
+(1, '0000', 'Cliente00', 'asd', 'asd', 'asd', 'asd'),
+(2, '21325645-N', 'Mario', 'Rodriguez Molina', 'C/Ruzafa n25', 'mario@gmail.com', '96 312 54 65'),
+(3, '64521489-Y', 'Sandra', 'Velazquez Martín', 'C/Puente n10', 'sandra@hotmail.com', '649 52 12 32');
 
 -- --------------------------------------------------------
 
@@ -171,10 +169,9 @@ CREATE TABLE `empleados` (
 
 INSERT INTO `empleados` (`id`, `nombre`, `apellidos`, `direccion`, `email`, `telefono`, `id_login`, `password`) VALUES
 (1, 'admin', '*', '*', '*', '*', 'admin', ''),
-(2, 'Marta', 'Sanchez', 'Av.de los Naranjos n14 pta23', 'marta@gmail.com', '96 154 98 65', 'marta', 'marta123'),
-(3, 'Pepe', 'Ramirez', 'C/Salvador n23 pta43', 'pepe@gmail.com', '676 45 12 52', 'pepe', 'pepe123'),
-(4, 'Sonia', 'Peris', 'C/Carrer n2 pta5', 'sonia@gmail.com', '96 345 64 78', 'sonia', 'sonia123'),
-(5, '', '', '', '', '', 'a', '');
+(2, 'Marta', 'Sanchez', 'Av.Naranjos n14 pta23', 'marta@gmail.com', '96 154 98 65', 'marta', 'marta'),
+(3, 'Pepe', 'Ramirez', 'C/Salvador n23 pta43', 'pepe@gmail.com', '676 45 12 52', 'pepe', 'pepe'),
+(4, 'Sonia', 'Peris', 'C/Carrer n2 pta5', 'sonia@gmail.com', '96 345 64 78', 'sonia', 'sonia');
 
 -- --------------------------------------------------------
 
@@ -196,12 +193,16 @@ CREATE TABLE `lineas_ventas` (
 --
 
 INSERT INTO `lineas_ventas` (`id`, `venta_id`, `num_linea`, `articulo`, `cantidad`, `importe`) VALUES
-(1, 1, 1, 1, 3, 59.70),
-(2, 2, 1, 6, 2, 29.80),
-(3, 3, 2, 47, 1, 32.90),
-(4, 4, 1, 10, 2, 55.80),
-(5, 5, 1, 1, 1, 14.90),
-(6, 6, 1, 18, 1, 74.95);
+(13, 1, 1, 13, 1, 14.95),
+(14, 1, 2, 40, 1, 40.90),
+(15, 1, 3, 51, 1, 29.50),
+(16, 2, 1, 9, 2, 37.80),
+(17, 2, 2, 13, 1, 29.90),
+(18, 3, 1, 6, 2, 29.80),
+(19, 3, 2, 42, 1, 85.80),
+(20, 4, 1, 1, 1, 19.90),
+(21, 4, 2, 6, 1, 14.90),
+(22, 4, 3, 45, 1, 30.90);
 
 -- --------------------------------------------------------
 
@@ -492,7 +493,7 @@ CREATE TABLE `ventas` (
   `id` int(10) UNSIGNED NOT NULL,
   `cliente` int(10) UNSIGNED NOT NULL,
   `empleado` int(10) UNSIGNED NOT NULL,
-  `fecha` varchar(50) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
   `metodo_pago` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -501,12 +502,10 @@ CREATE TABLE `ventas` (
 --
 
 INSERT INTO `ventas` (`id`, `cliente`, `empleado`, `fecha`, `metodo_pago`) VALUES
-(1, 1, 2, '2017/10/10', 'Efectivo'),
-(2, 1, 3, '2017/05/02', 'Efectivo'),
-(3, 1, 3, '2017/05/02', 'Efectivo'),
-(4, 1, 4, '2017/05/04', 'Efectivo'),
-(5, 1, 4, '1995/07/05', 'Efectivo'),
-(6, 1, 4, '1985/05/04', 'Efectivo');
+(1, 1, 4, '2017-05-20 00:00:00', 'Efectivo'),
+(2, 1, 4, '2017-05-20 00:00:00', 'Efectivo'),
+(3, 1, 2, '2017-05-21 00:00:00', 'Efectivo'),
+(4, 2, 3, '2017-05-23 00:00:00', 'Tarjeta');
 
 -- --------------------------------------------------------
 
@@ -526,11 +525,37 @@ CREATE TABLE `ventas_articulos` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `ventas_lineasventa`
+--
+CREATE TABLE `ventas_lineasventa` (
+`ID_Venta` int(10) unsigned
+,`Num_Linea` int(10) unsigned
+,`Cliente` varchar(50)
+,`Empleado` varchar(50)
+,`Fecha` datetime
+,`Metodo_Pago` varchar(20)
+,`Articulo` varchar(50)
+,`Cantidad` int(5)
+,`Importe` float(8,2)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `ventas_articulos`
 --
 DROP TABLE IF EXISTS `ventas_articulos`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ventas_articulos`  AS  (select `a`.`nombre` AS `Articulo`,`t`.`valor_talla` AS `valor_talla`,`a`.`descripcion` AS `descripcion`,`a`.`precio` AS `precio`,`c`.`nombre` AS `Categoria`,`m`.`nombre` AS `Marca`,`tam`.`stock` AS `stock` from ((((`tallas_articulos_map` `tam` join `tallas` `t`) join `articulos` `a`) join `categorias` `c`) join `marcas` `m`) where ((`a`.`id` = `tam`.`id_articulo`) and (`t`.`id` = `tam`.`id_talla`) and (`a`.`categoria` = `c`.`id`) and (`a`.`marca` = `m`.`id`)) order by `tam`.`id_articulo`,`tam`.`id_talla`) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `ventas_lineasventa`
+--
+DROP TABLE IF EXISTS `ventas_lineasventa`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ventas_lineasventa`  AS  (select `v`.`id` AS `ID_Venta`,`lv`.`num_linea` AS `Num_Linea`,`c`.`nombre` AS `Cliente`,`e`.`nombre` AS `Empleado`,`v`.`fecha` AS `Fecha`,`v`.`metodo_pago` AS `Metodo_Pago`,`a`.`nombre` AS `Articulo`,`lv`.`cantidad` AS `Cantidad`,`lv`.`importe` AS `Importe` from ((((`ventas` `v` join `lineas_ventas` `lv`) join `clientes` `c`) join `articulos` `a`) join `empleados` `e`) where ((`c`.`id` = `v`.`cliente`) and (`e`.`id` = `v`.`empleado`) and (`a`.`id` = `lv`.`articulo`) and (`v`.`id` = `lv`.`venta_id`)) order by 1,2) ;
 
 --
 -- Índices para tablas volcadas
@@ -617,12 +642,17 @@ ALTER TABLE `articulos`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `empleados`
 --
 ALTER TABLE `empleados`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT de la tabla `lineas_ventas`
+--
+ALTER TABLE `lineas_ventas`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --

@@ -3,7 +3,6 @@ package controlador;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,6 +68,38 @@ public class Ventas extends javax.swing.JFrame {
         jCBEfectivo.setVisible(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false);
+        Cantidad1.setVisible(false);
+        Cantidad2.setVisible(false);
+        Cantidad3.setVisible(false);
+        
+        CB3.setEnabled(false); //EL CHECKBOX DEL ARTICULO 3 EMPIEZA DISABLED Y SOLO CAMBIA A ENABLED SI EL ARTÍCULO 2 ESTÁ MARCADO
+        
+        //jTextFields artículos 2 y 3, más precios...
+        TFArticulo1.setVisible(false);
+        TFArticulo2.setVisible(false);
+        TFTalla1.setVisible(false);
+        TFTalla2.setVisible(false);
+        TFPrecio1.setVisible(false);
+        TFPrecio2.setVisible(false);
+        TFStock1.setVisible(false);
+        TFStock2.setVisible(false);
+        TFNumLinea1.setVisible(false);
+        TFNumLinea2.setVisible(false);
+        //SEPARADORES ITEM 2
+        jSeparator10.setVisible(false);
+        jSeparator12.setVisible(false);
+        jSeparator16.setVisible(false);
+        jSeparator17.setVisible(false);
+        jSeparator18.setVisible(false);
+        jSeparator19.setVisible(false);         
+        //SEPARADORES ITEM 3
+        jSeparator20.setVisible(false);
+        jSeparator21.setVisible(false);
+        jSeparator22.setVisible(false);
+        jSeparator23.setVisible(false);
+        jSeparator24.setVisible(false);
+        jSeparator25.setVisible(false);
+        
 
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String query = "SELECT * FROM ventas";
@@ -84,7 +115,6 @@ public class Ventas extends javax.swing.JFrame {
             array_ventas.add(new Venta(id, cliente, empleado, fecha, metodo_pago));
         }
 
-        //añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST, TABLA1 VENTAS/CLIENTES
         llenarClientes();  //MÉTODO PARA LLENAR COMBOBOX DE CLIENTES
         
        
@@ -155,8 +185,53 @@ public class Ventas extends javax.swing.JFrame {
         jTable2.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
 
             @Override
-            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
-                if (jTFBuscarVentaArticulos.getText().isEmpty()) {
+            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS        
+
+                if (CB3.isSelected()) {
+                     TFNumLinea2.setText("3");
+                     Cantidad3.setVisible(true);
+
+                    if (jTFBuscarVentaArticulos.getText().isEmpty()) {
+                        int i = jTable2.getSelectedRow();
+                        // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
+                        TFArticulo2.setText(model2.getValueAt(i, 0).toString());
+                        TFTalla2.setText(model2.getValueAt(i, 1).toString());
+                        TFPrecio2.setText(model2.getValueAt(i, 3).toString());
+                        TFStock2.setText(model2.getValueAt(i, 6).toString());
+
+                    } else {
+                        int i = modelRow;
+                        TFArticulo2.setText(model2.getValueAt(i, 0).toString());
+                        TFTalla2.setText(model2.getValueAt(i, 1).toString());
+                        TFPrecio2.setText(model2.getValueAt(i, 3).toString());
+                        TFStock2.setText(model2.getValueAt(i, 6).toString());
+
+                    }
+
+                } else if (CB2.isSelected()) {
+                    TFNumLinea1.setText("2");
+                    Cantidad2.setVisible(true);
+
+                    if (jTFBuscarVentaArticulos.getText().isEmpty()) {
+                        int i = jTable2.getSelectedRow();
+                        // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
+                        TFArticulo1.setText(model2.getValueAt(i, 0).toString());
+                        TFTalla1.setText(model2.getValueAt(i, 1).toString());
+                        TFPrecio1.setText(model2.getValueAt(i, 3).toString());
+                        TFStock1.setText(model2.getValueAt(i, 6).toString());
+
+                    } else {
+                        int i = modelRow;
+                        TFArticulo1.setText(model2.getValueAt(i, 0).toString());
+                        TFTalla1.setText(model2.getValueAt(i, 1).toString());
+                        TFPrecio1.setText(model2.getValueAt(i, 3).toString());
+                        TFStock1.setText(model2.getValueAt(i, 6).toString());
+
+                    }
+                } else if (jTFBuscarVentaArticulos.getText().isEmpty()) {
+                    TFNumLinea.setText("1");
+                    Cantidad1.setVisible(true);
+                    
                     int i = jTable2.getSelectedRow();
                     // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                     TFArticulo.setText(model2.getValueAt(i, 0).toString());
@@ -174,7 +249,7 @@ public class Ventas extends javax.swing.JFrame {
                 }
             }
         });
-           
+
     }
 
     /**
@@ -202,7 +277,6 @@ public class Ventas extends javax.swing.JFrame {
         TFTalla = new javax.swing.JTextField();
         TFPrecio = new javax.swing.JTextField();
         TFStock = new javax.swing.JTextField();
-        TFCantidad = new javax.swing.JTextField();
         TFNumLinea = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jSeparator15 = new javax.swing.JSeparator();
@@ -232,19 +306,57 @@ public class Ventas extends javax.swing.JFrame {
         statusText1 = new javax.swing.JTextField();
         jCBTarjeta = new javax.swing.JCheckBox();
         jCBEfectivo = new javax.swing.JCheckBox();
-        jCBCli = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        jCBCli = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        TFArticulo1 = new javax.swing.JTextField();
+        jSeparator10 = new javax.swing.JSeparator();
+        TFTalla1 = new javax.swing.JTextField();
+        jSeparator12 = new javax.swing.JSeparator();
+        TFPrecio1 = new javax.swing.JTextField();
+        jSeparator16 = new javax.swing.JSeparator();
+        TFStock1 = new javax.swing.JTextField();
+        jSeparator17 = new javax.swing.JSeparator();
+        jSeparator18 = new javax.swing.JSeparator();
+        TFNumLinea1 = new javax.swing.JTextField();
+        jSeparator19 = new javax.swing.JSeparator();
+        TFArticulo2 = new javax.swing.JTextField();
+        jSeparator21 = new javax.swing.JSeparator();
+        TFTalla2 = new javax.swing.JTextField();
+        jSeparator23 = new javax.swing.JSeparator();
+        TFPrecio2 = new javax.swing.JTextField();
+        jSeparator20 = new javax.swing.JSeparator();
+        TFStock2 = new javax.swing.JTextField();
+        jSeparator22 = new javax.swing.JSeparator();
+        jSeparator25 = new javax.swing.JSeparator();
+        TFNumLinea2 = new javax.swing.JTextField();
+        jSeparator24 = new javax.swing.JSeparator();
+        Precio1 = new javax.swing.JTextField();
+        precio_total = new javax.swing.JTextField();
+        CB2 = new javax.swing.JCheckBox();
+        CB3 = new javax.swing.JCheckBox();
+        jLabel23 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        precio2 = new javax.swing.JLabel();
+        Precio2 = new javax.swing.JTextField();
+        Precio3 = new javax.swing.JTextField();
+        precio3 = new javax.swing.JLabel();
+        Cantidad1 = new javax.swing.JComboBox<>();
+        Cantidad2 = new javax.swing.JComboBox<>();
+        Cantidad3 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(1045, 720));
-        setMinimumSize(new java.awt.Dimension(1045, 720));
+        setMaximumSize(new java.awt.Dimension(1200, 715));
+        setMinimumSize(new java.awt.Dimension(1200, 715));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1045, 720));
+        setPreferredSize(new java.awt.Dimension(1200, 715));
         getContentPane().setLayout(null);
 
         jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
@@ -260,46 +372,46 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBCerrar);
-        jBCerrar.setBounds(1020, 0, 20, 20);
+        jBCerrar.setBounds(1180, 0, 20, 20);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Cliente");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(60, 120, 55, 22);
+        jLabel2.setBounds(100, 130, 55, 22);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Empleado");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(60, 160, 78, 22);
+        jLabel3.setBounds(100, 170, 78, 22);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Fecha");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(60, 200, 45, 22);
+        jLabel4.setBounds(100, 210, 45, 22);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Método pago");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(60, 240, 127, 22);
+        jLabel5.setBounds(100, 250, 127, 22);
 
         jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ventas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(140, 30, 140, 30);
+        jLabel8.setBounds(190, 30, 140, 30);
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(500, 30, 40, 40);
+        jLabel9.setBounds(510, 30, 40, 40);
 
         TFIdOculta.setBackground(new java.awt.Color(0, 0, 0));
         TFIdOculta.setEnabled(false);
@@ -310,7 +422,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(TFIdOculta);
-        TFIdOculta.setBounds(60, 70, 20, 24);
+        TFIdOculta.setBounds(100, 80, 20, 24);
 
         TFCliente.setBackground(new java.awt.Color(204, 204, 204));
         TFCliente.setForeground(new java.awt.Color(255, 255, 255));
@@ -324,7 +436,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(TFCliente);
-        TFCliente.setBounds(170, 120, 142, 20);
+        TFCliente.setBounds(210, 130, 142, 20);
 
         TFEmpleado.setBackground(new java.awt.Color(204, 204, 204));
         TFEmpleado.setForeground(new java.awt.Color(255, 255, 255));
@@ -333,7 +445,7 @@ public class Ventas extends javax.swing.JFrame {
         TFEmpleado.setCaretColor(new java.awt.Color(255, 255, 255));
         TFEmpleado.setOpaque(false);
         getContentPane().add(TFEmpleado);
-        TFEmpleado.setBounds(170, 160, 142, 20);
+        TFEmpleado.setBounds(210, 170, 142, 20);
 
         TFFecha.setBackground(new java.awt.Color(204, 204, 204));
         TFFecha.setForeground(new java.awt.Color(255, 255, 255));
@@ -342,7 +454,7 @@ public class Ventas extends javax.swing.JFrame {
         TFFecha.setCaretColor(new java.awt.Color(255, 255, 255));
         TFFecha.setOpaque(false);
         getContentPane().add(TFFecha);
-        TFFecha.setBounds(170, 200, 142, 20);
+        TFFecha.setBounds(210, 210, 142, 20);
 
         TFPago.setBackground(new java.awt.Color(204, 204, 204));
         TFPago.setForeground(new java.awt.Color(255, 255, 255));
@@ -351,7 +463,7 @@ public class Ventas extends javax.swing.JFrame {
         TFPago.setCaretColor(new java.awt.Color(255, 255, 255));
         TFPago.setOpaque(false);
         getContentPane().add(TFPago);
-        TFPago.setBounds(170, 240, 142, 20);
+        TFPago.setBounds(210, 250, 142, 20);
 
         TFArticulo.setBackground(new java.awt.Color(204, 204, 204));
         TFArticulo.setForeground(new java.awt.Color(255, 255, 255));
@@ -359,13 +471,8 @@ public class Ventas extends javax.swing.JFrame {
         TFArticulo.setBorder(null);
         TFArticulo.setCaretColor(new java.awt.Color(255, 255, 255));
         TFArticulo.setOpaque(false);
-        TFArticulo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TFArticuloActionPerformed(evt);
-            }
-        });
         getContentPane().add(TFArticulo);
-        TFArticulo.setBounds(140, 300, 142, 20);
+        TFArticulo.setBounds(90, 330, 110, 20);
 
         TFTalla.setBackground(new java.awt.Color(204, 204, 204));
         TFTalla.setForeground(new java.awt.Color(255, 255, 255));
@@ -374,7 +481,7 @@ public class Ventas extends javax.swing.JFrame {
         TFTalla.setCaretColor(new java.awt.Color(255, 255, 255));
         TFTalla.setOpaque(false);
         getContentPane().add(TFTalla);
-        TFTalla.setBounds(140, 340, 142, 20);
+        TFTalla.setBounds(110, 370, 60, 20);
 
         TFPrecio.setBackground(new java.awt.Color(204, 204, 204));
         TFPrecio.setForeground(new java.awt.Color(255, 255, 255));
@@ -383,7 +490,7 @@ public class Ventas extends javax.swing.JFrame {
         TFPrecio.setCaretColor(new java.awt.Color(255, 255, 255));
         TFPrecio.setOpaque(false);
         getContentPane().add(TFPrecio);
-        TFPrecio.setBounds(140, 380, 142, 20);
+        TFPrecio.setBounds(110, 410, 60, 20);
 
         TFStock.setBackground(new java.awt.Color(204, 204, 204));
         TFStock.setForeground(new java.awt.Color(255, 255, 255));
@@ -392,16 +499,7 @@ public class Ventas extends javax.swing.JFrame {
         TFStock.setCaretColor(new java.awt.Color(255, 255, 255));
         TFStock.setOpaque(false);
         getContentPane().add(TFStock);
-        TFStock.setBounds(140, 420, 142, 20);
-
-        TFCantidad.setBackground(new java.awt.Color(204, 204, 204));
-        TFCantidad.setForeground(new java.awt.Color(255, 255, 255));
-        TFCantidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        TFCantidad.setBorder(null);
-        TFCantidad.setCaretColor(new java.awt.Color(255, 255, 255));
-        TFCantidad.setOpaque(false);
-        getContentPane().add(TFCantidad);
-        TFCantidad.setBounds(140, 460, 142, 20);
+        TFStock.setBounds(110, 450, 60, 20);
 
         TFNumLinea.setBackground(new java.awt.Color(204, 204, 204));
         TFNumLinea.setForeground(new java.awt.Color(255, 255, 255));
@@ -410,16 +508,16 @@ public class Ventas extends javax.swing.JFrame {
         TFNumLinea.setCaretColor(new java.awt.Color(255, 255, 255));
         TFNumLinea.setOpaque(false);
         getContentPane().add(TFNumLinea);
-        TFNumLinea.setBounds(140, 500, 142, 20);
+        TFNumLinea.setBounds(110, 530, 60, 20);
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Nº Linea");
         jLabel16.setFocusable(false);
         getContentPane().add(jLabel16);
-        jLabel16.setBounds(30, 500, 90, 22);
+        jLabel16.setBounds(20, 530, 90, 22);
         getContentPane().add(jSeparator15);
-        jSeparator15.setBounds(30, 520, 270, 10);
+        jSeparator15.setBounds(20, 550, 170, 10);
 
         jTFBuscarVenta.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscarVenta.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -435,7 +533,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscarVenta);
-        jTFBuscarVenta.setBounds(530, 40, 120, 19);
+        jTFBuscarVenta.setBounds(540, 40, 120, 19);
 
         jTFBuscarVentaArticulos.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscarVentaArticulos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -451,66 +549,66 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTFBuscarVentaArticulos);
-        jTFBuscarVentaArticulos.setBounds(530, 360, 120, 19);
+        jTFBuscarVentaArticulos.setBounds(540, 360, 120, 19);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Artículo");
         jLabel6.setFocusable(false);
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(30, 300, 80, 22);
+        jLabel6.setBounds(20, 330, 80, 22);
         getContentPane().add(jSeparator6);
-        jSeparator6.setBounds(30, 320, 270, 10);
+        jSeparator6.setBounds(20, 350, 170, 10);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Talla");
         jLabel7.setFocusable(false);
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(30, 340, 50, 22);
+        jLabel7.setBounds(20, 370, 50, 22);
         getContentPane().add(jSeparator9);
-        jSeparator9.setBounds(30, 360, 270, 10);
+        jSeparator9.setBounds(20, 390, 170, 10);
 
         jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Precio");
         jLabel12.setFocusable(false);
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(30, 380, 80, 22);
+        jLabel12.setBounds(20, 410, 80, 22);
         getContentPane().add(jSeparator11);
-        jSeparator11.setBounds(30, 400, 270, 10);
+        jSeparator11.setBounds(20, 430, 170, 10);
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Stock");
         jLabel14.setFocusable(false);
         getContentPane().add(jLabel14);
-        jLabel14.setBounds(30, 420, 60, 22);
+        jLabel14.setBounds(20, 450, 60, 22);
         getContentPane().add(jSeparator13);
-        jSeparator13.setBounds(30, 440, 270, 10);
+        jSeparator13.setBounds(20, 470, 170, 10);
 
         jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("Cantidad");
         jLabel15.setFocusable(false);
         getContentPane().add(jLabel15);
-        jLabel15.setBounds(30, 460, 80, 22);
+        jLabel15.setBounds(20, 490, 80, 22);
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Lineas de venta");
         jLabel11.setFocusable(false);
         getContentPane().add(jLabel11);
-        jLabel11.setBounds(660, 30, 140, 40);
+        jLabel11.setBounds(670, 30, 140, 40);
 
         jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Stock en tienda");
         jLabel13.setFocusable(false);
         getContentPane().add(jLabel13);
-        jLabel13.setBounds(660, 350, 140, 40);
+        jLabel13.setBounds(670, 350, 140, 40);
         getContentPane().add(jSeparator14);
-        jSeparator14.setBounds(30, 480, 270, 10);
+        jSeparator14.setBounds(20, 510, 170, 10);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
@@ -528,7 +626,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(110, 590, 140, 30);
+        jButton5.setBounds(180, 630, 140, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -544,7 +642,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(60, 640, 120, 30);
+        jButton8.setBounds(130, 670, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -560,25 +658,19 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(160, 640, 120, 30);
+        jButton9.setBounds(240, 670, 120, 30);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(60, 140, 270, 10);
+        jSeparator2.setBounds(100, 150, 270, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(60, 180, 270, 10);
+        jSeparator3.setBounds(100, 190, 270, 10);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(60, 220, 270, 10);
+        jSeparator4.setBounds(100, 230, 270, 10);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(60, 260, 270, 10);
+        jSeparator5.setBounds(100, 270, 270, 10);
         getContentPane().add(jSeparator7);
-        jSeparator7.setBounds(410, 60, 120, 10);
-
-        statusText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                statusTextActionPerformed(evt);
-            }
-        });
+        jSeparator7.setBounds(530, 60, 120, 10);
         getContentPane().add(statusText);
-        statusText.setBounds(470, 300, 20, 24);
+        statusText.setBounds(480, 260, 20, 24);
         getContentPane().add(statusText1);
         statusText1.setBounds(470, 640, 20, 24);
 
@@ -593,7 +685,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jCBTarjeta);
-        jCBTarjeta.setBounds(190, 240, 70, 20);
+        jCBTarjeta.setBounds(230, 250, 70, 20);
 
         jCBEfectivo.setForeground(new java.awt.Color(255, 255, 255));
         jCBEfectivo.setText("Efectivo");
@@ -604,17 +696,38 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jCBEfectivo);
-        jCBEfectivo.setBounds(260, 240, 80, 20);
+        jCBEfectivo.setBounds(300, 250, 80, 20);
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/buscar_iconx24.png"))); // NOI18N
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(510, 350, 40, 40);
 
         jCBCli.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBCli);
-        jCBCli.setBounds(170, 120, 160, 20);
+        jCBCli.setBounds(210, 130, 160, 20);
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
-        getContentPane().add(jLabel10);
-        jLabel10.setBounds(500, 350, 40, 40);
+        jLabel17.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("1");
+        jLabel17.setFocusable(false);
+        getContentPane().add(jLabel17);
+        jLabel17.setBounds(140, 300, 10, 20);
+
+        jLabel18.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("2");
+        jLabel18.setFocusable(false);
+        getContentPane().add(jLabel18);
+        jLabel18.setBounds(270, 300, 10, 20);
+
+        jLabel19.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("3");
+        jLabel19.setFocusable(false);
+        getContentPane().add(jLabel19);
+        jLabel19.setBounds(400, 300, 10, 20);
         getContentPane().add(jSeparator8);
-        jSeparator8.setBounds(410, 380, 120, 10);
+        jSeparator8.setBounds(530, 380, 120, 10);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -698,12 +811,237 @@ public class Ventas extends javax.swing.JFrame {
         getContentPane().add(jScrollPane2);
         jScrollPane2.setBounds(510, 390, 620, 280);
 
+        TFArticulo1.setBackground(new java.awt.Color(204, 204, 204));
+        TFArticulo1.setForeground(new java.awt.Color(255, 255, 255));
+        TFArticulo1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFArticulo1.setBorder(null);
+        TFArticulo1.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFArticulo1.setOpaque(false);
+        getContentPane().add(TFArticulo1);
+        TFArticulo1.setBounds(230, 330, 100, 20);
+        getContentPane().add(jSeparator10);
+        jSeparator10.setBounds(220, 350, 120, 10);
+
+        TFTalla1.setBackground(new java.awt.Color(204, 204, 204));
+        TFTalla1.setForeground(new java.awt.Color(255, 255, 255));
+        TFTalla1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFTalla1.setBorder(null);
+        TFTalla1.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFTalla1.setOpaque(false);
+        getContentPane().add(TFTalla1);
+        TFTalla1.setBounds(250, 370, 60, 20);
+        getContentPane().add(jSeparator12);
+        jSeparator12.setBounds(240, 390, 80, 10);
+
+        TFPrecio1.setBackground(new java.awt.Color(204, 204, 204));
+        TFPrecio1.setForeground(new java.awt.Color(255, 255, 255));
+        TFPrecio1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFPrecio1.setBorder(null);
+        TFPrecio1.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFPrecio1.setOpaque(false);
+        getContentPane().add(TFPrecio1);
+        TFPrecio1.setBounds(250, 410, 60, 20);
+        getContentPane().add(jSeparator16);
+        jSeparator16.setBounds(240, 430, 80, 10);
+
+        TFStock1.setBackground(new java.awt.Color(204, 204, 204));
+        TFStock1.setForeground(new java.awt.Color(255, 255, 255));
+        TFStock1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFStock1.setBorder(null);
+        TFStock1.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFStock1.setOpaque(false);
+        getContentPane().add(TFStock1);
+        TFStock1.setBounds(250, 450, 60, 20);
+        getContentPane().add(jSeparator17);
+        jSeparator17.setBounds(240, 470, 80, 10);
+        getContentPane().add(jSeparator18);
+        jSeparator18.setBounds(240, 510, 80, 10);
+
+        TFNumLinea1.setBackground(new java.awt.Color(204, 204, 204));
+        TFNumLinea1.setForeground(new java.awt.Color(255, 255, 255));
+        TFNumLinea1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFNumLinea1.setBorder(null);
+        TFNumLinea1.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFNumLinea1.setOpaque(false);
+        getContentPane().add(TFNumLinea1);
+        TFNumLinea1.setBounds(250, 530, 60, 20);
+        getContentPane().add(jSeparator19);
+        jSeparator19.setBounds(240, 550, 80, 10);
+
+        TFArticulo2.setBackground(new java.awt.Color(204, 204, 204));
+        TFArticulo2.setForeground(new java.awt.Color(255, 255, 255));
+        TFArticulo2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFArticulo2.setBorder(null);
+        TFArticulo2.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFArticulo2.setOpaque(false);
+        getContentPane().add(TFArticulo2);
+        TFArticulo2.setBounds(360, 330, 100, 20);
+        getContentPane().add(jSeparator21);
+        jSeparator21.setBounds(350, 350, 120, 10);
+
+        TFTalla2.setBackground(new java.awt.Color(204, 204, 204));
+        TFTalla2.setForeground(new java.awt.Color(255, 255, 255));
+        TFTalla2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFTalla2.setBorder(null);
+        TFTalla2.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFTalla2.setOpaque(false);
+        getContentPane().add(TFTalla2);
+        TFTalla2.setBounds(380, 370, 60, 20);
+        getContentPane().add(jSeparator23);
+        jSeparator23.setBounds(370, 390, 80, 10);
+
+        TFPrecio2.setBackground(new java.awt.Color(204, 204, 204));
+        TFPrecio2.setForeground(new java.awt.Color(255, 255, 255));
+        TFPrecio2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFPrecio2.setBorder(null);
+        TFPrecio2.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFPrecio2.setOpaque(false);
+        getContentPane().add(TFPrecio2);
+        TFPrecio2.setBounds(380, 410, 60, 20);
+        getContentPane().add(jSeparator20);
+        jSeparator20.setBounds(370, 430, 80, 10);
+
+        TFStock2.setBackground(new java.awt.Color(204, 204, 204));
+        TFStock2.setForeground(new java.awt.Color(255, 255, 255));
+        TFStock2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFStock2.setBorder(null);
+        TFStock2.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFStock2.setOpaque(false);
+        getContentPane().add(TFStock2);
+        TFStock2.setBounds(380, 450, 60, 20);
+        getContentPane().add(jSeparator22);
+        jSeparator22.setBounds(370, 470, 80, 10);
+        getContentPane().add(jSeparator25);
+        jSeparator25.setBounds(370, 510, 80, 10);
+
+        TFNumLinea2.setBackground(new java.awt.Color(204, 204, 204));
+        TFNumLinea2.setForeground(new java.awt.Color(255, 255, 255));
+        TFNumLinea2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        TFNumLinea2.setBorder(null);
+        TFNumLinea2.setCaretColor(new java.awt.Color(255, 255, 255));
+        TFNumLinea2.setOpaque(false);
+        getContentPane().add(TFNumLinea2);
+        TFNumLinea2.setBounds(380, 530, 60, 20);
+        getContentPane().add(jSeparator24);
+        jSeparator24.setBounds(370, 550, 80, 10);
+
+        Precio1.setBackground(new java.awt.Color(204, 204, 204));
+        Precio1.setForeground(new java.awt.Color(255, 255, 255));
+        Precio1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        Precio1.setBorder(null);
+        Precio1.setCaretColor(new java.awt.Color(255, 255, 255));
+        Precio1.setOpaque(false);
+        getContentPane().add(Precio1);
+        Precio1.setBounds(110, 560, 60, 20);
+
+        precio_total.setBackground(new java.awt.Color(204, 204, 204));
+        precio_total.setForeground(new java.awt.Color(255, 255, 255));
+        precio_total.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        precio_total.setBorder(null);
+        precio_total.setCaretColor(new java.awt.Color(255, 255, 255));
+        precio_total.setOpaque(false);
+        getContentPane().add(precio_total);
+        precio_total.setBounds(110, 600, 120, 20);
+
+        CB2.setBorder(null);
+        CB2.setContentAreaFilled(false);
+        CB2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(CB2);
+        CB2.setBounds(280, 300, 20, 20);
+
+        CB3.setBorder(null);
+        CB3.setContentAreaFilled(false);
+        CB3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(CB3);
+        CB3.setBounds(410, 300, 20, 20);
+
+        jLabel23.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("TOTAL");
+        getContentPane().add(jLabel23);
+        jLabel23.setBounds(20, 600, 70, 21);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(20, 620, 430, 10);
+
+        precio2.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(precio2);
+        precio2.setBounds(270, 560, 0, 0);
+
+        Precio2.setBackground(new java.awt.Color(204, 204, 204));
+        Precio2.setForeground(new java.awt.Color(255, 255, 255));
+        Precio2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        Precio2.setBorder(null);
+        Precio2.setCaretColor(new java.awt.Color(255, 255, 255));
+        Precio2.setOpaque(false);
+        getContentPane().add(Precio2);
+        Precio2.setBounds(250, 560, 60, 20);
+
+        Precio3.setBackground(new java.awt.Color(204, 204, 204));
+        Precio3.setForeground(new java.awt.Color(255, 255, 255));
+        Precio3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        Precio3.setBorder(null);
+        Precio3.setCaretColor(new java.awt.Color(255, 255, 255));
+        Precio3.setOpaque(false);
+        getContentPane().add(Precio3);
+        Precio3.setBounds(380, 560, 60, 20);
+
+        precio3.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(precio3);
+        precio3.setBounds(400, 560, 0, 0);
+
+        Cantidad1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        Cantidad1.setMaximumRowCount(5);
+        Cantidad1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        Cantidad1.setSelectedIndex(-1);
+        Cantidad1.setBorder(null);
+        Cantidad1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Cantidad1ItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(Cantidad1);
+        Cantidad1.setBounds(130, 480, 40, 31);
+
+        Cantidad2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        Cantidad2.setMaximumRowCount(5);
+        Cantidad2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        Cantidad2.setSelectedIndex(-1);
+        Cantidad2.setBorder(null);
+        Cantidad2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Cantidad2ItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(Cantidad2);
+        Cantidad2.setBounds(270, 480, 40, 31);
+
+        Cantidad3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        Cantidad3.setMaximumRowCount(5);
+        Cantidad3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        Cantidad3.setSelectedIndex(-1);
+        Cantidad3.setBorder(null);
+        Cantidad3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Cantidad3ItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(Cantidad3);
+        Cantidad3.setBounds(400, 480, 40, 31);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
-        jLabel1.setMaximumSize(new java.awt.Dimension(931, 386));
-        jLabel1.setMinimumSize(new java.awt.Dimension(931, 386));
-        jLabel1.setPreferredSize(new java.awt.Dimension(931, 386));
+        jLabel1.setMaximumSize(new java.awt.Dimension(1200, 715));
+        jLabel1.setMinimumSize(new java.awt.Dimension(1200, 715));
+        jLabel1.setPreferredSize(new java.awt.Dimension(1200, 715));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(390, -10, 1200, 720);
+        jLabel1.setBounds(0, 0, 1200, 715);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -741,13 +1079,19 @@ public class Ventas extends javax.swing.JFrame {
         jCBEfectivo.setVisible(true);
         jButton5.setEnabled(false);
         jButton8.setVisible(true);
-        jButton9.setVisible(true);        
+        jButton9.setVisible(true);          
+        
+        Precio1.setVisible(true);
+        Precio2.setVisible(true);
+        Precio3.setVisible(true);
+        precio_total.setVisible(true);
+        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //BOTÓN ACEPTAR       
         String vFecha = null;
-        vFecha = TFFecha.getText(); 
+        vFecha = TFFecha.getText();               
         try {
             int vId = 0, vCli, vEmp;
             String vMetodo_pago = null ,cli;            
@@ -759,8 +1103,12 @@ public class Ventas extends javax.swing.JFrame {
             }           
             vCli = getCodigoCliente((String) jCBCli.getSelectedItem());
             cli = (String) jCBCli.getSelectedItem();
-            vEmp = getCodigoEmpleado(TFEmpleado.getText());            
-            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
+            vEmp = getCodigoEmpleado(TFEmpleado.getText()); 
+            if(array_ventas.isEmpty()){
+                vId = 1;                
+            }else{
+            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1); 
+            }
             if (jCBTarjeta.isSelected()) {
                 vMetodo_pago = "Tarjeta";                
             }else if(jCBEfectivo.isSelected()){
@@ -794,30 +1142,60 @@ public class Ventas extends javax.swing.JFrame {
             int venta_id = vId;
             int num_linea = Integer.parseInt(TFNumLinea.getText());
             int articulo = getCodigoArticulo(TFArticulo.getText());
-            int cantidad = Integer.parseInt(TFCantidad.getText());
+            int cantidad = Cantidad1.getSelectedIndex()+1;
             float precio = Float.parseFloat(TFPrecio.getText());
-            float importe = cantidad * precio;
+            float importe = cantidad * precio;          
             
-            PreparedStatement ps2 = conex.prepareStatement("INSERT INTO lineas_ventas (id, venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?,?)");
+            PreparedStatement ps2 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
             ps2.setInt(1, venta_id);
-            ps2.setInt(2, venta_id);
-            ps2.setInt(3, num_linea);
-            ps2.setInt(4, articulo);
-            ps2.setInt(5, cantidad);
-            ps2.setFloat(6, importe);
-            ps2.executeUpdate();
-            
+            ps2.setInt(2, num_linea);
+            ps2.setInt(3, articulo);
+            ps2.setInt(4, cantidad);
+            ps2.setFloat(5, importe);
+            ps2.executeUpdate();            
             //INSERT PARA MÁS DE UN ARTICULO EN LA MISMA VENTA...
             
+            //INSERTAR ARTÍCULO 2 SI EL CHECKBOX2 ESTÁ ACTIVO
+            if (CB2.isSelected()) { 
+                int num_linea1 = Integer.parseInt(TFNumLinea1.getText());
+                int articulo1 = getCodigoArticulo(TFArticulo1.getText());
+                int cantidad1 = Cantidad2.getSelectedIndex()+1;
+                float precio1 = Float.parseFloat(TFPrecio1.getText());
+                float importe1 = cantidad * precio1;
+
+                PreparedStatement ps3 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
+                ps3.setInt(1, vId);
+                ps3.setInt(2, num_linea1);
+                ps3.setInt(3, articulo1);
+                ps3.setInt(4, cantidad1);
+                ps3.setFloat(5, importe1);
+                ps3.executeUpdate();     
+                
+                System.out.println(num_linea1);
+                System.out.println(articulo1);
+                        
+            }
+            //INSERTAR ARTÍCULO 3 SI EL CHECKBOX3 ESTÁ ACTIVO
+            if (CB3.isSelected()) { 
+                int num_linea2 = Integer.parseInt(TFNumLinea2.getText());
+                int articulo2 = getCodigoArticulo(TFArticulo2.getText());
+                int cantidad2 = Cantidad3.getSelectedIndex()+1;
+                float precio2 = Float.parseFloat(TFPrecio2.getText());
+                float importe2 = cantidad * precio2;
+
+                PreparedStatement ps4 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
+
+                ps4.setInt(1, vId);
+                ps4.setInt(2, num_linea2);
+                ps4.setInt(3, articulo2);
+                ps4.setInt(4, cantidad2);
+                ps4.setFloat(5, importe2);
+                ps4.executeUpdate(); 
+                
+            }
             
-            
-            
-            
-            
-            
-            
-            
-            
+            /********************************************************************/           
+
             jTFBuscarVenta.setEnabled(true);
             jButton5.setEnabled(true);
             jButton8.setVisible(false);
@@ -860,6 +1238,67 @@ public class Ventas extends javax.swing.JFrame {
         TFEmpleado.setText("");
         TFFecha.setText("");
         TFPago.setText("");
+        Cantidad1.setVisible(false);
+        Cantidad2.setVisible(false);
+        Cantidad3.setVisible(false); 
+        CB2.setSelected(false);
+        CB2.setEnabled(true);
+        CB3.setSelected(false); 
+        CB3.setEnabled(false);
+        TFArticulo1.setVisible(false);
+        TFArticulo2.setVisible(false);
+        TFTalla1.setVisible(false);
+        TFTalla2.setVisible(false);
+        TFPrecio1.setVisible(false);
+        TFPrecio2.setVisible(false);
+        TFStock1.setVisible(false);
+        TFStock2.setVisible(false);
+        TFNumLinea1.setVisible(false);
+        TFNumLinea2.setVisible(false);
+        //SEPARADORES ITEM 2
+        jSeparator10.setVisible(false);
+        jSeparator12.setVisible(false);
+        jSeparator16.setVisible(false);
+        jSeparator17.setVisible(false);
+        jSeparator18.setVisible(false);
+        jSeparator19.setVisible(false);         
+        //SEPARADORES ITEM 3
+        jSeparator20.setVisible(false);
+        jSeparator21.setVisible(false);
+        jSeparator22.setVisible(false);
+        jSeparator23.setVisible(false);
+        jSeparator24.setVisible(false);
+        jSeparator25.setVisible(false);
+        
+        Precio1.setText("");
+        Precio1.setVisible(false);
+        Precio2.setText("");
+        Precio2.setVisible(false);
+        Precio3.setText("");
+        Precio3.setVisible(false);
+        precio_total.setText("");
+        precio_total.setVisible(false);
+        
+        TFArticulo.setText("");
+        TFTalla.setText("");
+        TFPrecio.setText("");
+        TFStock.setText("");
+        TFNumLinea.setText("");
+        
+        TFArticulo1.setText("");
+        TFTalla1.setText("");
+        TFPrecio1.setText("");
+        TFStock1.setText("");
+        TFNumLinea1.setText("");
+        
+        TFArticulo2.setText("");
+        TFTalla2.setText("");
+        TFPrecio2.setText("");
+        TFStock2.setText("");
+        TFNumLinea2.setText("");    
+        
+        
+  
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
@@ -892,13 +1331,168 @@ public class Ventas extends javax.swing.JFrame {
         filtro2(query);
     }//GEN-LAST:event_jTFBuscarVentaArticulosKeyReleased
 
-    private void statusTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_statusTextActionPerformed
+    private void CB2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CB2ActionPerformed
+        //CHECKBOX ITEM 2
+        if (CB2.isSelected()) { 
+            CB3.setEnabled(true);
+            
+            jSeparator10.setVisible(true);
+            jSeparator12.setVisible(true);
+            jSeparator16.setVisible(true);
+            jSeparator17.setVisible(true);
+            jSeparator18.setVisible(true);
+            jSeparator19.setVisible(true);
 
-    private void TFArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFArticuloActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TFArticuloActionPerformed
+            TFArticulo1.setVisible(true);
+            TFTalla1.setVisible(true);
+            TFPrecio1.setVisible(true);
+            TFStock1.setVisible(true);
+            TFNumLinea1.setVisible(true);
+        }else{  
+            CB3.setEnabled(false);
+            
+            jSeparator10.setVisible(false);
+            jSeparator12.setVisible(false);
+            jSeparator16.setVisible(false);
+            jSeparator17.setVisible(false);
+            jSeparator18.setVisible(false);
+            jSeparator19.setVisible(false);
+
+            TFArticulo1.setVisible(false);
+            TFTalla1.setVisible(false);
+            TFPrecio1.setVisible(false);
+            TFStock1.setVisible(false);
+            TFNumLinea1.setVisible(false);
+            
+            TFArticulo1.setText("");
+            TFTalla1.setText("");
+            TFPrecio1.setText("");
+            TFStock1.setText("");
+            TFNumLinea1.setText("");
+            Precio2.setText("");
+            
+            Cantidad2.setVisible(false);
+            
+        }
+    }//GEN-LAST:event_CB2ActionPerformed
+
+    private void CB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CB3ActionPerformed
+        //CHECKBOX ITEM 3
+        if (CB3.isSelected()) {
+            CB2.setEnabled(false);
+            
+            jSeparator20.setVisible(true);
+            jSeparator21.setVisible(true);
+            jSeparator22.setVisible(true);
+            jSeparator23.setVisible(true);
+            jSeparator24.setVisible(true);
+            jSeparator25.setVisible(true);
+
+            TFArticulo2.setVisible(true);
+            TFTalla2.setVisible(true);
+            TFPrecio2.setVisible(true);
+            TFStock2.setVisible(true);
+            TFNumLinea2.setVisible(true);
+        } else {
+            CB2.setEnabled(true);
+            
+            jSeparator20.setVisible(false);
+            jSeparator21.setVisible(false);
+            jSeparator22.setVisible(false);
+            jSeparator23.setVisible(false);
+            jSeparator24.setVisible(false);
+            jSeparator25.setVisible(false);
+
+            TFArticulo2.setVisible(false);
+            TFTalla2.setVisible(false);
+            TFPrecio2.setVisible(false);
+            TFStock2.setVisible(false);
+            TFNumLinea2.setVisible(false);
+            
+            TFArticulo2.setText("");
+            TFTalla2.setText("");
+            TFPrecio2.setText("");
+            TFStock2.setText("");
+            TFNumLinea2.setText(""); 
+            Precio3.setText("");
+            
+            Cantidad3.setVisible(false);
+        }
+
+    }//GEN-LAST:event_CB3ActionPerformed
+
+    private void Cantidad1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_Cantidad1ItemStateChanged
+        //COMBOBOX CANTIDAD1
+        float v1 = Float.parseFloat(TFPrecio.getText());
+        int v2 = Cantidad1.getSelectedIndex()+1;
+        float resul = v1 * v2;  
+        Precio1.setText(Float.toString(resul));
+        
+        float t2, t3;
+        
+        float t1 = Float.parseFloat(Precio1.getText());
+        if(Precio2.getText().isEmpty()){
+            t2 = 0;        
+        }else{
+            t2 = Float.parseFloat(Precio2.getText());            
+        }
+        if (Precio3.getText().isEmpty()) {
+            t3 = 0;            
+        } else {
+            t3 = Float.parseFloat(Precio3.getText()); 
+        }
+        float precio_final = t1 + t2 + t3; 
+        precio_total.setText(Float.toString(precio_final));
+        
+    }//GEN-LAST:event_Cantidad1ItemStateChanged
+
+    private void Cantidad2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_Cantidad2ItemStateChanged
+         //COMBOBOX CANTIDAD2
+        float v1 = Float.parseFloat(TFPrecio1.getText());
+        int v2 = Cantidad2.getSelectedIndex()+1;
+        float resul = v1 * v2;  
+        Precio2.setText(Float.toString(resul));
+        
+        float t2, t3;
+        
+        float t1 = Float.parseFloat(Precio1.getText());
+        if(Precio2.getText().isEmpty()){
+            t2 = 0;        
+        }else{
+            t2 = Float.parseFloat(Precio2.getText());            
+        }
+        if (Precio3.getText().isEmpty()) {
+            t3 = 0;            
+        } else {
+            t3 = Float.parseFloat(Precio3.getText()); 
+        }
+        float precio_final = t1 + t2 + t3; 
+        precio_total.setText(Float.toString(precio_final));
+    }//GEN-LAST:event_Cantidad2ItemStateChanged
+
+    private void Cantidad3ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_Cantidad3ItemStateChanged
+        //COMBOBOX CANTIDAD3
+        float v1 = Float.parseFloat(TFPrecio2.getText());
+        int v2 = Cantidad3.getSelectedIndex()+1;
+        float resul = v1 * v2;  
+        Precio3.setText(Float.toString(resul));
+        
+        float t2, t3;
+        
+        float t1 = Float.parseFloat(Precio1.getText());
+        if(Precio2.getText().isEmpty()){
+            t2 = 0;        
+        }else{
+            t2 = Float.parseFloat(Precio2.getText());            
+        }
+        if (Precio3.getText().isEmpty()) {
+            t3 = 0;            
+        } else {
+            t3 = Float.parseFloat(Precio3.getText()); 
+        }
+        float precio_final = t1 + t2 + t3; 
+        precio_total.setText(Float.toString(precio_final));
+    }//GEN-LAST:event_Cantidad3ItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -1127,17 +1721,34 @@ public class Ventas extends javax.swing.JFrame {
         );
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox CB2;
+    private javax.swing.JCheckBox CB3;
+    private javax.swing.JComboBox<String> Cantidad1;
+    private javax.swing.JComboBox<String> Cantidad2;
+    private javax.swing.JComboBox<String> Cantidad3;
+    private javax.swing.JTextField Precio1;
+    private javax.swing.JTextField Precio2;
+    private javax.swing.JTextField Precio3;
     private javax.swing.JTextField TFArticulo;
-    private javax.swing.JTextField TFCantidad;
+    private javax.swing.JTextField TFArticulo1;
+    private javax.swing.JTextField TFArticulo2;
     private javax.swing.JTextField TFCliente;
     private javax.swing.JTextField TFEmpleado;
     private javax.swing.JTextField TFFecha;
     private javax.swing.JTextField TFIdOculta;
     private javax.swing.JTextField TFNumLinea;
+    private javax.swing.JTextField TFNumLinea1;
+    private javax.swing.JTextField TFNumLinea2;
     private javax.swing.JTextField TFPago;
     private javax.swing.JTextField TFPrecio;
+    private javax.swing.JTextField TFPrecio1;
+    private javax.swing.JTextField TFPrecio2;
     private javax.swing.JTextField TFStock;
+    private javax.swing.JTextField TFStock1;
+    private javax.swing.JTextField TFStock2;
     private javax.swing.JTextField TFTalla;
+    private javax.swing.JTextField TFTalla1;
+    private javax.swing.JTextField TFTalla2;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton8;
@@ -1153,7 +1764,11 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1163,11 +1778,24 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
+    private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
     private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JSeparator jSeparator16;
+    private javax.swing.JSeparator jSeparator17;
+    private javax.swing.JSeparator jSeparator18;
+    private javax.swing.JSeparator jSeparator19;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator20;
+    private javax.swing.JSeparator jSeparator21;
+    private javax.swing.JSeparator jSeparator22;
+    private javax.swing.JSeparator jSeparator23;
+    private javax.swing.JSeparator jSeparator24;
+    private javax.swing.JSeparator jSeparator25;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
@@ -1179,6 +1807,9 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JTextField jTFBuscarVentaArticulos;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JLabel precio2;
+    private javax.swing.JLabel precio3;
+    private javax.swing.JTextField precio_total;
     private javax.swing.JTextField statusText;
     private javax.swing.JTextField statusText1;
     // End of variables declaration//GEN-END:variables

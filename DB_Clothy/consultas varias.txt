@@ -1,4 +1,4 @@
-1. Consulta para la tabla ventas/artículos...muestra todos los articulos en stock, incluias todas las tallas y sus existencias actuales.
+1. Consulta para la tabla ventas/artículos...muestra todos los articulos en stock, incluidas todas las tallas y sus existencias actuales.
 
 CREATE VIEW ventas_articulos AS (SELECT A.nombre AS Articulo ,T.valor_talla, A.descripcion, A.precio, C.nombre AS Categoria, M.nombre AS Marca, TAM.stock
 FROM tallas_articulos_map TAM, tallas T, articulos A, categorias C, marcas M
@@ -7,7 +7,10 @@ ORDER BY TAM.id_articulo, TAM.id_talla);
 
 2. Consulta para la tabla ventas/lineas_venta...en la que muestra la tabla de venta y lineas de venta juntas
 
-CREATE VIEW ventas_lineasVenta AS (SELECT V.id AS ID_Venta, LV.num_linea AS Num_Linea, C.nombre AS Cliente, E.nombre AS Empleado, V.fecha AS Fecha,V.metodo_pago AS Método_Pago,  A.nombre AS Articulo, LV.cantidad AS Cantidad, LV.importe AS Importe
+CREATE VIEW ventas_lineasVenta AS (SELECT V.id AS ID_Venta, LV.num_linea AS Num_Linea, C.nombre AS Cliente, E.nombre AS Empleado, V.fecha AS Fecha,V.metodo_pago AS Metodo_Pago,  A.nombre AS Articulo, LV.cantidad AS Cantidad, LV.importe AS Importe
 FROM ventas V, lineas_ventas LV, clientes C, articulos A, empleados E
 WHERE C.id=V.cliente AND E.id=V.empleado AND A.id=LV.articulo AND V.id=LV.venta_id)
 ORDER BY 1, 2;
+
+
+3. Trigger después de venta, que reste la cantidad vendida de un artículo a las existencias.
