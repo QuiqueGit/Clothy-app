@@ -11,6 +11,7 @@ import controlador.Marcas;
 import controlador.Tallas;
 import controlador.Ventas;
 import java.sql.SQLException;
+import utilidades.ConexionDB;
 import static vista.Login.*;
 
 
@@ -178,7 +179,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBClientes);
-        jBClientes.setBounds(260, 210, 80, 78);
+        jBClientes.setBounds(200, 210, 80, 78);
 
         jBVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/ventas_icon.png"))); // NOI18N
         jBVentas.setToolTipText("");
@@ -193,7 +194,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBVentas);
-        jBVentas.setBounds(390, 220, 90, 60);
+        jBVentas.setBounds(320, 220, 90, 60);
 
         jBSesion.setFont(new java.awt.Font("Magneto", 0, 14)); // NOI18N
         jBSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/logout2.png"))); // NOI18N
@@ -208,7 +209,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBSesion);
-        jBSesion.setBounds(550, 220, 80, 80);
+        jBSesion.setBounds(440, 220, 80, 80);
 
         jLArticulos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLArticulos.setText("Artículos");
@@ -244,13 +245,13 @@ public class Menu extends javax.swing.JFrame {
         jLClientes.setText("Clientes");
         jLClientes.setToolTipText("");
         getContentPane().add(jLClientes);
-        jLClientes.setBounds(260, 290, 100, 26);
+        jLClientes.setBounds(200, 290, 100, 26);
 
         jLVentas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
         jLVentas.setText("Ventas");
         jLVentas.setToolTipText("");
         getContentPane().add(jLVentas);
-        jLVentas.setBounds(400, 290, 80, 26);
+        jLVentas.setBounds(330, 290, 80, 26);
 
         jBPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/pedidos_icon.png"))); // NOI18N
         jBPedidos.setToolTipText("");
@@ -298,6 +299,7 @@ public class Menu extends javax.swing.JFrame {
         
         if (resp == JOptionPane.YES_OPTION) {
             try {
+                ConexionDB.empleados();
                 login.setVisible(true);
                 menu.setVisible(false);
 

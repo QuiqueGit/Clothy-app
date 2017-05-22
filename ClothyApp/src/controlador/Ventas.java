@@ -51,13 +51,22 @@ public class Ventas extends javax.swing.JFrame {
         //array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         model = (DefaultTableModel) jTable1.getModel();
         model2 = (DefaultTableModel) jTable2.getModel();
-        //SETEA EL ANCHO DE LAS COLUMNAS      
+        //SETEA EL ANCHO DE LAS COLUMNAS TABLA 1     
         TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(55);
-        columnModel.getColumn(1).setPreferredWidth(120);
+        columnModel.getColumn(1).setPreferredWidth(60);
         columnModel.getColumn(2).setPreferredWidth(120);
         columnModel.getColumn(3).setPreferredWidth(120);
         columnModel.getColumn(4).setPreferredWidth(120);
+        //SETEA EL ANCHO DE LAS COLUMNAS TABLA 2
+        TableColumnModel columnModel2 = jTable2.getColumnModel();
+        columnModel2.getColumn(0).setPreferredWidth(120);
+        columnModel2.getColumn(1).setPreferredWidth(55);
+        columnModel2.getColumn(2).setPreferredWidth(150);
+        columnModel2.getColumn(3).setPreferredWidth(60);
+        columnModel2.getColumn(5).setPreferredWidth(120);
+        columnModel2.getColumn(6).setPreferredWidth(50);
+       
 
         TFIdOculta.setVisible(false);
         TFEmpleado.setEnabled(false);
@@ -221,6 +230,7 @@ public class Ventas extends javax.swing.JFrame {
                         TFStock1.setText(model2.getValueAt(i, 6).toString());
 
                     } else {
+                        
                         int i = modelRow;
                         TFArticulo1.setText(model2.getValueAt(i, 0).toString());
                         TFTalla1.setText(model2.getValueAt(i, 1).toString());
@@ -240,6 +250,8 @@ public class Ventas extends javax.swing.JFrame {
                     TFStock.setText(model2.getValueAt(i, 6).toString());
 
                 } else {
+                    TFNumLinea.setText("1");
+                    Cantidad1.setVisible(true);
                     int i = modelRow;
                     TFArticulo.setText(model2.getValueAt(i, 0).toString());
                     TFTalla.setText(model2.getValueAt(i, 1).toString());
@@ -781,7 +793,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, true, true
@@ -1124,14 +1136,17 @@ public class Ventas extends javax.swing.JFrame {
             ps.setString(4, vFecha);
             ps.setString(5, vMetodo_pago);
             ps.executeUpdate();
-            //INSERT EN LA TABLA
-            if(array_ventas.isEmpty()){ //SI NO HAY NINGÚN PEDIDO AÚN, ES EL 0.
+            //ACTUALIZA LA TABLA <--------------------------------------------------------------------------------------------------------------------------
+            
+            
+            //<-----------------------------------------------------------------------------------------------------------------------------------------------
+            /*if(array_ventas.isEmpty()){ //SI NO HAY NINGÚN PEDIDO AÚN, ES EL 0.
                 vId=1;                
             }else{
             vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
             }
             String emp = TFEmpleado.getText();
-            model.addRow(new Object[]{vId, cli, emp, vFecha, vMetodo_pago});
+            model.addRow(new Object[]{vId, cli, emp, vFecha, vMetodo_pago});*/
             //INSERT EN EL ARRAY
             array_ventas.add(new Venta(vId, vCli, vEmp, vFecha, vMetodo_pago));
             
@@ -1192,9 +1207,8 @@ public class Ventas extends javax.swing.JFrame {
                 ps4.setFloat(5, importe2);
                 ps4.executeUpdate(); 
                 
-            }
-            
-            /********************************************************************/           
+            }            
+          
 
             jTFBuscarVenta.setEnabled(true);
             jButton5.setEnabled(true);

@@ -57,7 +57,6 @@ public class Articulos extends javax.swing.JFrame {
         columnModel.getColumn(3).setPreferredWidth(65);
         columnModel.getColumn(4).setPreferredWidth(130);
         columnModel.getColumn(5).setPreferredWidth(150);
-        columnModel.getColumn(6).setPreferredWidth(60);
         //SETEA HACIA LA DERECHA LA COLUMNA 2 DE LA TABLA(ES UN STRING, PARA LA ORDENACIÓN)
         //LOS TIPO NÚMEROS EN GENERAL(INT, FLOAT...) LOS SETEA AUTOMÁTICAMENTE HACIA LA DERECHA
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
@@ -82,9 +81,8 @@ public class Articulos extends javax.swing.JFrame {
             float precio = Float.parseFloat(rs.getString("precio"));
             int categoria = Integer.parseInt(rs.getString("categoria"));            
             int marca= Integer.parseInt(rs.getString("marca"));                        
-            int existencias = Integer.parseInt(rs.getString("existencias"));
             
-            array_articulos.add(new Articulo(id, nombre, descripcion, precio, categoria, marca, existencias));            
+            array_articulos.add(new Articulo(id, nombre, descripcion, precio, categoria, marca));            
         }            
                        
         añadirFilasTabla(); //MÉTODO QUE LLENA LA TABLA CON LA INFO DEL ARRAYLIST
@@ -104,7 +102,6 @@ public class Articulos extends javax.swing.JFrame {
                jTextField4.setText(model.getValueAt(i, 3).toString());
                jTextField5.setText(model.getValueAt(i, 4).toString());
                jTextField6.setText(model.getValueAt(i, 5).toString());
-               jTextField7.setText(model.getValueAt(i, 6).toString());
                }else{
                     int i = modelRow;
                     jTextField1.setText(model.getValueAt(i, 0).toString());
@@ -113,7 +110,6 @@ public class Articulos extends javax.swing.JFrame {
                     jTextField4.setText(model.getValueAt(i, 3).toString());
                     jTextField5.setText(model.getValueAt(i, 4).toString());
                     jTextField6.setText(model.getValueAt(i, 5).toString());
-                    jTextField7.setText(model.getValueAt(i, 6).toString());
                }
            }
        });
@@ -135,7 +131,6 @@ public class Articulos extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -144,14 +139,12 @@ public class Articulos extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
         jTFBuscar = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
@@ -192,42 +185,35 @@ public class Articulos extends javax.swing.JFrame {
         jLabel2.setText("Nombre");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 120, 63, 22);
+        jLabel2.setBounds(50, 130, 63, 22);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Descripción");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(50, 160, 91, 22);
+        jLabel3.setBounds(50, 170, 91, 22);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Precio");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(50, 200, 49, 22);
+        jLabel4.setBounds(50, 210, 49, 22);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Categoria");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(50, 240, 76, 22);
+        jLabel5.setBounds(50, 250, 76, 22);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Marca");
         jLabel6.setFocusable(false);
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(50, 280, 50, 22);
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Existencias");
-        jLabel7.setFocusable(false);
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(50, 320, 85, 22);
+        jLabel6.setBounds(50, 290, 50, 22);
 
         jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -243,11 +229,6 @@ public class Articulos extends javax.swing.JFrame {
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
         jTextField1.setFocusable(false);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jTextField1);
         jTextField1.setBounds(50, 80, 39, 24);
 
@@ -257,13 +238,8 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2.setBorder(null);
         jTextField2.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField2.setOpaque(false);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(150, 120, 142, 20);
+        jTextField2.setBounds(150, 130, 142, 20);
 
         jTextField3.setBackground(new java.awt.Color(204, 204, 204));
         jTextField3.setForeground(new java.awt.Color(255, 255, 255));
@@ -272,7 +248,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField3.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField3.setOpaque(false);
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(150, 160, 142, 20);
+        jTextField3.setBounds(150, 170, 142, 20);
 
         jTextField4.setBackground(new java.awt.Color(204, 204, 204));
         jTextField4.setForeground(new java.awt.Color(255, 255, 255));
@@ -281,7 +257,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField4.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField4.setOpaque(false);
         getContentPane().add(jTextField4);
-        jTextField4.setBounds(150, 200, 142, 20);
+        jTextField4.setBounds(150, 210, 142, 20);
 
         jTextField5.setBackground(new java.awt.Color(204, 204, 204));
         jTextField5.setForeground(new java.awt.Color(255, 255, 255));
@@ -290,7 +266,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField5.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField5.setOpaque(false);
         getContentPane().add(jTextField5);
-        jTextField5.setBounds(150, 240, 142, 20);
+        jTextField5.setBounds(150, 250, 142, 20);
 
         jTextField6.setBackground(new java.awt.Color(204, 204, 204));
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
@@ -299,16 +275,7 @@ public class Articulos extends javax.swing.JFrame {
         jTextField6.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField6.setOpaque(false);
         getContentPane().add(jTextField6);
-        jTextField6.setBounds(150, 280, 142, 20);
-
-        jTextField7.setBackground(new java.awt.Color(204, 204, 204));
-        jTextField7.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField7.setBorder(null);
-        jTextField7.setCaretColor(new java.awt.Color(255, 255, 255));
-        jTextField7.setOpaque(false);
-        getContentPane().add(jTextField7);
-        jTextField7.setBounds(150, 320, 142, 20);
+        jTextField6.setBounds(150, 290, 142, 20);
 
         jTFBuscar.setBackground(new java.awt.Color(204, 204, 204));
         jTFBuscar.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -343,7 +310,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(20, 370, 100, 30);
+        jButton5.setBounds(20, 350, 100, 30);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
@@ -362,7 +329,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton6);
-        jButton6.setBounds(120, 370, 100, 30);
+        jButton6.setBounds(120, 350, 100, 30);
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
@@ -380,7 +347,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton7);
-        jButton7.setBounds(220, 370, 100, 30);
+        jButton7.setBounds(220, 350, 100, 30);
 
         jButton8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
@@ -396,7 +363,7 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(40, 410, 120, 30);
+        jButton8.setBounds(40, 390, 120, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -412,29 +379,27 @@ public class Articulos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(160, 410, 120, 30);
-        getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(50, 340, 240, 10);
+        jButton9.setBounds(160, 390, 120, 30);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(50, 140, 240, 10);
+        jSeparator2.setBounds(50, 150, 240, 10);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(50, 180, 240, 10);
+        jSeparator3.setBounds(50, 190, 240, 10);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(50, 220, 240, 10);
+        jSeparator4.setBounds(50, 230, 240, 10);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(50, 260, 240, 10);
+        jSeparator5.setBounds(50, 270, 240, 10);
         getContentPane().add(jSeparator6);
-        jSeparator6.setBounds(50, 300, 240, 10);
+        jSeparator6.setBounds(50, 310, 240, 10);
         getContentPane().add(jSeparator7);
         jSeparator7.setBounds(170, 90, 120, 10);
 
         jCBCat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBCat);
-        jCBCat.setBounds(170, 240, 140, 20);
+        jCBCat.setBounds(170, 250, 140, 20);
 
         jCBMar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jCBMar);
-        jCBMar.setBounds(170, 280, 140, 20);
+        jCBMar.setBounds(170, 290, 140, 20);
         getContentPane().add(statusText);
         statusText.setBounds(290, 410, 30, 24);
 
@@ -445,14 +410,14 @@ public class Articulos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Descripcion", "Precio", "Categoria", "Marca", "Existencias"
+                "ID", "Nombre", "Descripcion", "Precio", "Categoria", "Marca"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -502,8 +467,7 @@ public class Articulos extends javax.swing.JFrame {
         jCBCat.setVisible(true);
         jTextField6.setText("");
         jTextField6.setVisible(false);        
-        jCBMar.setVisible(true);
-        jTextField7.setText("");         
+        jCBMar.setVisible(true);      
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -515,7 +479,7 @@ public class Articulos extends javax.swing.JFrame {
        //BOTÓN EDITAR         
             try {
             String vNombre, vDescripcion, cat, mar;
-            int vId, vMarca, vExistencias, vCategoria;
+            int vId, vMarca, vCategoria;
             float vPrecio;
 
             vId = Integer.parseInt(jTextField1.getText());
@@ -526,14 +490,13 @@ public class Articulos extends javax.swing.JFrame {
             vCategoria = getCodigoCateg(cat);
             mar = jTextField6.getText();
             vMarca = getCodigoMarca(mar);
-            vExistencias = Integer.parseInt(jTextField7.getText());
             //REALIZA UPDATE EN LA BASE DE DATOS
             String url = "jdbc:mysql://localhost:3306/clothy";
             String user = "root";
             String pass = "";
             Connection connection = DriverManager.getConnection(url, user, pass);
             Statement st = connection.createStatement();
-            String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + ", existencias=" + vExistencias + " WHERE id=" + vId;
+            String query = "update articulos set nombre='" + vNombre + "', descripcion='" + vDescripcion + "', precio=" + vPrecio + ", categoria=" + vCategoria + ", marca=" + vMarca + " WHERE id=" + vId;
             st.executeUpdate(query);            
             //REALIZA UPDATE EN LA TABLA
             if(jTFBuscar.getText().isEmpty()){
@@ -543,7 +506,6 @@ public class Articulos extends javax.swing.JFrame {
             model.setValueAt(jTextField4.getText(), i, 3);
             model.setValueAt(jTextField5.getText(), i, 4);
             model.setValueAt(jTextField6.getText(), i, 5);
-            model.setValueAt(jTextField7.getText(), i, 6);
             }else{
                 int i = modelRow;
                 model.setValueAt(jTextField2.getText(), i, 1);
@@ -551,7 +513,6 @@ public class Articulos extends javax.swing.JFrame {
                 model.setValueAt(jTextField4.getText(), i, 3);
                 model.setValueAt(jTextField5.getText(), i, 4);
                 model.setValueAt(jTextField6.getText(), i, 5);
-                model.setValueAt(jTextField7.getText(), i, 6);
             }
 
             } catch (SQLException ex) {
@@ -575,7 +536,6 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
-        jTextField7.setText("");
         
         
     }//GEN-LAST:event_jButton9ActionPerformed
@@ -584,7 +544,7 @@ public class Articulos extends javax.swing.JFrame {
         //BOTÓN ACEPTAR
        try {            
             String vNombre, vDescripcion, cat, mar;
-            int vId, vMarca, vExistencias, vCategoria;
+            int vId, vMarca, vCategoria;
             float vPrecio;            
             
             vNombre = jTextField2.getText();
@@ -593,22 +553,41 @@ public class Articulos extends javax.swing.JFrame {
             cat = (String) jCBCat.getSelectedItem();
             vCategoria = getCodigoCateg(cat);
             mar = (String) jCBMar.getSelectedItem();
-            vMarca = getCodigoMarca(mar);
-            vExistencias = Integer.parseInt(jTextField7.getText());             
+            vMarca = getCodigoMarca(mar);           
             //INSERT EN LA BASE DE DATOS               
-            PreparedStatement ps = conex.prepareStatement("INSERT INTO articulos (nombre, descripcion, precio, categoria, marca, existencias) VALUES (?,?,?,?,?,?)");
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO articulos (nombre, descripcion, precio, categoria, marca) VALUES (?,?,?,?,?)");
             ps.setString(1, vNombre);
             ps.setString(2, vDescripcion);
             ps.setFloat(3, vPrecio);
             ps.setInt(4, vCategoria);
             ps.setInt(5, vMarca);
-            ps.setInt(6, vExistencias);
             ps.executeUpdate();           
             //INSERT EN LA TABLA      
             vId = (array_articulos.get(array_articulos.size()-1).getId()+1);
-            model.addRow(new Object[]{vId, vNombre,vDescripcion,vPrecio,cat,mar,vExistencias});
+            model.addRow(new Object[]{vId, vNombre,vDescripcion,vPrecio,cat,mar,});
             //INSERT EN EL ARRAY            
-            array_articulos.add(new Articulo(vId, vNombre, vDescripcion, vPrecio, vCategoria, vMarca, vExistencias));
+            array_articulos.add(new Articulo(vId, vNombre, vDescripcion, vPrecio, vCategoria, vMarca));
+            //*******************************************************************************************//
+            //INSERT PARA LLENAR AUTOMÁTICAMENTE EL STOCK DEL ARTÍCULO INTRODUCIDO, POR DEFECTO VENDRÁN SIEMPRE 10 DE CADA TALLA
+            if(vCategoria != 9 && vCategoria !=10){
+                for (int i = 0; i < 5; i++) {
+                    PreparedStatement ps2 = conex.prepareStatement("INSERT INTO tallas_articulos_map (id_talla, id_articulo, stock) VALUES (?,?,?)");
+                    ps2.setInt(1, i+1);
+                    ps2.setInt(2, vId);
+                    ps2.setInt(3, 10); 
+                    ps2.executeUpdate();
+                }
+                                       
+            }else{
+                for (int i = 6; i < 10; i++) {
+                    PreparedStatement ps2 = conex.prepareStatement("INSERT INTO tallas_articulos_map (id_talla, id_articulo, stock) VALUES (?,?,?)");
+                    ps2.setInt(1, i);
+                    ps2.setInt(2, vId);
+                    ps2.setInt(3, 10); 
+                    ps2.executeUpdate();
+                }
+    
+            }                               
             
             jTFBuscar.setEnabled(true); 
             jButton5.setEnabled(true);
@@ -622,24 +601,12 @@ public class Articulos extends javax.swing.JFrame {
             jTextField6.setVisible(true);
             jTextField2.setText("");
             jTextField3.setText("");
-            jTextField4.setText("");
-            jTextField7.setText("");
-            
-
-            //estadoInicial();           
+            jTextField4.setText("");                    
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
@@ -665,25 +632,31 @@ public class Articulos extends javax.swing.JFrame {
             try {
                 //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
                 // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
-                int vId = Integer.parseInt(jTextField1.getText());                
-                //REALIZA DELETE EN LA BASE DE DATOS
+                int vId = Integer.parseInt(jTextField1.getText());  
+                
                 String url = "jdbc:mysql://localhost:3306/clothy";
                 String user = "root";
                 String pass = "";
                 Connection connection = DriverManager.getConnection(url, user, pass);
+                //PRIMERO EL DELETE EN LA TABLA DONDE ESTÁ EL ARTÍCULO CON SUS TALLAS, SI NO...DARÍA ERROR DE FOREIGN KEY
+                Statement st2 = connection.createStatement();
+                String query2 = "DELETE FROM tallas_articulos_map WHERE id_articulo=" +vId;
+                st2.executeUpdate(query2);              
+                
+                //REALIZA DELETE EN TABLA ARTÍCULOS              
                 Statement st = connection.createStatement();
                 String query = "DELETE FROM articulos WHERE id=" + vId;
-                st.executeUpdate(query);
+                st.executeUpdate(query);               
 
                 jTextField2.setText("");
                 jTextField3.setText("");
                 jTextField4.setText("");
                 jTextField5.setText("");
                 jTextField6.setText("");
-                jTextField7.setText("");
 
             } catch (SQLException ex) {
                 Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Este artículo se ha vendido al menos 1 vez, no se debe borrar, cambia el nombre.", "Error Delete", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -812,7 +785,7 @@ public class Articulos extends javax.swing.JFrame {
     }
     
     public void añadirFilasTabla(){ 
-        Object datosFila []= new Object [7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+        Object datosFila []= new Object [6]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
         
         for (int i = 0; i < array_articulos.size(); i++) {
             datosFila[0] = array_articulos.get(i).getId();
@@ -821,7 +794,6 @@ public class Articulos extends javax.swing.JFrame {
             datosFila[3] = array_articulos.get(i).getPrecio();             
             datosFila[4] = getNombreCateg(array_articulos.get(i).getCategoria());
             datosFila[5] = getNombreMarca(array_articulos.get(i).getMarca());
-            datosFila[6] = array_articulos.get(i).getExistencias();
 
             model.addRow(datosFila);
         }
@@ -898,11 +870,9 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -917,7 +887,6 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField statusText;
     // End of variables declaration//GEN-END:variables
 }

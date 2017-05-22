@@ -7,17 +7,16 @@ package modelo;
 public class Articulo {
     
     private String nombre, descripcion;
-    private int id, marca, existencias, categoria;
+    private int id, marca, categoria;
     private float precio; 
     
-    public Articulo(int id, String nombre, String descripcion, float precio, int categoria, int marca, int existencias) {
+    public Articulo(int id, String nombre, String descripcion, float precio, int categoria, int marca) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.categoria = categoria;
-        this.marca = marca;
-        this.existencias = existencias;        
+        this.marca = marca;     
     }
 
     //GETTERS AND SETTERS
@@ -52,14 +51,6 @@ public class Articulo {
 
     public void setMarca(int marca) {
         this.marca = marca;
-    }
-
-    public int getExistencias() {
-        return existencias;
-    }
-
-    public void setExistencias(int existencias) {
-        this.existencias = existencias;
     }
 
     public int getCategoria() {

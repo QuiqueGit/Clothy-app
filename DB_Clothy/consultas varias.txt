@@ -14,3 +14,6 @@ ORDER BY 1, 2;
 
 
 3. Trigger después de venta, que reste la cantidad vendida de un artículo a las existencias.
+
+
+4. Trigger que automáticamente cree las tallas al introducir un artículo y a su vez le asigne existencias(stock) aleatoriamente...FLOOT (RAND()*15)
