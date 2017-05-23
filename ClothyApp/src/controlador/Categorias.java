@@ -161,11 +161,6 @@ public class Categorias extends javax.swing.JFrame {
         jTextField1.setBorder(null);
         jTextField1.setCaretColor(new java.awt.Color(255, 255, 255));
         jTextField1.setOpaque(false);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jTextField1);
         jTextField1.setBounds(130, 100, 140, 20);
 
@@ -334,8 +329,8 @@ public class Categorias extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        //BOTÓN NUEVO
-        jTextField1.setText("");        
+        //BOTÓN NUEVO     
+        jTextField1.setText(String.valueOf(array_categorias.get(array_categorias.size() - 1).getId()+1));        
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField1.setEnabled(true);
@@ -466,8 +461,8 @@ public class Categorias extends javax.swing.JFrame {
         try {
             int vId;
             String vNombre, vDescripcion;
-
-            vId = Integer.parseInt(jTextField1.getText());
+            
+            vId = Integer.parseInt(jTextField1.getText());           
             vNombre = jTextField2.getText();
             vDescripcion = jTextField3.getText();
 
@@ -494,10 +489,6 @@ public class Categorias extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
         //BOTÓN X, CERRAR VENTANA INDIVIDUAL

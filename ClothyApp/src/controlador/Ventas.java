@@ -947,6 +947,7 @@ public class Ventas extends javax.swing.JFrame {
         Precio1.setBounds(110, 560, 60, 20);
 
         precio_total.setBackground(new java.awt.Color(204, 204, 204));
+        precio_total.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         precio_total.setForeground(new java.awt.Color(255, 255, 255));
         precio_total.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         precio_total.setBorder(null);

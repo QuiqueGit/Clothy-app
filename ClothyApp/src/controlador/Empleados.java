@@ -51,7 +51,7 @@ public class Empleados extends javax.swing.JFrame {
         s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String query = "SELECT * FROM empleados";
         rs = s.executeQuery(query);
-                
+        
         while (rs.next()) { //CREO NUEVOS OBJETOS TIPO EMPLEADO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
             int id = rs.getInt("id");
             String nombre = rs.getString("nombre");
