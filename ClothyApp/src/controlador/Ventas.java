@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
@@ -71,7 +72,7 @@ public class Ventas extends javax.swing.JFrame {
         TFIdOculta.setVisible(false);
         TFEmpleado.setEnabled(false);
         statusText.setVisible(false);
-        statusText1.setVisible(false);
+        //statusText1.setVisible(false);
         jCBCli.setVisible(false);
         jCBTarjeta.setVisible(false);
         jCBEfectivo.setVisible(false);
@@ -214,7 +215,10 @@ public class Ventas extends javax.swing.JFrame {
                         TFTalla2.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio2.setText(model2.getValueAt(i, 3).toString());
                         TFStock2.setText(model2.getValueAt(i, 6).toString());
-
+                    }
+                    //RELLENAR COMBOBOX DE CANTIDADES EN FUNCIÓN DEL SOTCK QUE LE QUEDE...
+                    for(int index = 0; index < Integer.parseInt(TFStock2.getText()); index ++) {
+                        Cantidad3.addItem(String.valueOf(index + 1));
                     }
 
                 } else if (CB2.isSelected()) {
@@ -228,7 +232,6 @@ public class Ventas extends javax.swing.JFrame {
                         TFTalla1.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio1.setText(model2.getValueAt(i, 3).toString());
                         TFStock1.setText(model2.getValueAt(i, 6).toString());
-
                     } else {
                         
                         int i = modelRow;
@@ -238,17 +241,20 @@ public class Ventas extends javax.swing.JFrame {
                         TFStock1.setText(model2.getValueAt(i, 6).toString());
 
                     }
+                    for(int index = 0; index < Integer.parseInt(TFStock1.getText()); index ++) {
+                        Cantidad2.addItem(String.valueOf(index + 1));
+                    }
                 } else if (jTFBuscarVentaArticulos.getText().isEmpty()) {
                     TFNumLinea.setText("1");
                     Cantidad1.setVisible(true);
+                    Cantidad1.removeAllItems();
                     
                     int i = jTable2.getSelectedRow();
                     // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                     TFArticulo.setText(model2.getValueAt(i, 0).toString());
                     TFTalla.setText(model2.getValueAt(i, 1).toString());
                     TFPrecio.setText(model2.getValueAt(i, 3).toString());
-                    TFStock.setText(model2.getValueAt(i, 6).toString());
-
+                    TFStock.setText(model2.getValueAt(i, 6).toString());    
                 } else {
                     TFNumLinea.setText("1");
                     Cantidad1.setVisible(true);
@@ -257,8 +263,11 @@ public class Ventas extends javax.swing.JFrame {
                     TFTalla.setText(model2.getValueAt(i, 1).toString());
                     TFPrecio.setText(model2.getValueAt(i, 3).toString());
                     TFStock.setText(model2.getValueAt(i, 6).toString());
-
                 }
+                //RELLENAR COMBOBOX DE CANTIDADES EN FUNCIÓN DEL SOTCK QUE LE QUEDE...
+                    for(int index = 0; index < Integer.parseInt(TFStock.getText()); index ++) {
+                        Cantidad1.addItem(String.valueOf(index + 1));
+                    }
             }
         });
 
@@ -680,11 +689,11 @@ public class Ventas extends javax.swing.JFrame {
         getContentPane().add(jSeparator5);
         jSeparator5.setBounds(100, 270, 270, 10);
         getContentPane().add(jSeparator7);
-        jSeparator7.setBounds(530, 60, 120, 10);
+        jSeparator7.setBounds(540, 60, 120, 10);
         getContentPane().add(statusText);
         statusText.setBounds(480, 260, 20, 24);
         getContentPane().add(statusText1);
-        statusText1.setBounds(470, 640, 20, 24);
+        statusText1.setBounds(460, 680, 410, 24);
 
         jCBTarjeta.setForeground(new java.awt.Color(255, 255, 255));
         jCBTarjeta.setSelected(true);
@@ -739,7 +748,7 @@ public class Ventas extends javax.swing.JFrame {
         getContentPane().add(jLabel19);
         jLabel19.setBounds(400, 300, 10, 20);
         getContentPane().add(jSeparator8);
-        jSeparator8.setBounds(530, 380, 120, 10);
+        jSeparator8.setBounds(540, 380, 120, 10);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -938,13 +947,14 @@ public class Ventas extends javax.swing.JFrame {
         jSeparator24.setBounds(370, 550, 80, 10);
 
         Precio1.setBackground(new java.awt.Color(204, 204, 204));
+        Precio1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         Precio1.setForeground(new java.awt.Color(255, 255, 255));
         Precio1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         Precio1.setBorder(null);
         Precio1.setCaretColor(new java.awt.Color(255, 255, 255));
         Precio1.setOpaque(false);
         getContentPane().add(Precio1);
-        Precio1.setBounds(110, 560, 60, 20);
+        Precio1.setBounds(90, 560, 80, 20);
 
         precio_total.setBackground(new java.awt.Color(204, 204, 204));
         precio_total.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -989,22 +999,24 @@ public class Ventas extends javax.swing.JFrame {
         precio2.setBounds(270, 560, 0, 0);
 
         Precio2.setBackground(new java.awt.Color(204, 204, 204));
+        Precio2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         Precio2.setForeground(new java.awt.Color(255, 255, 255));
         Precio2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         Precio2.setBorder(null);
         Precio2.setCaretColor(new java.awt.Color(255, 255, 255));
         Precio2.setOpaque(false);
         getContentPane().add(Precio2);
-        Precio2.setBounds(250, 560, 60, 20);
+        Precio2.setBounds(230, 560, 80, 20);
 
         Precio3.setBackground(new java.awt.Color(204, 204, 204));
+        Precio3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         Precio3.setForeground(new java.awt.Color(255, 255, 255));
         Precio3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         Precio3.setBorder(null);
         Precio3.setCaretColor(new java.awt.Color(255, 255, 255));
         Precio3.setOpaque(false);
         getContentPane().add(Precio3);
-        Precio3.setBounds(380, 560, 60, 20);
+        Precio3.setBounds(360, 560, 80, 20);
 
         precio3.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(precio3);
@@ -1012,8 +1024,6 @@ public class Ventas extends javax.swing.JFrame {
 
         Cantidad1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         Cantidad1.setMaximumRowCount(5);
-        Cantidad1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
-        Cantidad1.setSelectedIndex(-1);
         Cantidad1.setBorder(null);
         Cantidad1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1025,7 +1035,6 @@ public class Ventas extends javax.swing.JFrame {
 
         Cantidad2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         Cantidad2.setMaximumRowCount(5);
-        Cantidad2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
         Cantidad2.setSelectedIndex(-1);
         Cantidad2.setBorder(null);
         Cantidad2.addItemListener(new java.awt.event.ItemListener() {
@@ -1038,7 +1047,6 @@ public class Ventas extends javax.swing.JFrame {
 
         Cantidad3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         Cantidad3.setMaximumRowCount(5);
-        Cantidad3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
         Cantidad3.setSelectedIndex(-1);
         Cantidad3.setBorder(null);
         Cantidad3.addItemListener(new java.awt.event.ItemListener() {
@@ -1137,17 +1145,9 @@ public class Ventas extends javax.swing.JFrame {
             ps.setString(4, vFecha);
             ps.setString(5, vMetodo_pago);
             ps.executeUpdate();
-            //ACTUALIZA LA TABLA <--------------------------------------------------------------------------------------------------------------------------
+            //ACTUALIZA LA TABLA 
+            updateView();           
             
-            
-            //<-----------------------------------------------------------------------------------------------------------------------------------------------
-            /*if(array_ventas.isEmpty()){ //SI NO HAY NINGÚN PEDIDO AÚN, ES EL 0.
-                vId=1;                
-            }else{
-            vId = (array_ventas.get(array_ventas.size() - 1).getId() + 1);
-            }
-            String emp = TFEmpleado.getText();
-            model.addRow(new Object[]{vId, cli, emp, vFecha, vMetodo_pago});*/
             //INSERT EN EL ARRAY
             array_ventas.add(new Venta(vId, vCli, vEmp, vFecha, vMetodo_pago));
             
@@ -1457,8 +1457,7 @@ public class Ventas extends javax.swing.JFrame {
             t3 = Float.parseFloat(Precio3.getText()); 
         }
         float precio_final = t1 + t2 + t3; 
-        precio_total.setText(Float.toString(precio_final));
-        
+        precio_total.setText(String.valueOf(precio_final));        
     }//GEN-LAST:event_Cantidad1ItemStateChanged
 
     private void Cantidad2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_Cantidad2ItemStateChanged
@@ -1633,7 +1632,7 @@ public class Ventas extends javax.swing.JFrame {
     }
 
     public void añadirFilasTabla() {
-        Object datosFila[] = new Object[9]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
+        Object datosFila[] = new Object[9]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 9
 
         for (int i = 0; i < array_lineasVenta.size(); i++) {
             datosFila[0] = array_lineasVenta.get(i).getId_venta();
@@ -1734,7 +1733,27 @@ public class Ventas extends javax.swing.JFrame {
             }
         }
         );
+    }   
+       
+    
+    private void updateView() throws SQLException{
+        Statement s2 = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        String query2 = "SELECT * FROM ventas_articulos";
+        ResultSet r2 = s2.executeQuery(query2);
+
+        while (r2.next()) { //CREO NUEVOS OBJETOS TIPO ARTICULO Y LLENO EL ARRAYLIST MIENTRAS TENGA RESULTSET
+            String idArt = r2.getString("Articulo");
+            String idTal = r2.getString("valor_talla");
+            String desc = r2.getString("descripcion");
+            float precio = r2.getFloat("precio");
+            String cat = r2.getString("Categoria");
+            String marca = r2.getString("Marca"); 
+            int stock = r2.getInt("stock");
+            
+            array_stockTotal.add(new VentaArticulo(idArt, idTal, desc, precio, cat, marca, stock));
+        }
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox CB2;
     private javax.swing.JCheckBox CB3;

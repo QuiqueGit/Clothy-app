@@ -107,6 +107,7 @@ public class Tallas extends javax.swing.JFrame {
         jSeparator1.setBounds(70, 120, 160, 10);
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 204));
+        jTextField1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setBorder(null);

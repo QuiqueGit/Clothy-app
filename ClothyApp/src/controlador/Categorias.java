@@ -156,6 +156,7 @@ public class Categorias extends javax.swing.JFrame {
         jLabel8.setBounds(80, 20, 220, 40);
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 204));
+        jTextField1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setBorder(null);
