@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -325,6 +326,15 @@ public class Empleados extends javax.swing.JFrame {
         jButton5.setMargin(new java.awt.Insets(5, 14, 5, 14));
         jButton5.setMaximumSize(null);
         jButton5.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton5.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/new_button_green.png"))); // NOI18N
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton5MouseExited(evt);
+            }
+        });
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -344,6 +354,15 @@ public class Empleados extends javax.swing.JFrame {
         jButton6.setMaximumSize(null);
         jButton6.setMinimumSize(new java.awt.Dimension(96, 40));
         jButton6.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton6.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/edit_button_orange.png"))); // NOI18N
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton6MouseExited(evt);
+            }
+        });
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -362,6 +381,15 @@ public class Empleados extends javax.swing.JFrame {
         jButton7.setFocusable(false);
         jButton7.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton7.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton7.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/delete_button_red.png"))); // NOI18N
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton7MouseExited(evt);
+            }
+        });
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -378,6 +406,15 @@ public class Empleados extends javax.swing.JFrame {
         jButton9.setContentAreaFilled(false);
         jButton9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton9.setFocusable(false);
+        jButton9.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/cancel_button_red.png"))); // NOI18N
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton9MouseExited(evt);
+            }
+        });
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
@@ -394,6 +431,15 @@ public class Empleados extends javax.swing.JFrame {
         jButton8.setContentAreaFilled(false);
         jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton8.setFocusable(false);
+        jButton8.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/aceptar_button_green.png"))); // NOI18N
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton8MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton8MouseExited(evt);
+            }
+        });
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
@@ -610,6 +656,63 @@ public class Empleados extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jBCerrarActionPerformed
 
+    private void jButton5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseEntered
+        jButton5.setForeground(Color.green);
+    }//GEN-LAST:event_jButton5MouseEntered
+
+    private void jButton5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseExited
+        jButton5.setForeground(Color.white);
+    }//GEN-LAST:event_jButton5MouseExited
+
+    private void jButton6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseEntered
+        jButton6.setForeground(Color.orange);
+    }//GEN-LAST:event_jButton6MouseEntered
+
+    private void jButton6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseExited
+       jButton6.setForeground(Color.white);
+    }//GEN-LAST:event_jButton6MouseExited
+
+    private void jButton7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseEntered
+        jButton7.setForeground(Color.red);
+    }//GEN-LAST:event_jButton7MouseEntered
+
+    private void jButton7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseExited
+        jButton7.setForeground(Color.white);
+    }//GEN-LAST:event_jButton7MouseExited
+
+    private void jButton8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseEntered
+        jButton8.setForeground(Color.green);
+    }//GEN-LAST:event_jButton8MouseEntered
+
+    private void jButton8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseExited
+        jButton8.setForeground(Color.white);
+    }//GEN-LAST:event_jButton8MouseExited
+
+    private void jButton9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseEntered
+       jButton9.setForeground(Color.red);
+    }//GEN-LAST:event_jButton9MouseEntered
+
+    private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
+       jButton9.setForeground(Color.white);
+    }//GEN-LAST:event_jButton9MouseExited
+    
+     public void añadirFilasTabla(){ 
+        Object datosFila []= new Object [8]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 8
+        
+        for (int i = 0; i < array_empleados.size(); i++) {
+            datosFila[0] = array_empleados.get(i).getId();
+            datosFila[1] = array_empleados.get(i).getNombre();
+            datosFila[2] = array_empleados.get(i).getApellidos();            
+            datosFila[3] = array_empleados.get(i).getDireccion();
+            datosFila[4] = array_empleados.get(i).getEmail();            
+            datosFila[5] = array_empleados.get(i).getTelefono();
+            datosFila[6] = array_empleados.get(i).getId_login();
+            datosFila[7] = array_empleados.get(i).getPassword();
+
+            model.addRow(datosFila);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -651,22 +754,7 @@ public class Empleados extends javax.swing.JFrame {
             }
         });
     }
-    public void añadirFilasTabla(){ 
-        Object datosFila []= new Object [8]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 8
-        
-        for (int i = 0; i < array_empleados.size(); i++) {
-            datosFila[0] = array_empleados.get(i).getId();
-            datosFila[1] = array_empleados.get(i).getNombre();
-            datosFila[2] = array_empleados.get(i).getApellidos();            
-            datosFila[3] = array_empleados.get(i).getDireccion();
-            datosFila[4] = array_empleados.get(i).getEmail();            
-            datosFila[5] = array_empleados.get(i).getTelefono();
-            datosFila[6] = array_empleados.get(i).getId_login();
-            datosFila[7] = array_empleados.get(i).getPassword();
-
-            model.addRow(datosFila);
-        }
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBCerrar;

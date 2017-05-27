@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -304,6 +305,16 @@ public class Articulos extends javax.swing.JFrame {
         jButton5.setMargin(new java.awt.Insets(5, 14, 5, 14));
         jButton5.setMaximumSize(null);
         jButton5.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton5.setRolloverEnabled(true);
+        jButton5.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/new_button_green.png"))); // NOI18N
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton5MouseExited(evt);
+            }
+        });
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -323,6 +334,15 @@ public class Articulos extends javax.swing.JFrame {
         jButton6.setMaximumSize(null);
         jButton6.setMinimumSize(new java.awt.Dimension(96, 40));
         jButton6.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton6.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/edit_button_orange.png"))); // NOI18N
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton6MouseExited(evt);
+            }
+        });
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -341,6 +361,15 @@ public class Articulos extends javax.swing.JFrame {
         jButton7.setFocusable(false);
         jButton7.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton7.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButton7.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/delete_button_red.png"))); // NOI18N
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton7MouseExited(evt);
+            }
+        });
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -357,13 +386,22 @@ public class Articulos extends javax.swing.JFrame {
         jButton8.setContentAreaFilled(false);
         jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton8.setFocusable(false);
+        jButton8.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/aceptar_button_green.png"))); // NOI18N
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton8MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton8MouseExited(evt);
+            }
+        });
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton8);
-        jButton8.setBounds(40, 390, 120, 30);
+        jButton8.setBounds(40, 390, 110, 30);
 
         jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
@@ -373,13 +411,22 @@ public class Articulos extends javax.swing.JFrame {
         jButton9.setContentAreaFilled(false);
         jButton9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton9.setFocusable(false);
+        jButton9.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/cancel_button_red.png"))); // NOI18N
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton9MouseExited(evt);
+            }
+        });
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton9);
-        jButton9.setBounds(160, 390, 120, 30);
+        jButton9.setBounds(170, 390, 110, 30);
         getContentPane().add(jSeparator2);
         jSeparator2.setBounds(50, 150, 240, 10);
         getContentPane().add(jSeparator3);
@@ -503,14 +550,14 @@ public class Articulos extends javax.swing.JFrame {
             int i = jTable1.getSelectedRow();
             model.setValueAt(jTextField2.getText(), i, 1);
             model.setValueAt(jTextField3.getText(), i, 2);
-            model.setValueAt(jTextField4.getText(), i, 3);
+            model.setValueAt(Float.parseFloat(jTextField4.getText()), i, 3);
             model.setValueAt(jTextField5.getText(), i, 4);
             model.setValueAt(jTextField6.getText(), i, 5);
             }else{
                 int i = modelRow;
                 model.setValueAt(jTextField2.getText(), i, 1);
                 model.setValueAt(jTextField3.getText(), i, 2);
-                model.setValueAt(jTextField4.getText(), i, 3);
+                model.setValueAt(Float.parseFloat(jTextField4.getText()), i, 3);
                 model.setValueAt(jTextField5.getText(), i, 4);
                 model.setValueAt(jTextField6.getText(), i, 5);
             }
@@ -564,6 +611,7 @@ public class Articulos extends javax.swing.JFrame {
             ps.executeUpdate();           
             //INSERT EN LA TABLA      
             vId = (array_articulos.get(array_articulos.size()-1).getId()+1);
+            System.out.println((array_articulos.get(array_articulos.size()-1).getId()+1));
             model.addRow(new Object[]{vId, vNombre,vDescripcion,vPrecio,cat,mar,});
             //INSERT EN EL ARRAY            
             array_articulos.add(new Articulo(vId, vNombre, vDescripcion, vPrecio, vCategoria, vMarca));
@@ -655,8 +703,8 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField6.setText("");
 
             } catch (SQLException ex) {
-                Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Este artículo se ha vendido al menos 1 vez, no se debe borrar, cambia el nombre.", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                //Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Este artículo se ha vendido al menos 1 vez, no se puede borrar.", "Error Delete", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -677,47 +725,51 @@ public class Articulos extends javax.swing.JFrame {
         //BOTÓN X, CERRAR VENTANA INDIVIDUAL
         this.dispose();
     }//GEN-LAST:event_jBCerrarActionPerformed
+    
+    //EVENTOS MOUSEOVER EN BOTONES
+    private void jButton6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseEntered
+        //EVENTO CUANDO ENTRA EL RATÓN SOBRE EL BOTÓN EDITAR
+        jButton6.setForeground(Color.orange);
+    }//GEN-LAST:event_jButton6MouseEntered
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {  //MÉTODO MAIN
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jButton6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseExited
+        //EVENTO CUANDO SALE EL RATÓN DEL BOTÓN EDITAR
+        jButton6.setForeground(Color.white);
+    }//GEN-LAST:event_jButton6MouseExited
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Articulos().setVisible(true);
-                    //this.articulos.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-           
+    private void jButton7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseEntered
+        jButton7.setForeground(Color.red); 
+    }//GEN-LAST:event_jButton7MouseEntered
+
+    private void jButton7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseExited
+        jButton7.setForeground(Color.white);
+    }//GEN-LAST:event_jButton7MouseExited
+
+    private void jButton5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseEntered
+        jButton5.setForeground(Color.green);
+    }//GEN-LAST:event_jButton5MouseEntered
+
+    private void jButton5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseExited
+        jButton5.setForeground(Color.white);
+    }//GEN-LAST:event_jButton5MouseExited
+
+    private void jButton8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseEntered
+        jButton8.setForeground(Color.green);
+    }//GEN-LAST:event_jButton8MouseEntered
+
+    private void jButton8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseExited
+        jButton8.setForeground(Color.white);
+    }//GEN-LAST:event_jButton8MouseExited
+
+    private void jButton9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseEntered
+        jButton9.setForeground(Color.red);
+    }//GEN-LAST:event_jButton9MouseEntered
+
+    private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
+        jButton9.setForeground(Color.white);
+    }//GEN-LAST:event_jButton9MouseExited
+    //FIN EVENTOS MOUSEOVER
+    
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
     public String getNombreCateg(int num) {
         String categ = "";
@@ -853,6 +905,46 @@ public class Articulos extends javax.swing.JFrame {
             }            
         }
 );    
+    }                                    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {  //MÉTODO MAIN
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Articulos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new Articulos().setVisible(true);
+                    //this.articulos.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

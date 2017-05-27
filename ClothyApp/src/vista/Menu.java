@@ -8,6 +8,7 @@ import controlador.Categorias;
 import controlador.Clientes;
 import controlador.Empleados;
 import controlador.Marcas;
+import controlador.Pedidos;
 import controlador.Tallas;
 import controlador.Ventas;
 import java.sql.SQLException;
@@ -260,6 +261,11 @@ public class Menu extends javax.swing.JFrame {
         jBPedidos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jBPedidos.setFocusPainted(false);
         jBPedidos.setFocusable(false);
+        jBPedidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBPedidosActionPerformed(evt);
+            }
+        });
         getContentPane().add(jBPedidos);
         jBPedidos.setBounds(560, 90, 80, 70);
 
@@ -397,6 +403,17 @@ public class Menu extends javax.swing.JFrame {
         }
         tallas.setVisible(true);
     }//GEN-LAST:event_jBTallasActionPerformed
+
+    private void jBPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPedidosActionPerformed
+        //BOTÓN PEDIDOS
+        Pedidos pedidos = null;
+        try {
+            pedidos = new Pedidos();            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        pedidos.setVisible(true);
+    }//GEN-LAST:event_jBPedidosActionPerformed
 
     /**
      * @param args the command line arguments
