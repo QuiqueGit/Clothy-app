@@ -14,9 +14,9 @@ public class VentaLineaVenta {
     private String met_pago;
     private String articulo;
     private int cantidad;
-    private int importe;
+    private float importe;
 
-    public VentaLineaVenta(int id_venta, int NLinea, String cliente, String  empleado, String fecha, String met_pago, String articulo, int cantidad, int importe) {
+    public VentaLineaVenta(int id_venta, int NLinea, String cliente, String  empleado, String fecha, String met_pago, String articulo, int cantidad, float importe) {
         this.id_venta = id_venta;
         this.Nlinea = NLinea;
         this.cliente = cliente;
@@ -92,11 +92,11 @@ public class VentaLineaVenta {
         this.cantidad = cantidad;
     }
 
-    public int getImporte() {
+    public float getImporte() {
         return importe;
     }
 
-    public void setImporte(int importe) {
+    public void setImporte(float importe) {
         this.importe = importe;
     }
 

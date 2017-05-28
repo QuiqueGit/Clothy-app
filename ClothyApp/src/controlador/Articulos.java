@@ -39,22 +39,27 @@ public class Articulos extends javax.swing.JFrame {
     DefaultTableModel model;    
     Statement s;
     ResultSet rs;
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
+    
     
     int viewRow, modelRow;
 
     /**
      * Creates new form Articulos
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     public Articulos() throws SQLException, ClassNotFoundException {        
         initComponents();         
-        this.setLocationRelativeTo(null);   
+        this.setLocationRelativeTo(null); 
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         array_articulos.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(45);
         columnModel.getColumn(1).setPreferredWidth(180);
-        columnModel.getColumn(2).setPreferredWidth(180);
+        columnModel.getColumn(2).setPreferredWidth(160);
         columnModel.getColumn(3).setPreferredWidth(65);
         columnModel.getColumn(4).setPreferredWidth(130);
         columnModel.getColumn(5).setPreferredWidth(150);
@@ -155,6 +160,7 @@ public class Articulos extends javax.swing.JFrame {
         jCBCat = new javax.swing.JComboBox<>();
         jCBMar = new javax.swing.JComboBox<>();
         statusText = new javax.swing.JTextField();
+        jLMover = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -216,12 +222,12 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jLabel6);
         jLabel6.setBounds(50, 290, 50, 22);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Artículos");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(30, 20, 200, 30);
+        jLabel8.setBounds(20, 20, 180, 30);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/src/vista/images/buscar_iconx24.png"))); // NOI18N
         getContentPane().add(jLabel9);
@@ -386,6 +392,7 @@ public class Articulos extends javax.swing.JFrame {
         jButton8.setContentAreaFilled(false);
         jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton8.setFocusable(false);
+        jButton8.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/aceptar_button_green.png"))); // NOI18N
         jButton8.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/aceptar_button_green.png"))); // NOI18N
         jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -411,6 +418,7 @@ public class Articulos extends javax.swing.JFrame {
         jButton9.setContentAreaFilled(false);
         jButton9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton9.setFocusable(false);
+        jButton9.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/cancel_button_red.png"))); // NOI18N
         jButton9.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/cancel_button_red.png"))); // NOI18N
         jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -449,6 +457,20 @@ public class Articulos extends javax.swing.JFrame {
         jCBMar.setBounds(170, 290, 140, 20);
         getContentPane().add(statusText);
         statusText.setBounds(290, 410, 30, 24);
+
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 1000, 30);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -489,7 +511,7 @@ public class Articulos extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(330, 20, 660, 420);
+        jScrollPane1.setBounds(330, 30, 660, 400);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(1013, 460));
@@ -523,7 +545,10 @@ public class Articulos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       //BOTÓN EDITAR         
+       //BOTÓN EDITAR   
+       if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún artículo", "Error Update", JOptionPane.ERROR_MESSAGE);
+        }else{
             try {
             String vNombre, vDescripcion, cat, mar;
             int vId, vMarca, vCategoria;
@@ -565,7 +590,7 @@ public class Articulos extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
             }    
-            
+       }   
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -583,6 +608,8 @@ public class Articulos extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
         
         
     }//GEN-LAST:event_jButton9ActionPerformed
@@ -663,19 +690,7 @@ public class Articulos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No ha seleccionado ningún artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
         }else{
         int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar el artículo seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
-        if (resp == JOptionPane.YES_OPTION) {
-            //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA            
-            if (jTFBuscar.getText().isEmpty()) {
-                i = jTable1.getSelectedRow();
-                if (i >= 0) {
-                    model.removeRow(i);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No ha seleccionado un artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                i = modelRow;
-                model.removeRow(i);
-            }
+        if (resp == JOptionPane.YES_OPTION) {         
 
             try {
                 //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
@@ -701,10 +716,24 @@ public class Articulos extends javax.swing.JFrame {
                 jTextField4.setText("");
                 jTextField5.setText("");
                 jTextField6.setText("");
+                
+                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA            
+            if (jTFBuscar.getText().isEmpty()) {
+                i = jTable1.getSelectedRow();
+                if (i >= 0) {
+                    model.removeRow(i);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No ha seleccionado un artículo", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                i = modelRow;
+                model.removeRow(i);
+            }
 
             } catch (SQLException ex) {
                 //Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Este artículo se ha vendido al menos 1 vez, no se puede borrar.", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Este artículo se ha vendido al menos 1 vez.\nComo una venta"
+                        + "no se puede borrar, el artículo se guarda como referencia, pero las existencias se borran.", "Error Delete", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -768,6 +797,17 @@ public class Articulos extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
     //FIN EVENTOS MOUSEOVER
     
     //MÉTODO QUE DEVUELVE EL NOMBRE DE LA TALLA, PASANDO POR PARÁMETRO SU INT
@@ -956,6 +996,7 @@ public class Articulos extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jCBCat;
     private javax.swing.JComboBox<String> jCBMar;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

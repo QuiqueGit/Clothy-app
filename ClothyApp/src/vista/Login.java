@@ -1,6 +1,5 @@
 package vista;
 
-import com.sun.awt.AWTUtilities;
 import modelo.Empleado;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,13 +21,14 @@ public class Login extends javax.swing.JFrame {
     
     int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
+    
     /**
      * Creates new form Login
      * @throws java.sql.SQLException
      */
     public Login() throws SQLException {        
         initComponents();         
-        AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         this.setLocationRelativeTo(null); //PARA CENTRAR FRAME EN PANTALLA
         empleados = utilidades.ConexionDB.empleados(); //arrayList con los empleados     
 
@@ -47,10 +47,14 @@ public class Login extends javax.swing.JFrame {
         jLUsuario = new javax.swing.JLabel();
         jLPass = new javax.swing.JLabel();
         jTFUsuario = new javax.swing.JTextField();
+        user_icon = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         jPFPass = new javax.swing.JPasswordField();
+        jSeparator2 = new javax.swing.JSeparator();
         jBLogin = new javax.swing.JButton();
         jBCerrar = new javax.swing.JButton();
         jLMover = new javax.swing.JLabel();
+        pass_icon = new javax.swing.JLabel();
         jLFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -68,27 +72,43 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(jLTitulo);
         jLTitulo.setBounds(260, 70, 170, 80);
 
-        jLUsuario.setFont(new java.awt.Font("Magneto", 0, 24)); // NOI18N
+        jLUsuario.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLUsuario.setForeground(new java.awt.Color(255, 255, 255));
         jLUsuario.setText("Usuario");
         getContentPane().add(jLUsuario);
-        jLUsuario.setBounds(290, 290, 120, 20);
+        jLUsuario.setBounds(280, 290, 120, 20);
 
-        jLPass.setFont(new java.awt.Font("Magneto", 0, 24)); // NOI18N
+        jLPass.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLPass.setForeground(new java.awt.Color(255, 255, 255));
         jLPass.setText("Contraseña");
         getContentPane().add(jLPass);
-        jLPass.setBounds(280, 370, 150, 30);
+        jLPass.setBounds(280, 380, 150, 30);
 
+        jTFUsuario.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        jTFUsuario.setForeground(new java.awt.Color(255, 255, 255));
         jTFUsuario.setBorder(null);
+        jTFUsuario.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTFUsuario.setOpaque(false);
         getContentPane().add(jTFUsuario);
-        jTFUsuario.setBounds(290, 330, 110, 20);
+        jTFUsuario.setBounds(280, 330, 110, 20);
 
+        user_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/userx24.png"))); // NOI18N
+        getContentPane().add(user_icon);
+        user_icon.setBounds(390, 320, 30, 30);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(280, 350, 110, 10);
+
+        jPFPass.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jPFPass.setForeground(new java.awt.Color(255, 255, 255));
         jPFPass.setBorder(null);
+        jPFPass.setCaretColor(new java.awt.Color(255, 255, 255));
+        jPFPass.setOpaque(false);
         getContentPane().add(jPFPass);
-        jPFPass.setBounds(290, 420, 110, 20);
+        jPFPass.setBounds(280, 430, 100, 20);
+        getContentPane().add(jSeparator2);
+        jSeparator2.setBounds(280, 450, 110, 10);
 
-        jBLogin.setFont(new java.awt.Font("Magneto", 0, 18)); // NOI18N
+        jBLogin.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jBLogin.setText("Login");
         jBLogin.setBorderPainted(false);
         jBLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -98,7 +118,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jBLogin);
-        jBLogin.setBounds(270, 480, 150, 39);
+        jBLogin.setBounds(270, 480, 150, 45);
 
         jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
         jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
@@ -128,6 +148,10 @@ public class Login extends javax.swing.JFrame {
         });
         getContentPane().add(jLMover);
         jLMover.setBounds(0, 0, 470, 30);
+
+        pass_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/pass_icon.png"))); // NOI18N
+        getContentPane().add(pass_icon);
+        pass_icon.setBounds(390, 420, 30, 30);
 
         jLFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/fondoLogin.png"))); // NOI18N
         getContentPane().add(jLFondo);
@@ -242,6 +266,10 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLTitulo;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JPasswordField jPFPass;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTFUsuario;
+    private javax.swing.JLabel pass_icon;
+    private javax.swing.JLabel user_icon;
     // End of variables declaration//GEN-END:variables
 }

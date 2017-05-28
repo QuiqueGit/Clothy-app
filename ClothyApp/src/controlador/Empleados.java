@@ -29,9 +29,11 @@ public class Empleados extends javax.swing.JFrame {
         DefaultTableModel model;
         Statement s;
         ResultSet rs;
+        int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
     public Empleados() throws SQLException, ClassNotFoundException {
         initComponents();
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         jTextField1.setVisible(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false);          
@@ -127,6 +129,7 @@ public class Empleados extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jTextField8 = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JSeparator();
+        jLMover = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(821, 475));
@@ -448,12 +451,12 @@ public class Empleados extends javax.swing.JFrame {
         getContentPane().add(jButton8);
         jButton8.setBounds(30, 430, 120, 30);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Empleados");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(50, 20, 220, 40);
+        jLabel8.setBounds(60, 20, 220, 40);
 
         jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -472,6 +475,20 @@ public class Empleados extends javax.swing.JFrame {
         jTextField8.setBounds(120, 340, 142, 20);
         getContentPane().add(jSeparator7);
         jSeparator7.setBounds(20, 360, 240, 10);
+
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 800, 30);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(821, 475));
@@ -695,6 +712,17 @@ public class Empleados extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
        jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
     
      public void añadirFilasTabla(){ 
         Object datosFila []= new Object [8]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 8
@@ -763,6 +791,7 @@ public class Empleados extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

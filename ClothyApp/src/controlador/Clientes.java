@@ -28,13 +28,15 @@ public class Clientes extends javax.swing.JFrame {
     DefaultTableModel model;    
     Statement s;
     ResultSet rs;
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
 
     /**
      * Creates new form Clientes
      */
     public Clientes() throws SQLException, ClassNotFoundException {
         initComponents();        
-        this.setLocationRelativeTo(null);   
+        this.setLocationRelativeTo(null);  
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         array_clientes.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE CLIENTES Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
@@ -122,6 +124,7 @@ public class Clientes extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jLMover = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -146,12 +149,12 @@ public class Clientes extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(910, 0, 20, 20);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Clientes");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(90, 40, 170, 30);
+        jLabel8.setBounds(110, 40, 170, 30);
 
         jTextField1.setBackground(new java.awt.Color(0, 0, 0));
         jTextField1.setEnabled(false);
@@ -400,6 +403,20 @@ public class Clientes extends javax.swing.JFrame {
         getContentPane().add(jButton7);
         jButton7.setBounds(220, 370, 100, 30);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 910, 30);
+
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -442,7 +459,7 @@ public class Clientes extends javax.swing.JFrame {
         }
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(330, 20, 580, 420);
+        jScrollPane1.setBounds(330, 30, 580, 420);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
@@ -572,13 +589,6 @@ public class Clientes extends javax.swing.JFrame {
         }else{
             int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar el cliente seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
             if (resp == JOptionPane.YES_OPTION) {
-                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA                
-                    i = jTable1.getSelectedRow();
-                    if (i >= 0) {
-                        model.removeRow(i);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No ha seleccionado ningún cliente", "Error Delete", JOptionPane.ERROR_MESSAGE);          
-                }
 
                 try {
                     //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
@@ -599,6 +609,12 @@ public class Clientes extends javax.swing.JFrame {
                     jTextField5.setText("");
                     jTextField6.setText("");
                     jTextField7.setText("");
+                    
+                    //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA                
+                    i = jTable1.getSelectedRow();
+                    if (i >= 0) {
+                        model.removeRow(i);
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -654,6 +670,17 @@ public class Clientes extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
 
     public void añadirFilasTabla(){
         Object datosFila []= new Object [7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
@@ -721,6 +748,7 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

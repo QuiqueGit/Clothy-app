@@ -42,7 +42,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tekton Pro" size="27" style="1"/>
+          <Font name="Tahoma" size="27" style="1"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="0" type="rgb"/>
@@ -259,49 +259,49 @@
     <Component class="javax.swing.JLabel" name="jLArticulos">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Art&#xed;culos"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="50" y="160" width="110" height="26"/>
+          <AbsoluteConstraints x="60" y="160" width="100" height="26"/>
         </Constraint>
       </Constraints>
     </Component>
     <Component class="javax.swing.JLabel" name="jLCategorias">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Categorias"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="180" y="160" width="120" height="26"/>
+          <AbsoluteConstraints x="190" y="160" width="120" height="26"/>
         </Constraint>
       </Constraints>
     </Component>
     <Component class="javax.swing.JLabel" name="jLMarcas">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Marcas"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="324" y="160" width="90" height="26"/>
+          <AbsoluteConstraints x="330" y="160" width="80" height="26"/>
         </Constraint>
       </Constraints>
     </Component>
     <Component class="javax.swing.JLabel" name="jLTallas">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Tallas"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -315,21 +315,21 @@
     <Component class="javax.swing.JLabel" name="jLEmpleados">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Empleados"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="45" y="290" width="120" height="26"/>
+          <AbsoluteConstraints x="50" y="290" width="120" height="26"/>
         </Constraint>
       </Constraints>
     </Component>
     <Component class="javax.swing.JLabel" name="jLClientes">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Clientes"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -343,7 +343,7 @@
     <Component class="javax.swing.JLabel" name="jLVentas">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Ventas"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -380,7 +380,7 @@
     <Component class="javax.swing.JLabel" name="jLPedidos">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Magneto" size="20" style="1"/>
+          <Font name="Tahoma" size="20" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Pedidos"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -411,6 +411,22 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="700" y="0" width="30" height="20"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLMover">
+      <Properties>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Cursor de Movimiento"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseDragged" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="jLMoverMouseDragged"/>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLMoverMousePressed"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="0" width="710" height="30"/>
         </Constraint>
       </Constraints>
     </Component>

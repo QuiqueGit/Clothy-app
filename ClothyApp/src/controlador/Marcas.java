@@ -27,14 +27,16 @@ public class Marcas extends javax.swing.JFrame {
     Connection conex = new ConexionDB().getCon(); 
     DefaultTableModel model;
     Statement s;
-    ResultSet rs;    
+    ResultSet rs;  
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
 
     /**
      * Creates new form Marcas
      */
     public Marcas() throws SQLException, ClassNotFoundException  {
         initComponents();
-        this.setLocationRelativeTo(null);   
+        this.setLocationRelativeTo(null);
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         array_marcas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE MARCAS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
@@ -126,6 +128,7 @@ public class Marcas extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
+        jLMover = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
 
@@ -190,12 +193,12 @@ public class Marcas extends javax.swing.JFrame {
         getContentPane().add(jTextField3);
         jTextField3.setBounds(150, 170, 130, 20);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Marcas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(90, 20, 160, 40);
+        jLabel8.setBounds(110, 20, 160, 40);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -431,6 +434,20 @@ public class Marcas extends javax.swing.JFrame {
         getContentPane().add(jSeparator6);
         jSeparator6.setBounds(50, 310, 230, 10);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 1030, 30);
+
         jTextField6.setBackground(new java.awt.Color(204, 204, 204));
         jTextField6.setForeground(new java.awt.Color(255, 255, 255));
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -452,10 +469,12 @@ public class Marcas extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //BOTÓN NUEVO
-        jTextField1.setText("");
-        jTextField2.setText("");
+        jTextField1.setText(String.valueOf(array_marcas.get(array_marcas.size() - 1).getId()+1)); 
+        jTextField2.setText("");        
         jTextField3.setText("");
-        jTextField1.setEnabled(true);
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -465,6 +484,9 @@ public class Marcas extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         //BOTÓN EDITAR
+        if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna marca", "Error Update", JOptionPane.ERROR_MESSAGE);
+        }else{
         try {
             String vNombre, vDireccion, vTelefono, vEmail, vContacto;
             int vId = Integer.parseInt(jTextField1.getText());
@@ -502,58 +524,22 @@ public class Marcas extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
-       int resp = 0, marca = 0, count = 0, id = 0;
-        String nomMarca = null;
+       int resp = 0, i = 0;
         
-        if (jTextField2.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna categoria", "Error Delete", JOptionPane.ERROR_MESSAGE);
+        if (jTextField1.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna marca", "Error Delete", JOptionPane.ERROR_MESSAGE);
         } else {
-            try {
-                marca = Integer.parseInt(jTextField1.getText());
-                s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                String query = "SELECT marca FROM articulos";
-                ResultSet r1 = s.executeQuery(query);
-                
-                while (r1.next()) {                    
-                    if (marca == Integer.parseInt(r1.getString("marca")))  
-                       count += 1;
-                       id = marca;                    
-                }
-                try {
-                    Articulos metodo = new Articulos();
-                    nomMarca = metodo.getNombreCateg(marca);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
-                }             
-            } catch (NumberFormatException numberFormatException) {
-            } catch (SQLException sQLException) {
-            }                    
-    
-            if(count > 0){           
-                resp = JOptionPane.showConfirmDialog(null, "ATENCIÓN!! La categoria seleccionada '"+nomMarca+"' tiene "+count+" artículos. ¿Seguro que desea borrar la categoría y sus artículos?", "PELIGRO. Confirmar acción", JOptionPane.YES_NO_OPTION);
-            }else{
-                resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la categoria seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
-            }
-            
-            int i = 0;
-             
-            if (resp == JOptionPane.YES_OPTION) {
-                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
-                i = jTable1.getSelectedRow();
-                if (i >= 0) {
-                    model.removeRow(i);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna categoria", "Error Delete", JOptionPane.ERROR_MESSAGE);
-                }
-
+            resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar el cliente seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
+            if (resp == JOptionPane.YES_OPTION) {                
                 try {
                     //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
                     // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
-                    String vId = jTextField1.getText();
+                    int vId = Integer.parseInt(jTextField1.getText());
                     //REALIZA DELETE EN LA BASE DE DATOS
                     String url = "jdbc:mysql://localhost:3306/clothy";
                     String user = "root";
@@ -561,22 +547,38 @@ public class Marcas extends javax.swing.JFrame {
                     Connection connection = DriverManager.getConnection(url, user, pass);
                     Statement st = connection.createStatement();
                     String query = "DELETE FROM marcas WHERE id=" + vId;
-                    String query2 = "DELETE FROM articulos WHERE marca=" + id;
-                    st.executeUpdate(query2);//PRIMERO BORRAMOS LOS ARTÍCULOS PORQUE SI LO HACEMOS AL REVÉS, DARÍA ERROR DE CLAVE AJENA EN LA TABLA ARTÍCULOS...
                     st.executeUpdate(query);
                                         
+                    //DELETE EN EL ARRAY
+                    int idd = Integer.parseInt(jTextField1.getText());
+                    for (int j = 0; j < array_marcas.size(); j++) {
+                        if (array_marcas.get(j).getId() == idd) {                           
+                           array_marcas.remove(j);
+                        }                        
+                    }              
+                    
+                    //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA                
+                    i = jTable1.getSelectedRow();
+                    if (i >= 0) {
+                        model.removeRow(i);
+                    } 
+                    
                     jTextField1.setText("");
                     jTextField2.setText("");
                     jTextField3.setText("");
                     jTextField4.setText("");
                     jTextField5.setText("");
                     jTextField6.setText("");
-
                 } catch (SQLException ex) {
-                    Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "No puede borrar una marca que ya tenga articulos", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                    //Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } 
+
+            if (resp == JOptionPane.NO_OPTION) {
+                //NO HACER NADA
+            }
+        }
 
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -587,14 +589,14 @@ public class Marcas extends javax.swing.JFrame {
             String vNombre, vDireccion, vTelefono, vEmail, vContacto;
 
             vId = Integer.parseInt(jTextField1.getText());
-            vNombre = jTextField2.getText();
+            vNombre = jTextField2.getText();                            
             vDireccion = jTextField3.getText();
             vTelefono = jTextField4.getText();
             vEmail = jTextField5.getText();
             vContacto = jTextField6.getText();            
 
             //INSERT EN LA BASE DE DATOS
-            PreparedStatement ps = conex.prepareStatement("INSERT INTO categorias (id, nombre, descripcion) VALUES (?,?,?)");
+            PreparedStatement ps = conex.prepareStatement("INSERT INTO marcas (id, nombre, direccion, telefono, email, contacto) VALUES (?,?,?,?,?,?)");
             ps.setInt(1, vId);
             ps.setString(2, vNombre);
             ps.setString(3, vDireccion);
@@ -622,6 +624,12 @@ public class Marcas extends javax.swing.JFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         //BOTÓN CANCELAR
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
         jButton8.setVisible(false);
         jButton9.setVisible(false);
         jTextField1.setEnabled(false);
@@ -674,6 +682,17 @@ public class Marcas extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
     
      public void añadirFilasTabla(){
         Object datosFila []= new Object [6]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
@@ -740,6 +759,7 @@ public class Marcas extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

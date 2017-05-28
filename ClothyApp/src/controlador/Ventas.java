@@ -1,7 +1,6 @@
 package controlador;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -16,14 +15,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComponent;
-import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Venta;
@@ -45,7 +40,8 @@ public class Ventas extends javax.swing.JFrame {
     DefaultTableModel model; //MODELO UNIDO A LA TABLA 1
     DefaultTableModel model2; //MODELO UNIDO A LA TABLA 2  
     Statement s;
-    ResultSet rs;  
+    ResultSet rs; 
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
     int viewRow, modelRow; //VARIABLES PARA GUARDAR FILA EN TABLAS, TANTO DE VISTA COMO DE MODELO
 
@@ -55,7 +51,8 @@ public class Ventas extends javax.swing.JFrame {
     public Ventas() throws SQLException, ClassNotFoundException {
         
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);  
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         //array_ventas.clear();//BORRAR TODO DEL ARRAY PARA CUANDO CIERRE ARTICULOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         model = (DefaultTableModel) jTable1.getModel();
         model2 = (DefaultTableModel) jTable2.getModel();
@@ -63,9 +60,11 @@ public class Ventas extends javax.swing.JFrame {
         TableColumnModel columnModel = jTable1.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(55);
         columnModel.getColumn(1).setPreferredWidth(60);
-        columnModel.getColumn(2).setPreferredWidth(120);
+        columnModel.getColumn(2).setPreferredWidth(90);
         columnModel.getColumn(3).setPreferredWidth(120);
         columnModel.getColumn(4).setPreferredWidth(120);
+        columnModel.getColumn(6).setPreferredWidth(180);
+        
         //SETEA EL ANCHO DE LAS COLUMNAS TABLA 2
         TableColumnModel columnModel2 = jTable2.getColumnModel();
         columnModel2.getColumn(0).setPreferredWidth(120);
@@ -149,29 +148,30 @@ public class Ventas extends javax.swing.JFrame {
             String met_pago = r5.getString("Metodo_Pago");
             String artic = r5.getString("Articulo");
             int cant = r5.getInt("Cantidad");
-            int imp = r5.getInt("Importe");
+            float imp = r5.getFloat("Importe");
 
             array_lineasVenta.add(new VentaLineaVenta(id_venta, num_linea, cliente, emp, fecha, met_pago, artic, cant, imp));
         }
         
-        añadirFilasTabla();
+        añadirFilasTabla();        
         
 
         jTable1.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
 
             @Override
-            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField              
-                if (jTFBuscarVenta.getText().isEmpty()) {
+            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField 
+               
+                if (jTFBuscarVenta.getText().isEmpty()) {                    
                     int i = jTable1.getSelectedRow();
-                    // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
+                   // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                     TFIdOculta.setText(model.getValueAt(i, 0).toString());
                     TFCliente.setText(model.getValueAt(i, 2).toString());
                     TFEmpleado.setText(model.getValueAt(i, 3).toString());
                     TFFecha.setText(model.getValueAt(i, 4).toString());
-                    TFPago.setText(model.getValueAt(i, 5).toString());
+                    TFPago.setText(model.getValueAt(i, 5).toString());                      
 
-                } else {
-                    int i = modelRow;
+                } else {                    
+                   int i = modelRow;
                     TFIdOculta.setText(model.getValueAt(i, 0).toString());
                     TFCliente.setText(model.getValueAt(i, 2).toString());
                     TFEmpleado.setText(model.getValueAt(i, 3).toString());
@@ -197,57 +197,67 @@ public class Ventas extends javax.swing.JFrame {
             array_stockTotal.add(new VentaArticulo(idArt, idTal, desc, precio, cat, marca, stock));
         }
         
-        añadirFilasTabla2(); //TABLA2 VENTAS/ARTICULOS
-        
-        JTable table2 = new JTable(model2) {
-        @Override
-        public Component prepareRenderer(TableCellRenderer renderer, int rowIndex,
-                int columnIndex) {
-            JComponent component = (JComponent) super.prepareRenderer(renderer, rowIndex, columnIndex);  
+        añadirFilasTabla2(); //TABLA2 VENTAS/ARTICULOS        
 
-            if(getValueAt(rowIndex, 6).toString().equalsIgnoreCase("stock") && columnIndex == 6) {
-                component.setBackground(Color.RED);
-            } else if(getValueAt(rowIndex, 1).toString().equalsIgnoreCase("j2ee") && columnIndex == 1){
-                component.setBackground(Color.GREEN);
-            }
-
-            return component;
-        }
-    };
-         
         jTable2.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
 
             @Override
             public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField
                 if (!CB2.isSelected() && !CB3.isSelected() && jTFBuscarVentaArticulos.getText().isEmpty()) {  
                     
-                        TFNumLinea.setText("1");
-                        Cantidad1.setVisible(true);                    
+                    TFNumLinea.setText("1");
+                    Cantidad1.setVisible(true);
 
-                        int i = jTable2.getSelectedRow();
+                    int i = jTable2.getSelectedRow();
+                    
+                    if (model2.getValueAt(i, 6).toString().equalsIgnoreCase("0")) {                        
+                        TFArticulo.setText("");
+                        TFTalla.setText("");
+                        TFPrecio.setText("");
+                        TFStock.setText("");
+                        TFNumLinea.setText("");
+                        Cantidad1.setVisible(false);
+                        Precio1.setText("");
+                        precio_total.setText("");
+                    } else { 
                         // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                         TFArticulo.setText(model2.getValueAt(i, 0).toString());
                         TFTalla.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio.setText(model2.getValueAt(i, 3).toString());
                         TFStock.setText(model2.getValueAt(i, 6).toString()); 
                         //RELLENAR COMBOBOX DE CANTIDADES EN FUNCIÓN DEL STOCK QUE LE QUEDE...
+                        Cantidad1.setVisible(true);
                         Cantidad1.removeAllItems();
                         for(int index = 0; index < Integer.parseInt(TFStock.getText()); index ++) {
                             Cantidad1.addItem(String.valueOf(index + 1));                        
                         }
+                    }                    
+                        
                 } else if (!CB2.isSelected() && !CB3.isSelected()) {
                     TFNumLinea.setText("1");
                     Cantidad1.setVisible(true);
                     int i = modelRow;
+                    if (model2.getValueAt(i, 6).toString().equalsIgnoreCase("0")) {                        
+                        TFArticulo.setText("");
+                        TFTalla.setText("");
+                        TFPrecio.setText("");
+                        TFStock.setText("");
+                        TFNumLinea.setText("");
+                        Cantidad1.setVisible(false);
+                        Precio1.setText("");
+                        precio_total.setText("");
+                    }else{
                     TFArticulo.setText(model2.getValueAt(i, 0).toString());
                     TFTalla.setText(model2.getValueAt(i, 1).toString());
                     TFPrecio.setText(model2.getValueAt(i, 3).toString());
                     TFStock.setText(model2.getValueAt(i, 6).toString());
                     //RELLENAR COMBOBOX DE CANTIDADES EN FUNCIÓN DEL STOCK QUE LE QUEDE...
+                        Cantidad1.setVisible(true);
                         Cantidad1.removeAllItems();
                         for(int index = 0; index < Integer.parseInt(TFStock.getText()); index ++) {
                             Cantidad1.addItem(String.valueOf(index + 1));                        
                         }
+                    }
                     
                 }
 
@@ -258,11 +268,22 @@ public class Ventas extends javax.swing.JFrame {
 
                     if (jTFBuscarVentaArticulos.getText().isEmpty()) {
                         int i = jTable2.getSelectedRow();
+                        if (model2.getValueAt(i, 6).toString().equalsIgnoreCase("0")) {                        
+                        TFArticulo2.setText("");
+                        TFTalla2.setText("");
+                        TFPrecio2.setText("");
+                        TFStock2.setText("");
+                        TFNumLinea2.setText("");
+                        Cantidad3.setVisible(false);
+                        Precio3.setText("");                        
+                        }else{
                         // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                         TFArticulo2.setText(model2.getValueAt(i, 0).toString());
                         TFTalla2.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio2.setText(model2.getValueAt(i, 3).toString());
                         TFStock2.setText(model2.getValueAt(i, 6).toString());
+                        Cantidad3.setVisible(true);
+                        }
 
                     } else {
                         int i = modelRow;
@@ -270,6 +291,7 @@ public class Ventas extends javax.swing.JFrame {
                         TFTalla2.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio2.setText(model2.getValueAt(i, 3).toString());
                         TFStock2.setText(model2.getValueAt(i, 6).toString());
+                        Cantidad3.setVisible(true);
                     }
                     //RELLENAR COMBOBOX DE CANTIDADES EN FUNCIÓN DEL STOCK QUE LE QUEDE...
                     
@@ -283,11 +305,22 @@ public class Ventas extends javax.swing.JFrame {
 
                     if (jTFBuscarVentaArticulos.getText().isEmpty()) {
                         int i = jTable2.getSelectedRow();
+                        if (model2.getValueAt(i, 6).toString().equalsIgnoreCase("0")) {                        
+                        TFArticulo1.setText("");
+                        TFTalla1.setText("");
+                        TFPrecio1.setText("");
+                        TFStock1.setText("");
+                        TFNumLinea1.setText("");
+                        Cantidad2.setVisible(false);
+                        Precio2.setText("");
+                        }else{
                         // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                         TFArticulo1.setText(model2.getValueAt(i, 0).toString());
                         TFTalla1.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio1.setText(model2.getValueAt(i, 3).toString());
                         TFStock1.setText(model2.getValueAt(i, 6).toString());
+                        Cantidad2.setVisible(true);
+                        }
                     } else {
                         
                         int i = modelRow;
@@ -295,6 +328,7 @@ public class Ventas extends javax.swing.JFrame {
                         TFTalla1.setText(model2.getValueAt(i, 1).toString());
                         TFPrecio1.setText(model2.getValueAt(i, 3).toString());
                         TFStock1.setText(model2.getValueAt(i, 6).toString());
+                        Cantidad2.setVisible(true);
 
                     }
                     for(int index = 0; index < Integer.parseInt(TFStock1.getText()); index ++) {
@@ -406,6 +440,7 @@ public class Ventas extends javax.swing.JFrame {
         Cantidad1 = new javax.swing.JComboBox<>();
         Cantidad2 = new javax.swing.JComboBox<>();
         Cantidad3 = new javax.swing.JComboBox<>();
+        jLMover = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1200, 715));
@@ -457,7 +492,7 @@ public class Ventas extends javax.swing.JFrame {
         getContentPane().add(jLabel5);
         jLabel5.setBounds(100, 250, 127, 22);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ventas");
         jLabel8.setFocusable(false);
@@ -819,6 +854,7 @@ public class Ventas extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setAutoscrolls(false);
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jTable1.setFocusable(false);
@@ -860,6 +896,7 @@ public class Ventas extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable2.setAutoscrolls(false);
         jTable2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jTable2.setFocusable(false);
@@ -1119,6 +1156,20 @@ public class Ventas extends javax.swing.JFrame {
         getContentPane().add(Cantidad3);
         Cantidad3.setBounds(400, 480, 40, 31);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 1180, 30);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(1200, 715));
         jLabel1.setMinimumSize(new java.awt.Dimension(1200, 715));
@@ -1169,6 +1220,9 @@ public class Ventas extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         //BOTÓN ACEPTAR       
+        if (TFArticulo.getText().isEmpty() || (!TFArticulo.getText().isEmpty() && CB2.isSelected() && TFArticulo1.getText().isEmpty()) || (!TFArticulo.getText().isEmpty() && !TFArticulo1.getText().isEmpty() && CB3.isSelected() && TFArticulo2.getText().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún artículo", "Error Venta", JOptionPane.ERROR_MESSAGE);                        
+        }else{
         String vFecha = null;
         vFecha = TFFecha.getText();
         try {
@@ -1215,16 +1269,18 @@ public class Ventas extends javax.swing.JFrame {
             int venta_id = vId;
             int num_linea = Integer.parseInt(TFNumLinea.getText());
             int articulo = getCodigoArticulo(TFArticulo.getText());
+            int talla = getCodigoTalla(TFTalla.getText());
             int cantidad = Cantidad1.getSelectedIndex() + 1;
             float precio = Float.parseFloat(TFPrecio.getText());
             float importe = cantidad * precio;
 
-            PreparedStatement ps2 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
+            PreparedStatement ps2 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, talla, cantidad, importe) VALUES (?,?,?,?,?,?)");
             ps2.setInt(1, venta_id);
             ps2.setInt(2, num_linea);
             ps2.setInt(3, articulo);
-            ps2.setInt(4, cantidad);
-            ps2.setFloat(5, importe);
+            ps2.setInt(4, talla);
+            ps2.setInt(5, cantidad);
+            ps2.setFloat(6, importe);
             ps2.executeUpdate();
 
             //UPDATE PARA RESTAR CANTIDAD VENDIDA AL STOCK EN TIENDA
@@ -1240,16 +1296,18 @@ public class Ventas extends javax.swing.JFrame {
             if (CB2.isSelected()) {
                 int num_linea1 = Integer.parseInt(TFNumLinea1.getText());
                 int articulo1 = getCodigoArticulo(TFArticulo1.getText());
+                int talla2 = getCodigoTalla(TFTalla1.getText());
                 int cantidad1 = Cantidad2.getSelectedIndex() + 1;
                 float precio1 = Float.parseFloat(TFPrecio1.getText());
                 float importe1 = cantidad * precio1;
 
-                PreparedStatement ps3 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
+                PreparedStatement ps3 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, talla, cantidad, importe) VALUES (?,?,?,?,?,?)");
                 ps3.setInt(1, vId);
                 ps3.setInt(2, num_linea1);
                 ps3.setInt(3, articulo1);
-                ps3.setInt(4, cantidad1);
-                ps3.setFloat(5, importe1);
+                ps3.setInt(4, talla2);
+                ps3.setInt(5, cantidad1);
+                ps3.setFloat(6, importe1);
                 ps3.executeUpdate();
 
                 System.out.println(num_linea1);
@@ -1268,17 +1326,19 @@ public class Ventas extends javax.swing.JFrame {
             if (CB3.isSelected()) {
                 int num_linea2 = Integer.parseInt(TFNumLinea2.getText());
                 int articulo2 = getCodigoArticulo(TFArticulo2.getText());
+                int talla2 = getCodigoTalla(TFTalla2.getText());
                 int cantidad2 = Cantidad3.getSelectedIndex() + 1;
                 float precio2 = Float.parseFloat(TFPrecio2.getText());
                 float importe2 = cantidad * precio2;
 
-                PreparedStatement ps4 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, cantidad, importe) VALUES (?,?,?,?,?)");
+                PreparedStatement ps4 = conex.prepareStatement("INSERT INTO lineas_ventas (venta_id, num_linea, articulo, talla, cantidad, importe) VALUES (?,?,?,?,?,?)");
 
                 ps4.setInt(1, vId);
                 ps4.setInt(2, num_linea2);
                 ps4.setInt(3, articulo2);
-                ps4.setInt(4, cantidad2);
-                ps4.setFloat(5, importe2);
+                ps4.setInt(4, talla2);
+                ps4.setInt(5, cantidad2);
+                ps4.setFloat(6, importe2);
                 ps4.executeUpdate();
 
                 //UPDATE PARA RESTAR CANTIDAD VENDIDA AL STOCK EN TIENDA
@@ -1333,6 +1393,7 @@ public class Ventas extends javax.swing.JFrame {
             Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Ventas.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
     }//GEN-LAST:event_jButton8ActionPerformed
 
@@ -1559,6 +1620,17 @@ public class Ventas extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
     
     
     public int getCodigoTalla(String nom){
@@ -1677,7 +1749,7 @@ public class Ventas extends javax.swing.JFrame {
         }
     }
     
-    public void añadirFilasTabla2() {
+    public void añadirFilasTabla2() {       
         Object datosFila[] = new Object[7]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 7
 
         for (int i = 0; i < array_stockTotal.size(); i++) {
@@ -1689,17 +1761,7 @@ public class Ventas extends javax.swing.JFrame {
             datosFila[5] = array_stockTotal.get(i).getMarca();
             datosFila[6] = array_stockTotal.get(i).getStock();
 
-            model2.addRow(datosFila);
-
-            //int status = (int) model2.getValueAt(i, 6);
-           /* if (status == 0) {
-                setBackground(Color.RED);
-                setForeground(Color.BLACK);
-            } else {
-               // setBackground(model2.getBackground());
-                //setForeground(model2.getForeground());
-            }*/
-
+            model2.addRow(datosFila);            
         }
     } 
     
@@ -1793,7 +1855,7 @@ public class Ventas extends javax.swing.JFrame {
             datosFila[5] = rs.getString("Metodo_Pago");
             datosFila[6] = rs.getString("Articulo");
             datosFila[7] = Integer.parseInt(rs.getString("Cantidad"));
-            datosFila[8] = Float.parseFloat(rs.getString("Importe"));
+            datosFila[8] = rs.getFloat("Importe");
 
             model.addRow(datosFila); //TABLA 1 VENTAS
         }        
@@ -1819,7 +1881,7 @@ public class Ventas extends javax.swing.JFrame {
             datosFila[5] = rs.getString("Marca");
             datosFila[6] = Integer.parseInt(rs.getString("stock"));
 
-            model2.addRow(datosFila); //TABLA 2 ARTICULOS
+            model2.addRow(datosFila); //TABLA 2 ARTICULOS            
         }        
         con.close();          
     }
@@ -1946,7 +2008,7 @@ public class Ventas extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            public void run() {                
                 try {
                     new Ventas().setVisible(true);
                 } catch (SQLException ex) {
@@ -1994,6 +2056,7 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jCBCli;
     private javax.swing.JCheckBox jCBEfectivo;
     private javax.swing.JCheckBox jCBTarjeta;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

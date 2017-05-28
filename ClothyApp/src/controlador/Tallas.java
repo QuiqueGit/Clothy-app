@@ -28,6 +28,7 @@ public class Tallas extends javax.swing.JFrame {
     DefaultTableModel model;
     Statement s;
     ResultSet rs;
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
 
     /**
      * Creates new form Tallas
@@ -35,6 +36,7 @@ public class Tallas extends javax.swing.JFrame {
     public Tallas() throws SQLException, ClassNotFoundException {
         initComponents();        
         this.setLocationRelativeTo(null); 
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         jTextField1.setEnabled(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false); 
@@ -88,6 +90,7 @@ public class Tallas extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jBCerrar = new javax.swing.JButton();
+        jLMover = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
@@ -135,12 +138,12 @@ public class Tallas extends javax.swing.JFrame {
         getContentPane().add(jTextField2);
         jTextField2.setBounds(140, 140, 80, 20);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Tallas");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(110, 20, 130, 40);
+        jLabel8.setBounds(120, 20, 130, 40);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
@@ -290,6 +293,20 @@ public class Tallas extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(460, 0, 20, 20);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 460, 20);
+
         jTable1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -343,9 +360,8 @@ public class Tallas extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //BOTÓN NUEVO
-        jTextField1.setText("");
+        jTextField1.setText(String.valueOf(array_tallas.get(array_tallas.size() - 1).getId()+1)); 
         jTextField2.setText("");
-        jTextField1.setEnabled(true);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -355,6 +371,9 @@ public class Tallas extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         //BOTÓN EDITAR
+        if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna talla", "Error Update", JOptionPane.ERROR_MESSAGE);
+        }else{
         try {
             String vValor;
             int vId = Integer.parseInt(jTextField1.getText());
@@ -381,24 +400,18 @@ public class Tallas extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
-        if (jTextField2.getText().isEmpty()) {
+        if (jTextField1.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna talla", "Error Delete", JOptionPane.ERROR_MESSAGE);
         } else {
             int i = 0;
             int resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la talla seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
             if (resp == JOptionPane.YES_OPTION) {
-                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
-                i = jTable1.getSelectedRow();
-                if (i >= 0) {
-                    model.removeRow(i);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna talla", "Error Delete", JOptionPane.ERROR_MESSAGE);
-                }
-
+                 
                 try {
                     //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
                     // 'i' PUEDE REPRESENTAR EL MODELO O LA VISTA DE LA TABLA, DEPENDIENDO SI ES CUADRO DE BUSCAR ESTÁ VACIO O NO...
@@ -411,11 +424,27 @@ public class Tallas extends javax.swing.JFrame {
                     Statement st = connection.createStatement();
                     String query = "DELETE FROM tallas WHERE id=" + vId;
                     st.executeUpdate(query);
+                    
+                    //DELETE EN EL ARRAY
+                    int idd = Integer.parseInt(jTextField1.getText());
+                    for (int j = 0; j < array_tallas.size(); j++) {
+                        if (array_tallas.get(j).getId() == idd) {                           
+                           array_tallas.remove(j);
+                        }                        
+                    }                   
 
-                    jTextField2.setText("");
+                    //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
+                        i = jTable1.getSelectedRow();
+                        if (i >= 0) {
+                            model.removeRow(i);
+                        }
+                        
+                jTextField1.setText("");
+                jTextField2.setText("");
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "No puede borrar una talla asignada a un articulo", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                    //Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else{
                 
@@ -443,7 +472,8 @@ public class Tallas extends javax.swing.JFrame {
             //INSERT EN EL ARRAY
             array_tallas.add(new Talla(vId,vValor));
 
-            jTextField1.setEnabled(false);
+            jTextField1.setText("");
+            jTextField2.setText("");
             jButton5.setEnabled(true);
             jButton6.setEnabled(true);
             jButton7.setEnabled(true);
@@ -457,9 +487,10 @@ public class Tallas extends javax.swing.JFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         //BOTÓN CANCELAR
+        jTextField1.setText("");
+        jTextField2.setText("");
         jButton8.setVisible(false);
         jButton9.setVisible(false);
-        jTextField1.setEnabled(false);
         jButton5.setEnabled(true);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
@@ -509,6 +540,17 @@ public class Tallas extends javax.swing.JFrame {
     private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
 
     public void añadirFilasTabla(){ 
         Object datosFila []= new Object [2]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 2
@@ -569,6 +611,7 @@ public class Tallas extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

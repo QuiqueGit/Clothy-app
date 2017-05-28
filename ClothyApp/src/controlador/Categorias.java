@@ -29,6 +29,7 @@ public class Categorias extends javax.swing.JFrame {
     DefaultTableModel model;
     Statement s;
     ResultSet rs;
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
     /**
      * Creates new form Categorias
@@ -39,13 +40,7 @@ public class Categorias extends javax.swing.JFrame {
         jTextField1.setEnabled(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false); 
-        //SI EL USUARIO LOGEADO NO ES ADMIN, EL EMPLEADO NO PODRÁ INSERTAR, EDITAR Y BORRAR CATEGORIAS
-        /*String user_actual = new Login().getUser_actual();
-        if (!user_actual.equalsIgnoreCase("admin")) {
-            jButton5.setVisible(false);
-            jButton6.setVisible(false);
-            jButton7.setVisible(false);
-        }*/        
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME       
         array_categorias.clear();//BORRAR ELEMENTOS DEL ARRAY PARA CUANDO CIERRE EMPLEADOS Y VUELVA A ABRIRLO NO SE DUPLIQUEN LOS DATOS
         this.model = (DefaultTableModel) jTable1.getModel();
         //SETEA EL ANCHO DE LAS COLUMNAS      
@@ -106,8 +101,10 @@ public class Categorias extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
+        info_button = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLMover = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(779, 335));
@@ -149,12 +146,12 @@ public class Categorias extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(30, 180, 91, 22);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Categorias");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(80, 20, 220, 40);
+        jLabel8.setBounds(90, 20, 220, 40);
 
         jTextField1.setBackground(new java.awt.Color(204, 204, 204));
         jTextField1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
@@ -323,6 +320,20 @@ public class Categorias extends javax.swing.JFrame {
         getContentPane().add(jSeparator3);
         jSeparator3.setBounds(30, 200, 290, 10);
 
+        info_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/info_button.png"))); // NOI18N
+        info_button.setBorder(null);
+        info_button.setContentAreaFilled(false);
+        info_button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        info_button.setDisabledIcon(null);
+        info_button.setFocusable(false);
+        info_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                info_buttonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(info_button);
+        info_button.setBounds(310, 140, 30, 30);
+
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jTable1.setForeground(new java.awt.Color(0, 0, 0));
@@ -365,6 +376,20 @@ public class Categorias extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(360, 20, 390, 280);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 760, 20);
+
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel4.setMaximumSize(new java.awt.Dimension(779, 335));
         jLabel4.setMinimumSize(new java.awt.Dimension(779, 335));
@@ -380,16 +405,19 @@ public class Categorias extends javax.swing.JFrame {
         jTextField1.setText(String.valueOf(array_categorias.get(array_categorias.size() - 1).getId()+1));        
         jTextField2.setText("");
         jTextField3.setText("");
-        jTextField1.setEnabled(true);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
         jButton8.setVisible(true);
         jButton9.setVisible(true);
+        info_button.setEnabled(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         //BOTÓN EDITAR
+        if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna categoria", "Error Update", JOptionPane.ERROR_MESSAGE);
+        }else{
         try {
             String vNombre, vDescripcion;
             int vId = Integer.parseInt(jTextField1.getText());
@@ -418,54 +446,23 @@ public class Categorias extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         //BOTÓN BORRAR
-        int resp = 0, cat = 0, count = 0, id = 0;
-        String nomCat = null;
+        int resp = 0, id = 0;
         
-        if (jTextField2.getText().isEmpty()) {
+        if (jTextField1.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna categoria", "Error Delete", JOptionPane.ERROR_MESSAGE);
         } else {
-            try {
-                cat = Integer.parseInt(jTextField1.getText());
-                count = 0;
-                s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                String query = "SELECT categoria FROM articulos";
-                ResultSet r1 = s.executeQuery(query);
-                
-                while (r1.next()) {                    
-                    if (cat == Integer.parseInt(r1.getString("categoria")))  
-                       count += 1;
-                       id = cat;                    
-                }
-                try {
-                    Articulos metodo = new Articulos();
-                    nomCat = metodo.getNombreCateg(cat);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
-                }             
-            } catch (NumberFormatException numberFormatException) {
-            } catch (SQLException sQLException) {
-            }                    
-    
-            if(count > 0){           
-                resp = JOptionPane.showConfirmDialog(null, "ATENCIÓN!! La categoria seleccionada '"+nomCat+"' tiene "+count+" artículos. ¿Seguro que desea borrar la categoría y sus artículos?", "PELIGRO. Confirmar acción", JOptionPane.YES_NO_OPTION);
-            }else{
+
                 resp = JOptionPane.showConfirmDialog(null, "¿Desea borrar la categoria seleccionada?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
-            }
+            
             
             int i = 0;
              
-            if (resp == JOptionPane.YES_OPTION) {
-                //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
-                i = jTable1.getSelectedRow();
-                if (i >= 0) {
-                    model.removeRow(i);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna categoria", "Error Delete", JOptionPane.ERROR_MESSAGE);
-                }
+            if (resp == JOptionPane.YES_OPTION) {                
 
                 try {
                     //GUARDAMOS EN UNA VARIABLE EL ID QUE HAY QUE ELIMINAR DE LA BBDD, 'i' REPRESENTA LA FILA SELECCIONADA DE LA TABLA
@@ -476,31 +473,46 @@ public class Categorias extends javax.swing.JFrame {
                     String user = "root";
                     String pass = "";
                     Connection connection = DriverManager.getConnection(url, user, pass);
-                    Statement st = connection.createStatement();
-                    String query = "DELETE FROM categorias WHERE id=" + vId;
-                    String query2 = "DELETE FROM articulos WHERE categoria=" + id;
-                    st.executeUpdate(query2);//PRIMERO BORRAMOS LOS ARTÍCULOS PORQUE SI LO HACEMOS AL REVÉS, DARÍA ERROR DE CLAVE AJENA EN LA TABLA ARTÍCULOS...
-                    st.executeUpdate(query);
+                    Statement st = connection.createStatement();                
+                    String query = "DELETE FROM categorias WHERE id=" + vId;   
+                    st.executeUpdate(query);                                        
                                         
+                    //DELETE EN EL ARRAY
+                    int idd = Integer.parseInt(jTextField1.getText());
+                    for (int j = 0; j < array_categorias.size(); j++) {
+                        if (array_categorias.get(j).getId() == idd) {                           
+                           array_categorias.remove(j);
+                        }                        
+                    }                                             
+                    //REALIZA DELETE EN LA TABLA, ELIMINA UNA FILA SELECCIONADA
+                    i = jTable1.getSelectedRow();
+                    if (i >= 0) {
+                        model.removeRow(i);
+                    }
+                    
                     jTextField1.setText("");
                     jTextField2.setText("");
                     jTextField3.setText("");
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "No puede eliminar una categoria que tenga artículos asignados", "Error Delete", JOptionPane.ERROR_MESSAGE);
+                    //Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }            
+        }                    
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         //BOTÓN CANCELAR
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
         jButton8.setVisible(false);
         jButton9.setVisible(false);
-        jTextField1.setEnabled(false);
         jButton5.setEnabled(true);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
+        info_button.setEnabled(true);
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -524,13 +536,16 @@ public class Categorias extends javax.swing.JFrame {
             model.addRow(new Object[]{vId, vNombre,vDescripcion});
             //INSERT EN EL ARRAY
             array_categorias.add(new Categoria(vId,vNombre,vDescripcion));
-
-            jTextField1.setEnabled(false);
+            
+            jTextField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
             jButton5.setEnabled(true);
             jButton6.setEnabled(true);
             jButton7.setEnabled(true);
             jButton8.setVisible(false);
             jButton9.setVisible(false);
+            info_button.setEnabled(true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -582,6 +597,54 @@ public class Categorias extends javax.swing.JFrame {
         jButton9.setForeground(Color.white);
     }//GEN-LAST:event_jButton9MouseExited
     //FIN EVENTOS RATÓN SOBRE BOTONES
+    
+    private void info_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_info_buttonActionPerformed
+        //BOTÓN INFO
+        String nomCat = null;
+        if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Seleccione una categoria para ver la cantidad de articulos", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            try {
+                int cat = Integer.parseInt(jTextField1.getText());
+                int count = 0;
+                s = conex.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                String query = "SELECT categoria FROM articulos";
+                ResultSet r1 = s.executeQuery(query);
+
+                while (r1.next()) {
+                    if (cat == Integer.parseInt(r1.getString("categoria"))) {
+                        count += 1;
+                    }
+                }
+                try {
+                    Articulos metodo = new Articulos();
+                    nomCat = metodo.getNombreCateg(cat);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Categorias.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (count == 0) {
+                    JOptionPane.showMessageDialog(null, "La categoria seleccionada '" + nomCat + "' no tiene artículos.", "Información", JOptionPane.INFORMATION_MESSAGE);                                        
+                }else{
+                    JOptionPane.showMessageDialog(null, "La categoria seleccionada '" + nomCat + "' tiene " + count + " artículos.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (NumberFormatException numberFormatException) {
+            } catch (SQLException sQLException) {
+            }
+        }
+
+    }//GEN-LAST:event_info_buttonActionPerformed
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
+    
     
     public void añadirFilasTabla(){ 
         Object datosFila []= new Object [3]; //EL RANGO DEL ARRAY REPRESENTA LAS COLUMNAS DE LA TABLA, EN ESTE CASO 3
@@ -637,12 +700,14 @@ public class Categorias extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton info_button;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

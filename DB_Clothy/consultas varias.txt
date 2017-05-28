@@ -19,3 +19,9 @@ if (stock - cantidad < 0) then
 ERROR MESSAGE
 else
 UPDATE stock - cantidad en tabla map...
+
+
+CREATE VIEW ventas_lineasVenta AS (SELECT V.id AS ID_Venta, LV.num_linea AS Num_Linea, C.nombre AS Cliente, E.nombre AS Empleado, V.fecha AS Fecha,V.metodo_pago AS Metodo_Pago, A.nombre AS Articulo, T.valor_talla, LV.cantidad AS Cantidad, LV.importe AS Importe
+FROM ventas V, lineas_ventas LV, clientes C, articulos A, empleados E, tallas T
+WHERE C.id=V.cliente AND E.id=V.empleado AND A.id=LV.articulo AND T.id=LV.talla AND V.id=LV.venta_id)
+ORDER BY 1, 2;

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +11,12 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import utilidades.ConexionDB;
 
 /**
@@ -27,6 +30,7 @@ public class Pedidos extends javax.swing.JFrame {
     DefaultTableModel model;    
     Statement s;
     ResultSet rs;
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
     
     int viewRow, modelRow;    
     
@@ -36,6 +40,7 @@ public class Pedidos extends javax.swing.JFrame {
     public Pedidos() throws SQLException, ClassNotFoundException {
         initComponents();
         this.setLocationRelativeTo(null);  
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         this.model = (DefaultTableModel) jTable1.getModel();        
         //SETEA EL ANCHO DE LAS COLUMNAS      
         TableColumnModel columnModel = jTable1.getColumnModel();
@@ -44,6 +49,8 @@ public class Pedidos extends javax.swing.JFrame {
         columnModel.getColumn(2).setPreferredWidth(180);
         columnModel.getColumn(3).setPreferredWidth(65);
         columnModel.getColumn(4).setPreferredWidth(150);
+        
+        statusText.setVisible(false);
         
         //LLENA LA TABLA
         String query = "SELECT * FROM pedidos";
@@ -60,31 +67,31 @@ public class Pedidos extends javax.swing.JFrame {
             datosFila[4] = rs.getString("estado");
 
             model.addRow(datosFila);
-        }                
+        }        
         
         jTable1.addMouseListener(new MouseAdapter() { //CREA UN LISTENER PARA EL RATÓN
-                           
-           @Override
-           public void mouseClicked (MouseEvent e){ //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
-               //if (jTFBuscar.getText().isEmpty()) {
-               int i = jTable1.getSelectedRow();
-               // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
-               TFID.setText(model.getValueAt(i, 0).toString());
-               TFFecha.setText(model.getValueAt(i, 1).toString());
-               TFArticulo.setText(model.getValueAt(i, 2).toString());
-               TFTalla.setText(model.getValueAt(i, 3).toString());
-               TFEstado.setText(model.getValueAt(i, 4).toString());
-               }/*else{
-                    int i = modelRow;
+
+            @Override
+            public void mouseClicked(MouseEvent e) { //CUANDO SELECCIONAS UNA FILA DE LA TABLA, SETEA LOS jTextField PARA EDITARLOS              
+                if (jTFBuscarPedidos.getText().isEmpty()) {
+                    int i = jTable1.getSelectedRow();
+                    // 'i' HACE REFERENCIA AL NÚMERO DE LA FILA SELECCIONADA Y EL NÚMERO HACE REFERENCIA A LA COLUMNA (i,n)
                     TFID.setText(model.getValueAt(i, 0).toString());
                     TFFecha.setText(model.getValueAt(i, 1).toString());
                     TFArticulo.setText(model.getValueAt(i, 2).toString());
                     TFTalla.setText(model.getValueAt(i, 3).toString());
                     TFEstado.setText(model.getValueAt(i, 4).toString());
-               }*/
-          // }
-       });
-        
+                } else {
+                    int i = modelRow;
+                    TFID.setText(model.getValueAt(i, 0).toString());
+                    TFFecha.setText(model.getValueAt(i, 1).toString());
+                    TFArticulo.setText(model.getValueAt(i, 2).toString());
+                    TFTalla.setText(model.getValueAt(i, 3).toString());
+                    TFEstado.setText(model.getValueAt(i, 4).toString());                    
+                }
+            }
+        });
+
     }
 
     /**
@@ -113,16 +120,21 @@ public class Pedidos extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        statusText = new javax.swing.JTextField();
+        jSeparator8 = new javax.swing.JSeparator();
+        jTFBuscarPedidos = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jBCerrar = new javax.swing.JButton();
+        jLMover = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(968, 375));
-        setMinimumSize(new java.awt.Dimension(968, 375));
+        setMaximumSize(new java.awt.Dimension(968, 411));
+        setMinimumSize(new java.awt.Dimension(968, 411));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(968, 375));
+        setPreferredSize(new java.awt.Dimension(968, 411));
         setResizable(false);
         getContentPane().setLayout(null);
 
@@ -131,7 +143,7 @@ public class Pedidos extends javax.swing.JFrame {
         jLabel2.setText("ID");
         jLabel2.setFocusable(false);
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(30, 100, 20, 22);
+        jLabel2.setBounds(30, 130, 20, 22);
 
         TFID.setEditable(false);
         TFID.setBackground(new java.awt.Color(204, 204, 204));
@@ -143,16 +155,16 @@ public class Pedidos extends javax.swing.JFrame {
         TFID.setFocusable(false);
         TFID.setOpaque(false);
         getContentPane().add(TFID);
-        TFID.setBounds(122, 100, 160, 20);
+        TFID.setBounds(120, 130, 160, 20);
         getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(30, 120, 270, 10);
+        jSeparator1.setBounds(30, 150, 270, 10);
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Fecha");
         jLabel3.setFocusable(false);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(30, 140, 45, 22);
+        jLabel3.setBounds(30, 170, 45, 22);
 
         TFFecha.setEditable(false);
         TFFecha.setBackground(new java.awt.Color(204, 204, 204));
@@ -164,16 +176,16 @@ public class Pedidos extends javax.swing.JFrame {
         TFFecha.setFocusable(false);
         TFFecha.setOpaque(false);
         getContentPane().add(TFFecha);
-        TFFecha.setBounds(122, 140, 160, 20);
+        TFFecha.setBounds(120, 170, 160, 20);
         getContentPane().add(jSeparator2);
-        jSeparator2.setBounds(30, 160, 270, 10);
+        jSeparator2.setBounds(30, 190, 270, 10);
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Articulo");
         jLabel4.setFocusable(false);
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(30, 180, 100, 22);
+        jLabel4.setBounds(30, 210, 100, 22);
 
         TFArticulo.setEditable(false);
         TFArticulo.setBackground(new java.awt.Color(204, 204, 204));
@@ -185,16 +197,16 @@ public class Pedidos extends javax.swing.JFrame {
         TFArticulo.setFocusable(false);
         TFArticulo.setOpaque(false);
         getContentPane().add(TFArticulo);
-        TFArticulo.setBounds(122, 180, 160, 20);
+        TFArticulo.setBounds(120, 210, 160, 20);
         getContentPane().add(jSeparator3);
-        jSeparator3.setBounds(30, 200, 270, 10);
+        jSeparator3.setBounds(30, 230, 270, 10);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Talla");
         jLabel5.setFocusable(false);
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(30, 220, 70, 22);
+        jLabel5.setBounds(30, 250, 70, 22);
 
         TFTalla.setEditable(false);
         TFTalla.setBackground(new java.awt.Color(204, 204, 204));
@@ -206,16 +218,16 @@ public class Pedidos extends javax.swing.JFrame {
         TFTalla.setFocusable(false);
         TFTalla.setOpaque(false);
         getContentPane().add(TFTalla);
-        TFTalla.setBounds(122, 220, 160, 20);
+        TFTalla.setBounds(120, 250, 160, 20);
         getContentPane().add(jSeparator4);
-        jSeparator4.setBounds(30, 240, 270, 10);
+        jSeparator4.setBounds(30, 270, 270, 10);
 
-        jLabel8.setFont(new java.awt.Font("Magneto", 1, 36)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Pedidos");
         jLabel8.setFocusable(false);
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(100, 20, 180, 30);
+        jLabel8.setBounds(30, 20, 170, 30);
 
         TFEstado.setEditable(false);
         TFEstado.setBackground(new java.awt.Color(204, 204, 204));
@@ -227,16 +239,16 @@ public class Pedidos extends javax.swing.JFrame {
         TFEstado.setFocusable(false);
         TFEstado.setOpaque(false);
         getContentPane().add(TFEstado);
-        TFEstado.setBounds(122, 260, 160, 20);
+        TFEstado.setBounds(120, 290, 160, 20);
 
         jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Estado");
         jLabel6.setFocusable(false);
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(30, 260, 60, 22);
+        jLabel6.setBounds(30, 290, 60, 22);
         getContentPane().add(jSeparator5);
-        jSeparator5.setBounds(30, 280, 270, 10);
+        jSeparator5.setBounds(30, 310, 270, 10);
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -264,7 +276,31 @@ public class Pedidos extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(80, 310, 180, 30);
+        jButton1.setBounds(80, 340, 180, 30);
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/buscar_iconx24.png"))); // NOI18N
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(150, 70, 40, 40);
+        getContentPane().add(statusText);
+        statusText.setBounds(310, 350, 20, 24);
+        getContentPane().add(jSeparator8);
+        jSeparator8.setBounds(180, 100, 120, 10);
+
+        jTFBuscarPedidos.setBackground(new java.awt.Color(204, 204, 204));
+        jTFBuscarPedidos.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jTFBuscarPedidos.setForeground(new java.awt.Color(255, 255, 255));
+        jTFBuscarPedidos.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTFBuscarPedidos.setBorder(null);
+        jTFBuscarPedidos.setCaretColor(new java.awt.Color(255, 255, 255));
+        jTFBuscarPedidos.setName("Buscar"); // NOI18N
+        jTFBuscarPedidos.setOpaque(false);
+        jTFBuscarPedidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTFBuscarPedidosKeyReleased(evt);
+            }
+        });
+        getContentPane().add(jTFBuscarPedidos);
+        jTFBuscarPedidos.setBounds(180, 80, 120, 19);
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -306,7 +342,7 @@ public class Pedidos extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(330, 40, 610, 300);
+        jScrollPane1.setBounds(330, 40, 610, 330);
 
         jBCerrar.setForeground(new java.awt.Color(255, 255, 255));
         jBCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/icon_exit.png"))); // NOI18N
@@ -323,12 +359,26 @@ public class Pedidos extends javax.swing.JFrame {
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(950, 0, 20, 20);
 
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 950, 30);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/tab_fondo2.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(483, 284));
         jLabel1.setMinimumSize(new java.awt.Dimension(483, 284));
         jLabel1.setPreferredSize(new java.awt.Dimension(483, 284));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 980, 390);
+        jLabel1.setBounds(0, -10, 980, 440);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -336,33 +386,42 @@ public class Pedidos extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         //BOTÓN EDITAR
         if (TFID.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún pedido", "ERROR UPDATE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún pedido", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
-            String vEstado = "Recibido";
-            int vId = Integer.parseInt(TFID.getText());
+            if (TFEstado.getText().equalsIgnoreCase("Recibido")) {
+                JOptionPane.showMessageDialog(null, "Este pedido ya se ha recibido", "", JOptionPane.ERROR_MESSAGE);                                
+            }else{
+            int resp = JOptionPane.showConfirmDialog(null, "¿Desea actualizar el estado del pedido seleccionado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
+            if (resp == JOptionPane.YES_OPTION) {
+                String vEstado = "Recibido";
+                int vId = Integer.parseInt(TFID.getText());
 
-            //REALIZA UPDATE EN LA BASE DE DATOS
-            try {
-                PreparedStatement ps = conex.prepareStatement("UPDATE pedidos SET estado='" + vEstado + "' WHERE id=" + vId);
-                ps.executeUpdate();
-            } catch (SQLException ex) {
-                Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
+                //REALIZA UPDATE EN LA BASE DE DATOS
+                try {
+                    PreparedStatement ps = conex.prepareStatement("UPDATE pedidos SET estado='" + vEstado + "' WHERE id=" + vId);
+                    ps.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //PRIMERO BORRAR TABLA PARA NO REPETIR DATOS CUANDO HAGA UPDATE
+                if (model.getRowCount() > 0) {
+                    for (int i = model.getRowCount() - 1; i > -1; i--) {
+                        model.removeRow(i);
+                    }
+                }
+
+                try {
+                    //UPDATE EN TABLA
+                    updatePedidos();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                JOptionPane.showMessageDialog(null, "Pedido recibido. Stock aumentado.", "Información", JOptionPane.INFORMATION_MESSAGE);
             }
         }
-         //PRIMERO BORRAR TABLA PARA NO REPETIR DATOS CUANDO HAGA UPDATE
-         if (model.getRowCount() > 0) {
-            for (int i = model.getRowCount() - 1; i > -1; i--) {
-                model.removeRow(i);
-            }
-        }
-        
-        try {
-            //UPDATE EN TABLA
-            updatePedidos();
-        } catch (SQLException ex) {
-            Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Pedidos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -380,6 +439,24 @@ public class Pedidos extends javax.swing.JFrame {
         //EVENTO CUANDO SALE EL RATÓN DEL BOTÓN EDITAR
         jButton1.setForeground(Color.white);
     }//GEN-LAST:event_jButton1MouseExited
+
+    private void jTFBuscarPedidosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFBuscarPedidosKeyReleased
+        //jTextField BÚSQUEDA Pedidos
+        String query = jTFBuscarPedidos.getText().toLowerCase();
+
+        filtro(query);
+    }//GEN-LAST:event_jTFBuscarPedidosKeyReleased
+
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
 
     public String getValorTalla(int cod){
         String valor = null;
@@ -433,6 +510,35 @@ public class Pedidos extends javax.swing.JFrame {
         con.close();        
     }
     
+    //MÉTODO FILTRAR RESULTADOS
+    private void filtro(String query) { //FILTRO PARA CLIENTES
+
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
+        jTable1.setRowSorter(tr);
+
+        tr.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+
+        jTable1.getSelectionModel().addListSelectionListener(
+                new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                viewRow = jTable1.getSelectedRow();
+                if (viewRow < 0) {
+                    //Selection got filtered away.
+                    statusText.setText("");
+                } else {
+                    modelRow
+                            = jTable1.convertRowIndexToModel(viewRow);
+                    statusText.setText(
+                            String.format("Selected Row in view: %d. "
+                                    + "Selected Row in model: %d.",
+                                    viewRow, modelRow));
+                }
+            }
+        }
+        );
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -482,7 +588,9 @@ public class Pedidos extends javax.swing.JFrame {
     private javax.swing.JTextField TFTalla;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -495,6 +603,9 @@ public class Pedidos extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JTextField jTFBuscarPedidos;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField statusText;
     // End of variables declaration//GEN-END:variables
 }

@@ -24,6 +24,8 @@ import static vista.Login.*;
 public class Menu extends javax.swing.JFrame {    
     
     static Menu menu;    
+    
+    int x, y; //VARIABLES USADAS PARA EL MARCO DEL FRAME, PARA MOVERLO
 
     /**
      * Creates new form Menu
@@ -31,6 +33,7 @@ public class Menu extends javax.swing.JFrame {
     public Menu() throws SQLException {
         initComponents();
         this.setLocationRelativeTo(null);  
+        //AWTUtilities.setWindowOpaque(this, false);//PARA EL MARCO MOVER FRAME
         
         user_logeado.setText(user_actual);
        
@@ -70,6 +73,7 @@ public class Menu extends javax.swing.JFrame {
         jBPedidos = new javax.swing.JButton();
         jLPedidos = new javax.swing.JLabel();
         jBCerrar = new javax.swing.JButton();
+        jLMover = new javax.swing.JLabel();
         fondo_menu = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -81,7 +85,7 @@ public class Menu extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(725, 365));
         getContentPane().setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tekton Pro", 1, 27)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 27)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText(" @");
         getContentPane().add(jLabel1);
@@ -212,43 +216,43 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBSesion);
         jBSesion.setBounds(440, 220, 80, 80);
 
-        jLArticulos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLArticulos.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLArticulos.setText("Artículos");
         jLArticulos.setToolTipText("");
         getContentPane().add(jLArticulos);
-        jLArticulos.setBounds(50, 160, 110, 26);
+        jLArticulos.setBounds(60, 160, 100, 26);
 
-        jLCategorias.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLCategorias.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLCategorias.setText("Categorias");
         jLCategorias.setToolTipText("");
         getContentPane().add(jLCategorias);
-        jLCategorias.setBounds(180, 160, 120, 26);
+        jLCategorias.setBounds(190, 160, 120, 26);
 
-        jLMarcas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLMarcas.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLMarcas.setText("Marcas");
         jLMarcas.setToolTipText("");
         getContentPane().add(jLMarcas);
-        jLMarcas.setBounds(324, 160, 90, 26);
+        jLMarcas.setBounds(330, 160, 80, 26);
 
-        jLTallas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLTallas.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLTallas.setText("Tallas");
         jLTallas.setToolTipText("");
         getContentPane().add(jLTallas);
         jLTallas.setBounds(450, 160, 70, 26);
 
-        jLEmpleados.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLEmpleados.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLEmpleados.setText("Empleados");
         jLEmpleados.setToolTipText("");
         getContentPane().add(jLEmpleados);
-        jLEmpleados.setBounds(45, 290, 120, 26);
+        jLEmpleados.setBounds(50, 290, 120, 26);
 
-        jLClientes.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLClientes.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLClientes.setText("Clientes");
         jLClientes.setToolTipText("");
         getContentPane().add(jLClientes);
         jLClientes.setBounds(200, 290, 100, 26);
 
-        jLVentas.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLVentas.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLVentas.setText("Ventas");
         jLVentas.setToolTipText("");
         getContentPane().add(jLVentas);
@@ -269,7 +273,7 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().add(jBPedidos);
         jBPedidos.setBounds(560, 90, 80, 70);
 
-        jLPedidos.setFont(new java.awt.Font("Magneto", 1, 20)); // NOI18N
+        jLPedidos.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLPedidos.setText("Pedidos");
         jLPedidos.setToolTipText("");
         getContentPane().add(jLPedidos);
@@ -287,6 +291,20 @@ public class Menu extends javax.swing.JFrame {
         });
         getContentPane().add(jBCerrar);
         jBCerrar.setBounds(700, 0, 30, 20);
+
+        jLMover.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        jLMover.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jLMoverMouseDragged(evt);
+            }
+        });
+        jLMover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLMoverMousePressed(evt);
+            }
+        });
+        getContentPane().add(jLMover);
+        jLMover.setBounds(0, 0, 710, 30);
 
         fondo_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/menu_fondo.jpg"))); // NOI18N
         fondo_menu.setMaximumSize(new java.awt.Dimension(733, 365));
@@ -415,6 +433,17 @@ public class Menu extends javax.swing.JFrame {
         pedidos.setVisible(true);
     }//GEN-LAST:event_jBPedidosActionPerformed
 
+    private void jLMoverMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMouseDragged
+        //EVENTO RATÓN ARRASTRAR (Drag)
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_jLMoverMouseDragged
+
+    private void jLMoverMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLMoverMousePressed
+        //EVENTO RATÓN PULSADO (Press)
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jLMoverMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -473,6 +502,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLClientes;
     private javax.swing.JLabel jLEmpleados;
     private javax.swing.JLabel jLMarcas;
+    private javax.swing.JLabel jLMover;
     private javax.swing.JLabel jLPedidos;
     private javax.swing.JLabel jLTallas;
     private javax.swing.JLabel jLVentas;
